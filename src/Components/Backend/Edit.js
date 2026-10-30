@@ -1,4 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { BlockControls, MediaUpload, MediaUploadCheck, RichText, store as blockEditorStore, useBlockProps } from '@wordpress/block-editor';
@@ -42,6 +43,27 @@ const Edit = (props) => {
 		return 'number' === typeof id ? id : 0;
 	}, []);
 	const votes = useVotes(pollId, postId);
+
+	// a poll pasted from another post still has that post's id: ask once per id and take a new one;
+	// a synced pattern's poll belongs to the pattern, so it keeps its id wherever the pattern is used
+	const inPattern = useSelect(select => !!select(blockEditorStore).getBlockParentsByBlockName(clientId, 'core/block').length, [clientId]);
+	const checked = useRef('');
+	const latest = useRef(pollId);
+	latest.current = pollId;
+	useEffect(() => {
+		if (!pollId || !postId || inPattern || checked.current === pollId) {
+			return;
+		}
+		const asked = checked.current = pollId;
+		apiFetch({ path: `/softicon-poll/v1/id-taken/${pollId}?post=${postId}` }).then(({ taken }) => {
+			if (taken && latest.current === asked) {
+				const id = newPollId();
+				checked.current = id;
+				__unstableMarkNextChangeAsNotPersistent();
+				setAttributes({ pollId: id });
+			}
+		}).catch(() => {});
+	}, [pollId, postId, inPattern]);
 
 	// a new answer gets the cursor
 	useEffect(() => {

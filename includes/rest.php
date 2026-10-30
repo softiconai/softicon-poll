@@ -50,6 +50,14 @@ class rest {
             ),
         ) );
 
+        // a poll copied from another post gets a new id in the editor, or the two would share their votes
+        register_rest_route( self::NS, '/id-taken/' . $id, array(
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => array( $this, 'id_taken' ),
+            'permission_callback' => function () { return current_user_can('edit_posts'); },
+            'args'                => array( 'post' => $post ),
+        ) );
+
         // the editor's Votes panel
         register_rest_route( self::NS, '/manage/' . $id, array(
             array(
@@ -222,6 +230,11 @@ class rest {
         }
 
         return self::respond( self::state( $settings, $post_id ) );
+    }
+
+    public function id_taken( \WP_REST_Request $request ) {
+        $owner = block::owner( $request['id'] );
+        return self::respond( array( 'taken' => $owner && absint( $request['post'] ) !== $owner ) );
     }
 
     // every count, also for answers removed since; an empty list stays a JSON object

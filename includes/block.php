@@ -5,11 +5,56 @@ if ( !defined('ABSPATH') ) { exit;}
 class block {
 
     const NAME = 'softicon/poll';
+    const META = '_alpl_poll';
 
     public function __construct()
     {
         add_action('init', array( $this, 'register' ));
         add_filter('block_editor_settings_all', array( $this, 'no_inspector_tabs' ));
+        add_action('save_post', array( $this, 'record_ids' ), 10, 2);
+    }
+
+    // one meta row per poll in the post; the oldest row of an id marks the post the poll was made in,
+    // so the editor can tell a copy pasted into another post (see rest::id_taken)
+    public function record_ids( $post_id, $post ) {
+        if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+            return;
+        }
+
+        $ids = array();
+        if ( false !== strpos( $post->post_content, '<!-- wp:' . self::NAME . ' ' ) ) {
+            self::collect_ids( parse_blocks( $post->post_content ), $ids );
+        }
+
+        // rows are kept, not rewritten, or the original would lose its place to a newer copy
+        $saved = array_map( 'strval', get_post_meta( $post_id, self::META ) );
+        foreach ( array_diff( $ids, $saved ) as $id ) {
+            add_post_meta( $post_id, self::META, $id );
+        }
+        foreach ( array_diff( $saved, $ids ) as $id ) {
+            delete_post_meta( $post_id, self::META, $id );
+        }
+    }
+
+    // only the post's own polls, not those of synced patterns it uses (the pattern records its own)
+    private static function collect_ids( $blocks, &$ids ) {
+        foreach ( $blocks as $block ) {
+            if ( self::NAME === $block['blockName'] && isset( $block['attrs']['pollId'] ) ) {
+                $id = self::poll_id( $block['attrs']['pollId'] );
+                if ( '' !== $id && ! in_array( $id, $ids, true ) ) {
+                    $ids[] = $id;
+                }
+            }
+            if ( ! empty( $block['innerBlocks'] ) ) {
+                self::collect_ids( $block['innerBlocks'], $ids );
+            }
+        }
+    }
+
+    // the post the poll id was first saved in, 0 when none has it
+    public static function owner( $poll_id ) {
+        global $wpdb;
+        return (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s ORDER BY meta_id ASC LIMIT 1", self::META, $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- asked once when a poll opens in the editor
     }
 
     // the block has its own General and Style tabs; without this WordPress adds its Settings/Styles tabs above them
