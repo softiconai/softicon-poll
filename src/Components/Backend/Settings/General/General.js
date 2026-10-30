@@ -1,7 +1,7 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { Button, DateTimePicker, Dropdown, Modal, TextControl } from '@wordpress/components';
-import { dateI18n, getSettings } from '@wordpress/date';
+import { dateI18n, getDate, getSettings, isInTheFuture } from '@wordpress/date';
 import { FieldHead, HelpCards, Panel, Tiles, ToggleRow } from '../../../../vendor/softicon-tools/components/Panels';
 import { formats, helpCards, showResultsOptions } from '../../../../utils/options';
 import { hasText } from '../../../../utils/functions';
@@ -55,7 +55,8 @@ const Votes = ( { options, votes } ) => {
 const General = ( { attributes, setAttributes, votes } ) => {
 	const { options, multiple, maxChoices, showResults, resultsFormat, showTotal, closed, endDate, loginOnly } = attributes;
 	const set = ( key ) => ( val ) => setAttributes( { [ key ]: val } );
-	const ended = endDate && new Date( endDate ) <= new Date();
+	// the stored date has no zone, it is the site's time
+	const ended = endDate && ! isInTheFuture( endDate );
 
 	return <>
 		<Panel id="help" title={ __( 'Help', 'softicon-poll' ) }>
@@ -76,12 +77,10 @@ const General = ( { attributes, setAttributes, votes } ) => {
 		</Panel>
 
 		<Panel id="results" title={ __( 'Results', 'softicon-poll' ) }>
-			<Tiles label={ __( 'Show results', 'softicon-poll' ) } tip={ __( 'When visitors see the votes. Always adds a "View results" link before voting. With Never only you see them, here.', 'softicon-poll' ) } value={ showResults } options={ showResultsOptions } onChange={ set( 'showResults' ) } />
+			<Tiles label={ __( 'Show results', 'softicon-poll' ) } tip={ __( 'When visitors see the votes. Always adds a "View results" link before voting. With Never, visitors never see them; people who can edit this post see them here and on the page.', 'softicon-poll' ) } value={ showResults } options={ showResultsOptions } onChange={ set( 'showResults' ) } />
 
-			{ 'never' !== showResults && <>
-				<Tiles label={ __( 'Show as', 'softicon-poll' ) } value={ resultsFormat } options={ formats } onChange={ set( 'resultsFormat' ) } />
-				<ToggleRow label={ __( 'Total votes', 'softicon-poll' ) } tip={ __( 'The number of people who voted, under the results.', 'softicon-poll' ) } checked={ showTotal } onChange={ set( 'showTotal' ) } />
-			</> }
+			<Tiles label={ __( 'Show as', 'softicon-poll' ) } value={ resultsFormat } options={ formats } onChange={ set( 'resultsFormat' ) } />
+			<ToggleRow label={ __( 'Total votes', 'softicon-poll' ) } tip={ __( 'The number of people who voted, under the results.', 'softicon-poll' ) } checked={ showTotal } onChange={ set( 'showTotal' ) } />
 		</Panel>
 
 		<Panel id="voting" title={ __( 'Voting', 'softicon-poll' ) }>
@@ -92,7 +91,7 @@ const General = ( { attributes, setAttributes, votes } ) => {
 				<div className="alplButtons">
 					<Dropdown popoverProps={ { placement: 'left-start' } }
 						renderToggle={ ( { isOpen, onToggle } ) => <Button variant="secondary" onClick={ onToggle } aria-expanded={ isOpen }>
-							{ endDate ? dateI18n( getSettings().formats.datetime, endDate ) : __( 'Set an end date', 'softicon-poll' ) }
+							{ endDate ? dateI18n( getSettings().formats.datetime, getDate( endDate ) ) : __( 'Set an end date', 'softicon-poll' ) }
 						</Button> }
 						renderContent={ () => <div className="alplDatePicker">
 							<DateTimePicker currentDate={ endDate || undefined } onChange={ ( val ) => setAttributes( { endDate: val || '' } ) } is12Hour={ is12Hour } />

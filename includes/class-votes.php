@@ -5,12 +5,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// One row per chosen answer. A voter is a salted hash of the user id or the IP address,
-// the address itself is never stored.
+// One row per chosen answer, plus one ballot row per voter. A voter is a salted hash of the user id or
+// the IP address, the address itself is never stored.
 class Votes {
 
 	const DB_VERSION = '1';
 	const CACHE      = 'alpl_votes';
+	// the ballot row's option id; answer ids are [a-z0-9] only, so it can't clash
+	const BALLOT = '-';
 
 	public function __construct() {
 		add_action( 'admin_init', array( __CLASS__, 'maybe_install' ) );
@@ -130,25 +132,50 @@ class Votes {
 		return false;
 	}
 
+	// an IPv6 visitor gets a whole /64 to pick addresses from, so the network counts as one address
+	public static function network() {
+		$ip = self::ip();
+		if ( false !== strpos( $ip, ':' ) ) {
+			$ip = inet_ntop( substr( inet_pton( $ip ), 0, 8 ) . str_repeat( "\0", 8 ) ) . '/64';
+		}
+		return $ip;
+	}
+
 	// logged-in visitors are counted by account, others by address; the poll id in the hash
 	// keeps the same visitor from being linked across polls
 	public static function voter( $poll_id ) {
 		$user = get_current_user_id();
-		return wp_hash( ( $user ? 'user:' . $user : 'ip:' . self::ip() ) . '|' . $poll_id );
+		return wp_hash( ( $user ? 'user:' . $user : 'ip:' . self::network() ) . '|' . $poll_id );
 	}
 
 	public static function cookie( $poll_id ) {
 		return 'alpl_voted_' . $poll_id;
 	}
 
+	// signed, so a hand-made cookie can't unlock the results of a poll the visitor hasn't voted in
+	public static function cookie_value( $poll_id ) {
+		return wp_hash( 'voted|' . $poll_id );
+	}
+
+	public static function has_cookie( $poll_id ) {
+		$name = self::cookie( $poll_id );
+		return isset( $_COOKIE[ $name ] ) && hash_equals( self::cookie_value( $poll_id ), sanitize_text_field( wp_unslash( $_COOKIE[ $name ] ) ) );
+	}
+
+	// [] when this voter hasn't voted, else the answers, with the ballot row for a vote whose answers were removed
 	public static function choices_of( $poll_id, $voter ) {
 		global $wpdb;
 		return $wpdb->get_col( $wpdb->prepare( 'SELECT option_id FROM %i WHERE poll_id = %s AND voter_hash = %s', self::table(), $poll_id, $voter ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- per visitor, not worth caching
 	}
 
+	// false when the voter already has a ballot: of requests sent at the same time only the first gets one in
 	public static function add( $poll_id, $voter, $choices ) {
 		global $wpdb;
-		$now = current_time( 'mysql', true );
+		$now   = current_time( 'mysql', true );
+		$first = $wpdb->query( $wpdb->prepare( 'INSERT IGNORE INTO %i (poll_id, option_id, voter_hash, created) VALUES (%s, %s, %s, %s)', self::table(), $poll_id, self::BALLOT, $voter, $now ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
+		if ( 1 !== $first ) {
+			return false;
+		}
 		foreach ( $choices as $choice ) {
 			$row = array(
 				'poll_id'    => $poll_id,
@@ -159,9 +186,10 @@ class Votes {
 			$wpdb->insert( self::table(), $row, array( '%s', '%s', '%s', '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
 		}
 		wp_cache_delete( $poll_id, self::CACHE );
+		return true;
 	}
 
-	// votes per answer and the number of people who voted
+	// votes per answer and the number of people who voted (one ballot row each)
 	public static function results( $poll_id ) {
 		$cached = wp_cache_get( $poll_id, self::CACHE );
 		if ( is_array( $cached ) ) {
@@ -169,13 +197,14 @@ class Votes {
 		}
 
 		global $wpdb;
-		$rows   = $wpdb->get_results( $wpdb->prepare( 'SELECT option_id, COUNT(*) AS votes FROM %i WHERE poll_id = %s GROUP BY option_id', self::table(), $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- cached below
-		$voters = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(DISTINCT voter_hash) FROM %i WHERE poll_id = %s', self::table(), $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- cached below
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT option_id, COUNT(*) AS votes FROM %i WHERE poll_id = %s GROUP BY option_id', self::table(), $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- cached below
 
 		$counts = array();
 		foreach ( (array) $rows as $row ) {
 			$counts[ $row->option_id ] = (int) $row->votes;
 		}
+		$voters = isset( $counts[ self::BALLOT ] ) ? $counts[ self::BALLOT ] : 0;
+		unset( $counts[ self::BALLOT ] );
 
 		$results = array(
 			'counts' => $counts,

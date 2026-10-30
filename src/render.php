@@ -10,9 +10,6 @@ if ( '' === $alpl['id'] || count( $alpl['options'] ) < 2 ) {
 	return;
 }
 
-// votes are checked against this post's copy of the poll; 0 on archives, where only polls in templates show
-$alpl_post = absint( get_the_ID() );
-
 // colors become css variables so the stylesheet keeps the fallbacks
 $alpl_style = '';
 foreach ( array(
@@ -30,7 +27,6 @@ foreach ( array(
 
 $alpl_config = array(
 	'id'          => $alpl['id'],
-	'post'        => $alpl_post,
 	'api'         => rest_url( ALPL_Poll\Rest::NS . '/' ),
 	// only logged-in visitors get a nonce, page caches skip their pages
 	'nonce'       => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : '',
@@ -72,10 +68,16 @@ $alpl_wrapper = get_block_wrapper_attributes(
 	)
 );
 
-$alpl_label = function ( $option ) {
+$alpl_label = function ( $option, $index ) {
 	$image = ALPL_Poll\Block::image( $option['image'] );
 	if ( $image ) {
 		echo '<img class="alpl_image" src="' . esc_url( $image['url'] ) . '" alt="' . esc_attr( $image['alt'] ) . '" loading="lazy" decoding="async">';
+	}
+	// an image without text or alt still gives screen readers a name for the answer
+	if ( '' === trim( wp_strip_all_tags( $option['text'] ) ) && ( ! $image || '' === $image['alt'] ) ) {
+		/* translators: %d: the answer's position, like 1 */
+		echo '<span class="alpl_text"><span class="screen-reader-text">' . esc_html( sprintf( __( 'Answer %d', 'softicon-poll' ), $index + 1 ) ) . '</span></span>';
+		return;
 	}
 	echo '<span class="alpl_text">' . wp_kses(
 		$option['text'],
@@ -99,10 +101,10 @@ $alpl_label = function ( $option ) {
 				<p class="alpl_hint" id="<?php echo esc_attr( $alpl_hid ); ?>"><?php echo esc_html( $alpl_hint ); ?></p>
 			<?php endif; ?>
 			<div class="alpl_options">
-				<?php foreach ( $alpl['options'] as $alpl_option ) : ?>
+				<?php foreach ( $alpl['options'] as $alpl_index => $alpl_option ) : ?>
 					<label class="alpl_option">
 						<input class="alpl_input" type="<?php echo $alpl['multiple'] ? 'checkbox' : 'radio'; ?>" name="alpl_choice" value="<?php echo esc_attr( $alpl_option['id'] ); ?>" disabled>
-						<?php $alpl_label( $alpl_option ); ?>
+						<?php $alpl_label( $alpl_option, $alpl_index ); ?>
 					</label>
 				<?php endforeach; ?>
 			</div>
@@ -117,10 +119,10 @@ $alpl_label = function ( $option ) {
 
 	<div class="alpl_results" hidden>
 		<ul class="alpl_rows"<?php echo $alpl_has_q ? ' aria-labelledby="' . esc_attr( $alpl_qid ) . '"' : ''; ?>>
-			<?php foreach ( $alpl['options'] as $alpl_option ) : ?>
+			<?php foreach ( $alpl['options'] as $alpl_index => $alpl_option ) : ?>
 				<li class="alpl_row" data-option="<?php echo esc_attr( $alpl_option['id'] ); ?>">
 					<span class="alpl_row_head">
-						<span class="alpl_row_label"><?php $alpl_label( $alpl_option ); ?></span>
+						<span class="alpl_row_label"><?php $alpl_label( $alpl_option, $alpl_index ); ?></span>
 						<span class="alpl_row_value"></span>
 					</span>
 					<span class="alpl_bar"><span class="alpl_bar_fill"></span></span>

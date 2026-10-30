@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -14,7 +14,7 @@ import { cssVars, hasText, newOptionId, newPollId, toImage } from '../../utils/f
 
 const Edit = ( props ) => {
 	const { attributes, setAttributes, clientId, name } = props;
-	const { pollId, question, options, multiple, animateBars, accentColor } = attributes;
+	const { pollId, question, options, multiple, maxChoices, animateBars, accentColor } = attributes;
 	const [ preview, setPreview ] = useState( false );
 	const [ focusId, setFocusId ] = useState( null );
 	const answerRefs = useRef( {} );
@@ -37,12 +37,12 @@ const Edit = ( props ) => {
 		}
 	}, [ pollId, earlierIds, setAttributes, __unstableMarkNextChangeAsNotPersistent ] );
 
-	// the site editor's "post" is a template, its polls are managed by editors only
+	// the post being edited, to tell a pasted copy; in the site editor it is a template's name, not a number
 	const postId = useSelect( ( select ) => {
 		const id = select( 'core/editor' )?.getCurrentPostId?.();
 		return 'number' === typeof id ? id : 0;
 	}, [] );
-	const votes = useVotes( pollId, postId );
+	const votes = useVotes( pollId );
 
 	// a poll pasted from another post still has that post's id: ask once per id and take a new one;
 	// a synced pattern's poll belongs to the pattern, so it keeps its id wherever the pattern is used
@@ -89,6 +89,14 @@ const Edit = ( props ) => {
 	};
 
 	const filled = options.filter( ( option ) => hasText( option.text ) || option.image?.url ).length;
+	// the same line the page shows above the answers
+	const hint = maxChoices && maxChoices < filled
+		? sprintf(
+			/* translators: %d: how many answers a visitor may pick */
+			_n( 'Choose up to %d answer.', 'Choose up to %d answers.', maxChoices, 'softicon-poll' ),
+			maxChoices
+		)
+		: __( 'Choose one or more answers.', 'softicon-poll' );
 	const answerLabel = ( index ) => sprintf(
 		/* translators: %d: the answer's position, like 1 */
 		__( 'Answer %d', 'softicon-poll' ),
@@ -116,6 +124,8 @@ const Edit = ( props ) => {
 				placeholder={ __( 'Ask a question…', 'softicon-poll' ) } allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] } aria-label={ __( 'Question', 'softicon-poll' ) } />
 
 			{ preview ? <ResultsPreview attributes={ attributes } results={ votes.results } /> : <>
+				{ multiple && <p className="alpl_hint">{ hint }</p> }
+
 				<div className="alpl_options">
 					{ options.map( ( option, index ) => <div key={ option.id } className="alpl_option alplAnswer">
 						<input className="alpl_input" type={ multiple ? 'checkbox' : 'radio' } tabIndex={ -1 } aria-hidden="true" readOnly checked={ false } />
