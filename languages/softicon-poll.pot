@@ -1,0 +1,632 @@
+# Copyright (C) 2026 softiconai
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SoftIcon Poll 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/softicon-poll\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-30T04:40:02+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: softicon-poll\n"
+
+#. Plugin Name of the plugin
+#: softicon-poll.php
+msgid "SoftIcon Poll"
+msgstr ""
+
+#. Description of the plugin
+#: softicon-poll.php
+msgid "A poll block for the block editor. Votes are saved on your own site, no account or outside service needed."
+msgstr ""
+
+#. Author of the plugin
+#: softicon-poll.php
+msgid "softiconai"
+msgstr ""
+
+#. Author URI of the plugin
+#: softicon-poll.php
+msgid "https://profiles.wordpress.org/softiconai/"
+msgstr ""
+
+#. translators: %d: how many answers a visitor may pick
+#: build/render.php:56
+#, php-format
+msgid "Choose up to %d answer."
+msgid_plural "Choose up to %d answers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/render.php:57
+msgid "Choose one or more answers."
+msgstr ""
+
+#: build/render.php:62
+#: includes/class-rest.php:219
+#: build/view.js:2
+msgid "This poll is closed."
+msgstr ""
+
+#. translators: %s: the date and time the poll closes
+#: build/render.php:65
+#, php-format
+msgid "Voting ends on %s."
+msgstr ""
+
+#: build/render.php:99
+msgid "Poll"
+msgstr ""
+
+#: build/render.php:113
+#: build/index.js:7
+msgid "Vote"
+msgstr ""
+
+#: build/render.php:115
+msgid "View results"
+msgstr ""
+
+#: build/render.php:134
+msgid "Back to vote"
+msgstr ""
+
+#: build/render.php:142
+msgid "Please turn on JavaScript to vote."
+msgstr ""
+
+#: includes/class-rest.php:122
+msgid "This poll could not be found."
+msgstr ""
+
+#: includes/class-rest.php:207
+msgid "Too many votes from your network. Please try again in a minute."
+msgstr ""
+
+#: includes/class-rest.php:221
+#: build/view.js:2
+msgid "Please log in to vote."
+msgstr ""
+
+#: includes/class-rest.php:223
+msgid "You have already voted."
+msgstr ""
+
+#: includes/class-rest.php:239
+msgid "Please choose a valid answer."
+msgstr ""
+
+#: includes/class-votes.php:25
+msgid "When you vote in a poll on this site, we save which answers you chose. To allow one vote per person, we also save a scrambled code made from your user account if you are logged in, or else from your IP address. Your IP address itself is not saved, and the code cannot be turned back into it."
+msgstr ""
+
+#: includes/class-votes.php:26
+msgid "If you are not logged in, your browser also gets a cookie named alpl_voted_ followed by the poll's id, for one year, so the site remembers that you voted. The votes stay on this site and are not sent to anyone else."
+msgstr ""
+
+#: build/index.js:2
+#, js-format
+msgid "%s color"
+msgstr ""
+
+#: build/index.js:2
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: build/index.js:2
+msgid "General"
+msgstr ""
+
+#: build/index.js:2
+msgid "Style"
+msgstr ""
+
+#: build/index.js:2
+msgid "After voting"
+msgstr ""
+
+#: build/index.js:2
+msgid "Always"
+msgstr ""
+
+#: build/index.js:2
+msgid "When closed"
+msgstr ""
+
+#: build/index.js:2
+msgid "Never"
+msgstr ""
+
+#: build/index.js:2
+msgid "Both"
+msgstr ""
+
+#: build/index.js:2
+msgid "Percent"
+msgstr ""
+
+#: build/index.js:2
+#: build/index.js:4
+msgid "Votes"
+msgstr ""
+
+#: build/index.js:2
+msgid "Get support"
+msgstr ""
+
+#: build/index.js:2
+msgid "Rate Poll"
+msgstr ""
+
+#: build/index.js:2
+msgid "More plugins"
+msgstr ""
+
+#. translators: %d: the answer's position, like 1
+#: build/index.js:3
+#: build/index.js:7
+#, js-format
+msgid "Answer %d"
+msgstr ""
+
+#. translators: %s: number of people who voted
+#: build/index.js:4
+#, js-format
+msgid "%s person voted."
+msgid_plural "%s people voted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:4
+msgid "Refresh"
+msgstr ""
+
+#: build/index.js:4
+msgid "Reset votes"
+msgstr ""
+
+#: build/index.js:4
+msgid "Reset votes?"
+msgstr ""
+
+#: build/index.js:4
+msgid "Every vote of this poll is deleted and everyone can vote again. This cannot be undone."
+msgstr ""
+
+#: build/index.js:4
+msgid "Cancel"
+msgstr ""
+
+#: build/index.js:4
+msgid "Loading…"
+msgstr ""
+
+#: build/index.js:4
+msgid "The votes show here once the post is saved."
+msgstr ""
+
+#: build/index.js:4
+msgid "Help"
+msgstr ""
+
+#: build/index.js:4
+msgid "Email:"
+msgstr ""
+
+#: build/index.js:4
+msgid "Answers"
+msgstr ""
+
+#: build/index.js:4
+msgid "Allow more than one answer"
+msgstr ""
+
+#: build/index.js:4
+msgid "Visitors tick boxes instead of picking one answer."
+msgstr ""
+
+#: build/index.js:4
+msgid "Most answers per visitor"
+msgstr ""
+
+#: build/index.js:4
+msgid "0 means any number of answers."
+msgstr ""
+
+#: build/index.js:4
+msgid "Write the answers in the block. Press Enter for the next one."
+msgstr ""
+
+#: build/index.js:4
+msgid "Results"
+msgstr ""
+
+#: build/index.js:4
+msgid "Show results"
+msgstr ""
+
+#: build/index.js:4
+msgid "When visitors see the votes. Always adds a \"View results\" link before voting. With Never only you see them, here."
+msgstr ""
+
+#: build/index.js:4
+msgid "Show as"
+msgstr ""
+
+#: build/index.js:4
+msgid "Total votes"
+msgstr ""
+
+#: build/index.js:4
+msgid "The number of people who voted, under the results."
+msgstr ""
+
+#: build/index.js:4
+msgid "Voting"
+msgstr ""
+
+#: build/index.js:4
+msgid "Poll closed"
+msgstr ""
+
+#: build/index.js:4
+msgid "No more votes. Visitors see the results unless they are set to Never."
+msgstr ""
+
+#: build/index.js:4
+msgid "End date"
+msgstr ""
+
+#: build/index.js:4
+msgid "The poll closes by itself at this time, in your site's time zone."
+msgstr ""
+
+#: build/index.js:4
+msgid "Set an end date"
+msgstr ""
+
+#: build/index.js:4
+msgid "Remove"
+msgstr ""
+
+#: build/index.js:4
+msgid "This date has passed, the poll is closed."
+msgstr ""
+
+#: build/index.js:4
+msgid "Only logged-in users"
+msgstr ""
+
+#: build/index.js:4
+msgid "Visitors who are not logged in see a link to log in. Each account votes once."
+msgstr ""
+
+#: build/index.js:4
+msgid "Each visitor votes once, checked by browser and by a scrambled form of the IP address. The address itself is never saved."
+msgstr ""
+
+#: build/index.js:4
+msgid "Colors"
+msgstr ""
+
+#: build/index.js:4
+msgid "Background"
+msgstr ""
+
+#: build/index.js:4
+msgid "Text"
+msgstr ""
+
+#: build/index.js:4
+msgid "Accent"
+msgstr ""
+
+#: build/index.js:4
+msgid "Bar background"
+msgstr ""
+
+#: build/index.js:4
+msgid "Border"
+msgstr ""
+
+#: build/index.js:4
+msgid "Accent colors the bars, the chosen answer and the Vote button. Without it the button follows your theme. The toolbar's chart button previews the results."
+msgstr ""
+
+#: build/index.js:4
+msgid "Result bars"
+msgstr ""
+
+#: build/index.js:4
+msgid "Animate the bars"
+msgstr ""
+
+#: build/index.js:4
+msgid "The bars grow when the results appear. Visitors who prefer less motion see them without it."
+msgstr ""
+
+#: build/index.js:4
+#: build/view.js:1
+#, js-format
+msgid "%1$d%%"
+msgstr ""
+
+#: build/index.js:4
+#: build/index.js:5
+#: build/view.js:1
+#: build/view.js:2
+#, js-format
+msgid "%s vote"
+msgid_plural "%s votes"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %1$d: a share of the votes, like 40
+#: build/index.js:5
+msgid "Sample results, this poll has no votes yet."
+msgstr ""
+
+#: build/index.js:5
+#: build/view.js:2
+#, js-format
+msgid "%s voter"
+msgid_plural "%s voters"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:6
+msgid "Yes / No poll"
+msgstr ""
+
+#: build/index.js:6
+msgid "A quick question with a Yes and a No."
+msgstr ""
+
+#: build/index.js:6
+msgid "yes"
+msgstr ""
+
+#: build/index.js:6
+msgid "no"
+msgstr ""
+
+#: build/index.js:6
+msgid "feedback"
+msgstr ""
+
+#: build/index.js:6
+msgid "helpful"
+msgstr ""
+
+#: build/index.js:6
+msgid "Was this article helpful?"
+msgstr ""
+
+#: build/index.js:6
+msgid "Yes"
+msgstr ""
+
+#: build/index.js:6
+msgid "No"
+msgstr ""
+
+#: build/index.js:6
+msgid "Rating poll"
+msgstr ""
+
+#: build/index.js:6
+msgid "Visitors rate from 1 to 5 stars."
+msgstr ""
+
+#: build/index.js:6
+msgid "rating"
+msgstr ""
+
+#: build/index.js:6
+msgid "stars"
+msgstr ""
+
+#: build/index.js:6
+msgid "score"
+msgstr ""
+
+#: build/index.js:6
+msgid "review"
+msgstr ""
+
+#: build/index.js:6
+msgid "How would you rate this?"
+msgstr ""
+
+#: build/index.js:6
+msgid "Excellent"
+msgstr ""
+
+#: build/index.js:6
+msgid "Good"
+msgstr ""
+
+#: build/index.js:6
+msgid "Okay"
+msgstr ""
+
+#: build/index.js:6
+msgid "Poor"
+msgstr ""
+
+#: build/index.js:6
+msgid "Bad"
+msgstr ""
+
+#: build/index.js:6
+msgid "Reactions poll"
+msgstr ""
+
+#: build/index.js:6
+msgid "Visitors react with an emoji."
+msgstr ""
+
+#: build/index.js:6
+msgid "reaction"
+msgstr ""
+
+#: build/index.js:6
+msgid "emoji"
+msgstr ""
+
+#: build/index.js:6
+msgid "like"
+msgstr ""
+
+#: build/index.js:6
+msgid "mood"
+msgstr ""
+
+#: build/index.js:6
+msgid "What do you think?"
+msgstr ""
+
+#: build/index.js:6
+msgid "Like"
+msgstr ""
+
+#: build/index.js:6
+msgid "Love"
+msgstr ""
+
+#: build/index.js:6
+msgid "Funny"
+msgstr ""
+
+#: build/index.js:6
+msgid "Surprised"
+msgstr ""
+
+#: build/index.js:6
+msgid "Dislike"
+msgstr ""
+
+#: build/index.js:6
+msgid "Multiple choice poll"
+msgstr ""
+
+#: build/index.js:6
+msgid "Visitors tick every answer that fits."
+msgstr ""
+
+#: build/index.js:6
+msgid "checkbox"
+msgstr ""
+
+#: build/index.js:6
+msgid "multiple"
+msgstr ""
+
+#: build/index.js:6
+msgid "survey"
+msgstr ""
+
+#: build/index.js:6
+msgid "Which of these do you use?"
+msgstr ""
+
+#: build/index.js:7
+msgid "Add answer"
+msgstr ""
+
+#: build/index.js:7
+msgid "Preview results"
+msgstr ""
+
+#: build/index.js:7
+msgid "Ask a question…"
+msgstr ""
+
+#: build/index.js:7
+msgid "Question"
+msgstr ""
+
+#: build/index.js:7
+msgid "Replace image"
+msgstr ""
+
+#: build/index.js:7
+msgid "Add image"
+msgstr ""
+
+#: build/index.js:7
+msgid "Remove image"
+msgstr ""
+
+#: build/index.js:7
+msgid "Move up"
+msgstr ""
+
+#: build/index.js:7
+msgid "Move down"
+msgstr ""
+
+#: build/index.js:7
+msgid "Remove answer"
+msgstr ""
+
+#: build/index.js:7
+msgid "Write at least two answers, the poll shows on the page only then."
+msgstr ""
+
+#. translators: %1$d: a share of the votes, like 40
+#: build/view.js:2
+msgid "The poll could not be loaded. Please reload the page."
+msgstr ""
+
+#: build/view.js:2
+msgid "Thanks for voting! The results will be shown when the poll closes."
+msgstr ""
+
+#: build/view.js:2
+#: build/view.js:3
+msgid "Thanks for voting!"
+msgstr ""
+
+#: build/view.js:3
+msgid "Your vote could not be saved. Please try again."
+msgstr ""
+
+#: build/block.json
+msgctxt "block title"
+msgid "Poll"
+msgstr ""
+
+#: build/block.json
+msgctxt "block description"
+msgid "Ask a question and let visitors vote. Votes are saved on your own site."
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "poll"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "vote"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "voting"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "survey"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "question"
+msgstr ""

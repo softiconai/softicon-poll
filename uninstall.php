@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-    exit;
+	exit;
 }
 
 // the votes table goes with the plugin; the polls themselves stay in the posts
