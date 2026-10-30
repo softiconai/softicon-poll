@@ -219,6 +219,16 @@ class Block {
 		return self::find_in( parse_blocks( $post->post_content ), $poll_id, $visited );
 	}
 
+	// a poll in a template, template part or synced pattern shows on pages that are not its own post
+	// (archives, 404, every post's footer); it is found through the post that saved it first
+	public static function find_shared( $poll_id ) {
+		$owner = get_post( self::owner( $poll_id ) );
+		if ( ! $owner || 'publish' !== $owner->post_status || ! in_array( $owner->post_type, array( 'wp_template', 'wp_template_part', 'wp_block' ), true ) ) {
+			return null;
+		}
+		return self::find( $owner->ID, $poll_id );
+	}
+
 	private static function find_in( $blocks, $poll_id, &$visited ) {
 		foreach ( $blocks as $block ) {
 			if ( self::NAME === $block['blockName'] && isset( $block['attrs']['pollId'] ) && $poll_id === $block['attrs']['pollId'] ) {

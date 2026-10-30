@@ -21,7 +21,8 @@ class Rest {
 		$post = array(
 			'type'     => 'integer',
 			'required' => true,
-			'minimum'  => 1,
+			// 0: a page with no post of its own, such as an archive, for a poll in a template
+			'minimum'  => 0,
 		);
 
 		// public on purpose: visitors of cached pages have no nonce, the poll is read from the post and every value is checked
@@ -118,6 +119,9 @@ class Rest {
 
 	private static function poll( $post_id, $poll_id ) {
 		$attributes = self::viewable( $post_id ) ? Block::find( $post_id, $poll_id ) : null;
+		if ( null === $attributes ) {
+			$attributes = Block::find_shared( $poll_id );
+		}
 		if ( null === $attributes ) {
 			return new \WP_Error( 'alpl_not_found', __( 'This poll could not be found.', 'softicon-poll' ), array( 'status' => 404 ) );
 		}

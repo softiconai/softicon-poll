@@ -10,11 +10,8 @@ if ( '' === $alpl['id'] || count( $alpl['options'] ) < 2 ) {
 	return;
 }
 
-// votes are checked against this post's copy of the poll
+// votes are checked against this post's copy of the poll; 0 on archives, where only polls in templates show
 $alpl_post = absint( get_the_ID() );
-if ( ! $alpl_post ) {
-	return;
-}
 
 // colors become css variables so the stylesheet keeps the fallbacks
 $alpl_style = '';
@@ -37,7 +34,8 @@ $alpl_config = array(
 	'api'         => rest_url( ALPL_Poll\Rest::NS . '/' ),
 	// only logged-in visitors get a nonce, page caches skip their pages
 	'nonce'       => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : '',
-	'login'       => wp_login_url( (string) get_permalink( $alpl_post ) ),
+	// view.js adds the page the visitor is on, the poll may be in a template shown on many pages
+	'login'       => wp_login_url(),
 	'multiple'    => $alpl['multiple'],
 	'max'         => $alpl['max'],
 	'showResults' => $alpl['showResults'],
