@@ -1,4 +1,5 @@
-// block settings panels shared by SoftIcon blocks (copied from ../softicon-tools by npm run tools)
+// block settings panels shared by SoftIcon blocks
+// (copied from ../softicon-tools by npm run tools)
 @import "./vendor/softicon-tools/styles/panels";
 
 .alplHelp {
@@ -60,6 +61,7 @@
 
 // the block in the editor
 .wp-block-softicon-poll {
+
 	.alpl_question {
 		cursor: text;
 	}

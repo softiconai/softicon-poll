@@ -1,37 +1,15 @@
+// WordPress JavaScript coding standards. The plain `recommended` preset also loads TypeScript ESLint,
+// which fails to start with the version @wordpress/scripts 27 installs; this one has the same rules without it.
 module.exports = {
-	settings: {
-		react: {
-			version: 'detect'
-		}
-	},
+	root: true,
+	extends: [ 'plugin:@wordpress/eslint-plugin/recommended-with-formatting' ],
 	env: {
 		browser: true,
-		commonjs: true,
-		es2022: true,
-		node: true
 	},
-	extends: [
-		'eslint:recommended',
-		'plugin:react/recommended'
-	],
-	globals: {
-		wp: 'readonly'
-	},
-	parserOptions: {
-		ecmaFeatures: {
-			jsx: true
+	settings: {
+		react: {
+			version: 'detect',
 		},
-		ecmaVersion: 'latest',
-		sourceType: 'module'
 	},
-	plugins: [
-		'react'
-	],
-	rules: {
-		'no-console': 'warn',
-		'no-unused-vars': 'warn',
-		'react/prop-types': 'off',
-		'react/react-in-jsx-scope': 'off',
-		'react/display-name': 'off'
-	}
+	ignorePatterns: [ 'build/', 'node_modules/', 'src/vendor/' ],
 };
