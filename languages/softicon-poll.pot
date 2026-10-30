@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-30T04:40:02+00:00\n"
+"POT-Creation-Date: 2026-10-30T05:43:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
@@ -35,27 +35,37 @@ msgid "https://profiles.wordpress.org/softiconai/"
 msgstr ""
 
 #. translators: %d: how many answers a visitor may pick
-#: build/render.php:56
-#, php-format
+#: build/render.php:50
+#: build/index.js:7
+#, php-format,js-format
 msgid "Choose up to %d answer."
 msgid_plural "Choose up to %d answers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/render.php:57
+#: build/render.php:51
+#: build/index.js:7
 msgid "Choose one or more answers."
 msgstr ""
 
-#: build/render.php:62
-#: includes/class-rest.php:219
+#: build/render.php:56
+#: includes/class-rest.php:246
 #: build/view.js:2
 msgid "This poll is closed."
 msgstr ""
 
 #. translators: %s: the date and time the poll closes
-#: build/render.php:65
+#: build/render.php:59
 #, php-format
 msgid "Voting ends on %s."
+msgstr ""
+
+#. translators: %d: the answer's position, like 1
+#: build/render.php:79
+#: build/index.js:3
+#: build/index.js:8
+#, php-format,js-format
+msgid "Answer %d"
 msgstr ""
 
 #: build/render.php:99
@@ -63,7 +73,7 @@ msgid "Poll"
 msgstr ""
 
 #: build/render.php:113
-#: build/index.js:7
+#: build/index.js:8
 msgid "Vote"
 msgstr ""
 
@@ -79,32 +89,36 @@ msgstr ""
 msgid "Please turn on JavaScript to vote."
 msgstr ""
 
-#: includes/class-rest.php:122
+#: includes/class-rest.php:128
 msgid "This poll could not be found."
 msgstr ""
 
-#: includes/class-rest.php:207
+#: includes/class-rest.php:197
+msgid "Please vote on the site itself."
+msgstr ""
+
+#: includes/class-rest.php:236
 msgid "Too many votes from your network. Please try again in a minute."
 msgstr ""
 
-#: includes/class-rest.php:221
+#: includes/class-rest.php:249
 #: build/view.js:2
 msgid "Please log in to vote."
 msgstr ""
 
-#: includes/class-rest.php:223
+#: includes/class-rest.php:251
 msgid "You have already voted."
 msgstr ""
 
-#: includes/class-rest.php:239
+#: includes/class-rest.php:259
 msgid "Please choose a valid answer."
 msgstr ""
 
-#: includes/class-votes.php:25
+#: includes/class-votes.php:27
 msgid "When you vote in a poll on this site, we save which answers you chose. To allow one vote per person, we also save a scrambled code made from your user account if you are logged in, or else from your IP address. Your IP address itself is not saved, and the code cannot be turned back into it."
 msgstr ""
 
-#: includes/class-votes.php:26
+#: includes/class-votes.php:28
 msgid "If you are not logged in, your browser also gets a cookie named alpl_voted_ followed by the poll's id, for one year, so the site remembers that you voted. The votes stay on this site and are not sent to anyone else."
 msgstr ""
 
@@ -164,13 +178,6 @@ msgstr ""
 
 #: build/index.js:2
 msgid "More plugins"
-msgstr ""
-
-#. translators: %d: the answer's position, like 1
-#: build/index.js:3
-#: build/index.js:7
-#, js-format
-msgid "Answer %d"
 msgstr ""
 
 #. translators: %s: number of people who voted
@@ -250,7 +257,7 @@ msgid "Show results"
 msgstr ""
 
 #: build/index.js:4
-msgid "When visitors see the votes. Always adds a \"View results\" link before voting. With Never only you see them, here."
+msgid "When visitors see the votes. Always adds a \"View results\" link before voting. With Never, visitors never see them; people who can edit this post see them here and on the page."
 msgstr ""
 
 #: build/index.js:4
@@ -534,47 +541,47 @@ msgstr ""
 msgid "Which of these do you use?"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Add answer"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Preview results"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Ask a question…"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Question"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Replace image"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Add image"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Remove image"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Move up"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Move down"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Remove answer"
 msgstr ""
 
-#: build/index.js:7
+#: build/index.js:8
 msgid "Write at least two answers, the poll shows on the page only then."
 msgstr ""
 

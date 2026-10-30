@@ -11,21 +11,17 @@ class Rest {
 
 	const NS         = 'softicon-poll/v1';
 	const RATE_LIMIT = 20; // votes per address per minute
+	// posts shown on pages that are not their own: a poll in one of these can be voted on from any page
+	const SHARED = array( 'wp_template', 'wp_template_part', 'wp_block' );
 
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
 	}
 
 	public function routes() {
-		$id   = '(?P<id>[a-z0-9]{6,32})';
-		$post = array(
-			'type'     => 'integer',
-			'required' => true,
-			// 0: a page with no post of its own, such as an archive, for a poll in a template
-			'minimum'  => 0,
-		);
+		$id = '(?P<id>[a-z0-9]{6,32})';
 
-		// public on purpose: visitors of cached pages have no nonce, the poll is read from the post and every value is checked
+		// public on purpose: visitors of cached pages have no nonce; the poll is read from its own post and every value is checked
 		register_rest_route(
 			self::NS,
 			'/results/' . $id,
@@ -33,7 +29,6 @@ class Rest {
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'results' ),
 				'permission_callback' => '__return_true',
-				'args'                => array( 'post' => $post ),
 			)
 		);
 
@@ -50,7 +45,6 @@ class Rest {
 						'required' => true,
 						'pattern'  => '^[a-z0-9]{6,32}$',
 					),
-					'post'    => $post,
 					'choices' => array(
 						'type'     => 'array',
 						'required' => true,
@@ -69,8 +63,14 @@ class Rest {
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'id_taken' ),
 				'permission_callback' => function () {
-					return current_user_can( 'edit_posts' ); },
-				'args'                => array( 'post' => $post ),
+					return current_user_can( 'edit_posts' );
+				},
+				'args'                => array(
+					'post' => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+				),
 			)
 		);
 
@@ -89,53 +89,60 @@ class Rest {
 					'callback'            => array( $this, 'reset' ),
 					'permission_callback' => array( $this, 'can_manage' ),
 				),
-				'args' => array(
-					'post' => array(
-						'type'    => 'integer',
-						'default' => 0,
-					),
-				),
 			)
 		);
 	}
 
-	// editors see every poll; authors only the polls in posts they can edit
+	// editors manage every poll, authors the polls whose own post they can edit
 	public function can_manage( $request ) {
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			return true;
 		}
-		$post_id = absint( $request['post'] );
-		return $post_id && current_user_can( 'edit_post', $post_id ) && null !== Block::find( $post_id, $request['id'] );
+		$owner = Block::owner( $request['id'] );
+		return $owner && current_user_can( 'edit_post', $owner );
 	}
 
-	// published and not behind a password, or a draft its editor previews
-	private static function viewable( $post_id ) {
-		$post = get_post( $post_id );
-		if ( ! $post ) {
+	// browsers send Origin with requests from other sites: a form there may not vote for its visitors,
+	// nor a script read how they voted
+	private static function cross_site( \WP_REST_Request $request ) {
+		$origin = $request->get_header( 'origin' );
+		if ( ! $origin ) {
 			return false;
 		}
-		return ( is_post_publicly_viewable( $post ) && ! post_password_required( $post ) ) || current_user_can( 'edit_post', $post->ID );
+		$hosts = array( wp_parse_url( home_url(), PHP_URL_HOST ), wp_parse_url( site_url(), PHP_URL_HOST ) );
+		return ! in_array( wp_parse_url( $origin, PHP_URL_HOST ), $hosts, true );
 	}
 
-	private static function poll( $post_id, $poll_id ) {
-		$attributes = self::viewable( $post_id ) ? Block::find( $post_id, $poll_id ) : null;
-		if ( null === $attributes ) {
-			$attributes = Block::find_shared( $poll_id );
+	// the settings always come from the poll's own post, never from a copy of the block elsewhere,
+	// so nobody can open a closed poll or change its rules by saving a copy with other settings
+	private static function poll( $poll_id ) {
+		$owner = get_post( Block::owner( $poll_id ) );
+		$found = null;
+		if ( $owner ) {
+			$shared = in_array( $owner->post_type, self::SHARED, true ) && 'publish' === $owner->post_status;
+			// published and not behind a password, or a draft its editor previews
+			$viewable = ( is_post_publicly_viewable( $owner ) && ! post_password_required( $owner ) ) || current_user_can( 'edit_post', $owner->ID );
+			$found    = $shared || $viewable ? Block::find( $owner->ID, $poll_id ) : null;
 		}
-		if ( null === $attributes ) {
+		if ( ! $found ) {
 			return new \WP_Error( 'alpl_not_found', __( 'This poll could not be found.', 'softicon-poll' ), array( 'status' => 404 ) );
 		}
-		return Block::settings( $attributes );
+		$settings          = Block::settings( $found );
+		$settings['owner'] = $owner->ID;
+		return $settings;
 	}
 
 	// what view.js needs: can this visitor vote, what did they choose, and the results when they may see them
-	private static function state( $settings, $post_id ) {
-		$id      = $settings['id'];
-		$choices = Votes::choices_of( $id, Votes::voter( $id ) );
+	private static function state( $settings ) {
+		$id   = $settings['id'];
+		$rows = Votes::choices_of( $id, Votes::voter( $id ) );
 		// a poll for logged-in users counts accounts only, not the browser
-		$voted       = (bool) $choices || ( ! $settings['loginOnly'] && isset( $_COOKIE[ Votes::cookie( $id ) ] ) );
+		$cookie      = ! $settings['loginOnly'] && Votes::has_cookie( $id );
+		$voted       = (bool) $rows || $cookie;
 		$open        = Block::is_open( $settings );
 		$needs_login = $settings['loginOnly'] && ! is_user_logged_in();
+		// a match by address alone may be someone else on the same network: they learn a vote was cast, not which
+		$own = is_user_logged_in() || $cookie;
 
 		switch ( $settings['showResults'] ) {
 			case 'always':
@@ -145,7 +152,7 @@ class Rest {
 				$show = ! $open;
 				break;
 			case 'never':
-				$show = current_user_can( 'edit_post', $post_id );
+				$show = current_user_can( 'edit_post', $settings['owner'] );
 				break;
 			default:
 				$show = $voted || ! $open;
@@ -168,7 +175,7 @@ class Rest {
 		return array(
 			'open'       => $open,
 			'voted'      => $voted,
-			'choices'    => array_values( $choices ),
+			'choices'    => $own ? array_values( array_diff( $rows, array( Votes::BALLOT ) ) ) : array(),
 			'canVote'    => $open && ! $voted && ! $needs_login,
 			'needsLogin' => $open && ! $voted && $needs_login,
 			'results'    => $results,
@@ -186,18 +193,21 @@ class Rest {
 		return $response;
 	}
 
+	private static function other_site_error() {
+		return new \WP_Error( 'alpl_other_site', __( 'Please vote on the site itself.', 'softicon-poll' ), array( 'status' => 403 ) );
+	}
+
 	public function results( \WP_REST_Request $request ) {
-		$post_id  = absint( $request['post'] );
-		$settings = self::poll( $post_id, $request['id'] );
-		if ( is_wp_error( $settings ) ) {
-			return $settings;
+		if ( self::cross_site( $request ) ) {
+			return self::other_site_error();
 		}
-		return self::respond( self::state( $settings, $post_id ) );
+		$settings = self::poll( $request['id'] );
+		return is_wp_error( $settings ) ? $settings : self::respond( self::state( $settings ) );
 	}
 
 	// counts requests per address for a minute; the address is hashed for the key too
 	private static function rate_limited() {
-		$key   = 'alpl_rate_' . wp_hash( 'rate|' . Votes::ip() );
+		$key   = 'alpl_rate_' . wp_hash( 'rate|' . Votes::network() );
 		$count = (int) get_transient( $key );
 		if ( $count >= (int) apply_filters( 'alpl_rate_limit', self::RATE_LIMIT ) ) {
 			return true;
@@ -206,35 +216,41 @@ class Rest {
 		return false;
 	}
 
+	// the page shows the right state from the error's data
+	private static function refuse( $code, $message, $status, $state ) {
+		return new \WP_Error(
+			$code,
+			$message,
+			array(
+				'status' => $status,
+				'state'  => $state,
+			)
+		);
+	}
+
 	public function vote( \WP_REST_Request $request ) {
+		if ( self::cross_site( $request ) ) {
+			return self::other_site_error();
+		}
 		if ( self::rate_limited() ) {
 			return new \WP_Error( 'alpl_rate_limited', __( 'Too many votes from your network. Please try again in a minute.', 'softicon-poll' ), array( 'status' => 429 ) );
 		}
 
-		$post_id  = absint( $request['post'] );
-		$settings = self::poll( $post_id, $request['poll'] );
+		$settings = self::poll( $request['poll'] );
 		if ( is_wp_error( $settings ) ) {
 			return $settings;
 		}
 
-		$state = self::state( $settings, $post_id );
-		if ( ! $state['canVote'] ) {
-			if ( ! $state['open'] ) {
-				$error = array( 'alpl_closed', __( 'This poll is closed.', 'softicon-poll' ), 403 );
-			} elseif ( $state['needsLogin'] ) {
-				$error = array( 'alpl_login', __( 'Please log in to vote.', 'softicon-poll' ), 403 );
-			} else {
-				$error = array( 'alpl_voted', __( 'You have already voted.', 'softicon-poll' ), 409 );
-			}
-			// the page shows the right state from it
-			return new \WP_Error(
-				$error[0],
-				$error[1],
-				array(
-					'status' => $error[2],
-					'state'  => $state,
-				)
-			);
+		$state = self::state( $settings );
+		if ( ! $state['open'] ) {
+			return self::refuse( 'alpl_closed', __( 'This poll is closed.', 'softicon-poll' ), 403, $state );
+		}
+		if ( $state['needsLogin'] ) {
+			return self::refuse( 'alpl_login', __( 'Please log in to vote.', 'softicon-poll' ), 403, $state );
+		}
+		$voted = __( 'You have already voted.', 'softicon-poll' );
+		if ( $state['voted'] ) {
+			return self::refuse( 'alpl_voted', $voted, 409, $state );
 		}
 
 		$allowed = wp_list_pluck( $settings['options'], 'id' );
@@ -244,13 +260,16 @@ class Rest {
 		}
 
 		$id = $settings['id'];
-		Votes::add( $id, Votes::voter( $id ), $choices );
+		// another request of the same voter got in first
+		if ( ! Votes::add( $id, Votes::voter( $id ), $choices ) ) {
+			return self::refuse( 'alpl_voted', $voted, 409, self::state( $settings ) );
+		}
 
 		// the browser remembers the vote too, for visitors whose address changes
 		if ( ! $settings['loginOnly'] ) {
 			setcookie(
 				Votes::cookie( $id ),
-				'1',
+				Votes::cookie_value( $id ),
 				array(
 					'expires'  => time() + YEAR_IN_SECONDS,
 					'path'     => COOKIEPATH ? COOKIEPATH : '/',
@@ -260,10 +279,10 @@ class Rest {
 					'samesite' => 'Lax',
 				)
 			);
-			$_COOKIE[ Votes::cookie( $id ) ] = '1';
+			$_COOKIE[ Votes::cookie( $id ) ] = Votes::cookie_value( $id );
 		}
 
-		return self::respond( self::state( $settings, $post_id ) );
+		return self::respond( self::state( $settings ) );
 	}
 
 	public function id_taken( \WP_REST_Request $request ) {

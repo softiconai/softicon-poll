@@ -14,10 +14,11 @@ class Block {
 		add_action( 'init', array( $this, 'register' ) );
 		add_filter( 'block_editor_settings_all', array( $this, 'no_inspector_tabs' ) );
 		add_action( 'save_post', array( $this, 'record_ids' ), 10, 2 );
+		add_action( 'before_delete_post', array( $this, 'forget_ids' ) );
 	}
 
-	// one meta row per poll in the post; the oldest row of an id marks the post the poll was made in,
-	// so the editor can tell a copy pasted into another post (see Rest::id_taken)
+	// One meta row per poll in the post. The oldest row of an id marks the poll's owner, the post it was made in:
+	// its settings are the ones votes are checked against, and the editor gives a copy pasted elsewhere a new id.
 	public function record_ids( $post_id, $post ) {
 		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
 			return;
@@ -34,8 +35,27 @@ class Block {
 			add_post_meta( $post_id, self::META, $id );
 		}
 		foreach ( array_diff( $saved, $ids ) as $id ) {
-			delete_post_meta( $post_id, self::META, $id );
+			self::release( $post_id, $id, false );
 		}
+	}
+
+	// a deleted post takes its polls' votes along
+	public function forget_ids( $post_id ) {
+		foreach ( array_map( 'strval', get_post_meta( $post_id, self::META, false ) ) as $id ) {
+			self::release( $post_id, $id, true );
+		}
+	}
+
+	// when the owner lets go of a poll, a copy saved in another post must not become the owner of its votes
+	private static function release( $post_id, $poll_id, $drop_votes ) {
+		if ( self::owner( $poll_id ) === (int) $post_id ) {
+			delete_metadata( 'post', 0, self::META, $poll_id, true );
+			if ( $drop_votes ) {
+				Votes::reset( $poll_id );
+			}
+			return;
+		}
+		delete_post_meta( $post_id, self::META, $poll_id );
 	}
 
 	// only the post's own polls, not those of synced patterns it uses (the pattern records its own)
@@ -208,52 +228,20 @@ class Block {
 		return null;
 	}
 
-	// the poll's saved attributes, read from the post itself so a vote is checked against the current answers;
-	// synced patterns inside the post are followed
+	// the poll's saved attributes in its own post, so a vote is checked against the current answers
 	public static function find( $post_id, $poll_id ) {
 		$post = get_post( $post_id );
-		if ( ! $post || '' === $poll_id ) {
-			return null;
-		}
-		$visited = array();
-		return self::find_in( parse_blocks( $post->post_content ), $poll_id, $visited );
+		return $post && '' !== $poll_id ? self::find_in( parse_blocks( $post->post_content ), $poll_id ) : null;
 	}
 
-	// a poll in a template, template part or synced pattern shows on pages that are not its own post
-	// (archives, 404, every post's footer); it is found through the post that saved it first
-	public static function find_shared( $poll_id ) {
-		$owner = get_post( self::owner( $poll_id ) );
-		if ( ! $owner || 'publish' !== $owner->post_status || ! in_array( $owner->post_type, array( 'wp_template', 'wp_template_part', 'wp_block' ), true ) ) {
-			return null;
-		}
-		return self::find( $owner->ID, $poll_id );
-	}
-
-	private static function find_in( $blocks, $poll_id, &$visited ) {
+	private static function find_in( $blocks, $poll_id ) {
 		foreach ( $blocks as $block ) {
 			if ( self::NAME === $block['blockName'] && isset( $block['attrs']['pollId'] ) && $poll_id === $block['attrs']['pollId'] ) {
 				return $block['attrs'];
 			}
-
-			if ( 'core/block' === $block['blockName'] && ! empty( $block['attrs']['ref'] ) ) {
-				$ref = absint( $block['attrs']['ref'] );
-				if ( ! isset( $visited[ $ref ] ) ) {
-					$visited[ $ref ] = true;
-					$pattern         = get_post( $ref );
-					if ( $pattern && 'wp_block' === $pattern->post_type && 'publish' === $pattern->post_status ) {
-						$found = self::find_in( parse_blocks( $pattern->post_content ), $poll_id, $visited );
-						if ( $found ) {
-							return $found;
-						}
-					}
-				}
-			}
-
-			if ( ! empty( $block['innerBlocks'] ) ) {
-				$found = self::find_in( $block['innerBlocks'], $poll_id, $visited );
-				if ( $found ) {
-					return $found;
-				}
+			$found = empty( $block['innerBlocks'] ) ? null : self::find_in( $block['innerBlocks'], $poll_id );
+			if ( $found ) {
+				return $found;
 			}
 		}
 		return null;

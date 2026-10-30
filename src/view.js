@@ -64,7 +64,7 @@ class Poll {
 	async load() {
 		this.el.classList.add( 'alpl_busy' );
 		try {
-			const { ok, data } = await request( this.config, 'results/' + this.config.id, { params: { post: this.config.post } } );
+			const { ok, data } = await request( this.config, 'results/' + this.config.id );
 			if ( ! ok ) {
 				throw data;
 			}
@@ -190,7 +190,7 @@ class Poll {
 		this.voteButton.disabled = true;
 		this.el.classList.add( 'alpl_busy' );
 		try {
-			const { ok, data } = await request( this.config, 'vote', { method: 'POST', body: { poll: this.config.id, post: this.config.post, choices } } );
+			const { ok, data } = await request( this.config, 'vote', { method: 'POST', body: { poll: this.config.id, choices } } );
 			if ( ok ) {
 				this.apply( data );
 				if ( data.results ) {
