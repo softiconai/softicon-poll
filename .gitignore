@@ -1,0 +1,24 @@
+# Dependencies, restored by `npm install`
+node_modules/
+
+# Build output, rebuilt from src/ by `npm run build`
+build/
+*.map
+
+# Release zip
+*.zip
+
+# OS and editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Private project notes, kept out of the public repo
+PROJECT-NOTES.md
+
+# Local credentials and marketing, never commit
+svn.txt
+*.secret
+elevenlabs.txt
+.elevenlabs_key
+marketing/

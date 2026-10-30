@@ -1,0 +1,383 @@
+// Settings panels for SoftIcon blocks (components/Panels.js). One accent color, emerald green by default;
+// a plugin can set $si-accent and friends before importing this file.
+$si-accent: #059669 !default;
+$si-accent-dark: #047857 !default;
+$si-tint: #dcf5ec !default;
+$si-line: #b0e6d2 !default;
+
+// with such a block selected the whole block sidebar uses the accent color: buttons, toggles, focus rings and links
+.block-editor-block-inspector:has(.siSettings),
+.siSettings {
+	--wp-admin-theme-color: #{$si-accent};
+	--wp-admin-theme-color--rgb: 5, 150, 105;
+	--wp-admin-theme-color-darker-10: #{$si-accent-dark};
+	--wp-admin-theme-color-darker-20: #065f46;
+	// WordPress buttons read this one first, so it changes too
+	--wp-components-color-accent: #{$si-accent};
+	--wp-components-color-accent-darker-10: #{$si-accent-dark};
+	--wp-components-color-accent-darker-20: #065f46;
+	// and newer WordPress (design tokens) for focus rings, toggles and brand borders
+	--wpds-color-stroke-focus: #{$si-accent};
+	--wpds-color-background-interactive-brand-strong: #{$si-accent};
+	--wpds-color-background-interactive-brand-strong-active: #{$si-accent-dark};
+	--wpds-color-background-interactive-brand-weak-active: #{$si-tint};
+	--wpds-color-background-surface-brand: #{$si-tint};
+	--wpds-color-background-thumb-brand: #{$si-accent};
+	--wpds-color-background-thumb-brand-active: #{$si-accent};
+	--wpds-color-foreground-interactive-brand: #{$si-accent};
+	--wpds-color-foreground-interactive-brand-active: #{$si-accent-dark};
+	--wpds-color-stroke-interactive-brand: #{$si-accent};
+	--wpds-color-stroke-interactive-brand-active: #{$si-accent-dark};
+	--wpds-color-stroke-surface-brand: #{$si-line};
+	--wpds-color-stroke-surface-brand-strong: #{$si-accent};
+}
+
+.siSettings {
+	// two equal tabs, the active one underlined
+	.components-tab-panel__tabs {
+		display: flex;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.components-tab-panel__tabs-item {
+		flex: 1;
+		justify-content: center;
+		height: 48px;
+		color: #50575e;
+		font-weight: 500;
+
+		// only the active tab is underlined
+		&::after {
+			height: 3px;
+			background: transparent;
+		}
+
+		&.is-active {
+			color: $si-accent;
+			font-weight: 600;
+			background: $si-tint;
+
+			&::after {
+				background: $si-accent;
+			}
+		}
+
+		&:hover:not(.is-active) {
+			color: $si-accent;
+		}
+	}
+
+	a,
+	.components-external-link {
+		color: $si-accent;
+	}
+
+	.components-toggle-control .components-form-toggle.is-checked .components-form-toggle__track {
+		background: $si-accent;
+		border-color: $si-accent;
+	}
+}
+
+// one panel open at a time; the open one is tinted and marked with a bar
+.siPanel {
+	position: relative;
+	transition: background-color 0.2s;
+
+	> .components-panel__body-title .components-panel__body-toggle {
+		font-weight: 600;
+		transition: color 0.15s, background-color 0.15s;
+	}
+
+	&:not(.is-opened) > .components-panel__body-title:hover {
+		background: #f0faf6;
+
+		.components-panel__body-toggle {
+			color: $si-accent;
+		}
+	}
+
+	&.is-opened {
+		z-index: 1;
+		margin-top: -1px;
+		border: 1px solid $si-accent;
+		background: #fff;
+
+		> .components-panel__body-title {
+			margin: -16px -16px 16px;
+			background: $si-tint;
+
+			.components-panel__body-toggle,
+			.components-panel__arrow {
+				color: $si-accent;
+			}
+		}
+	}
+}
+
+// controls inside a panel, evenly spaced; WordPress margins are replaced by the gap
+.siFields {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 4px 0 8px;
+
+	> *,
+	.components-base-control,
+	.components-base-control__field {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.components-base-control__help {
+		margin-top: 6px;
+		margin-bottom: 0;
+	}
+
+	p {
+		margin: 0;
+	}
+}
+
+// color settings: one row per color, the palette opens in a popover
+.siColors {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.siColorRow {
+	display: block;
+}
+
+.siColorToggle.components-button {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	height: 40px;
+	padding: 0 4px 0 0;
+	border-radius: 6px;
+	color: #1e1e1e;
+	font-size: 13px;
+
+	&:hover,
+	&[aria-expanded="true"] {
+		color: $si-accent;
+		background: transparent;
+	}
+
+	.component-color-indicator {
+		flex: none;
+		width: 26px;
+		height: 26px;
+		margin: 0;
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+
+		&.is-empty {
+			background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 8px 8px;
+		}
+	}
+
+	.siColorName {
+		flex: 1;
+		text-align: left;
+	}
+}
+
+.siColorPopover {
+	width: 260px;
+	padding: 16px;
+}
+
+// a field name with its (i) tip
+.siFieldHead {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.siFieldLabel {
+	color: #1e1e1e;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.siFieldLine {
+	flex: 1;
+	height: 1px;
+	margin-left: 4px;
+	background: #e0e0e0;
+}
+
+.siReset.components-button {
+	height: 26px;
+	padding: 0 10px;
+	font-size: 12px;
+}
+
+.siTip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	color: #8c8f94;
+	background: none;
+	cursor: help;
+
+	svg {
+		width: 16px;
+		height: 16px;
+		fill: currentColor;
+	}
+
+	&:hover,
+	&:focus-visible {
+		color: $si-accent;
+		background: $si-tint;
+		outline: none;
+	}
+}
+
+.siToggleRow {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+
+	.components-toggle-control {
+		margin: 0;
+	}
+}
+
+// choices as icon tiles
+.siTilesGrid {
+	display: grid;
+	gap: 8px;
+}
+
+.siTile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 68px;
+	margin: 0;
+	padding: 10px 6px;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	color: #3c434a;
+	background: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-align: center;
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+
+	svg {
+		width: 24px;
+		height: 24px;
+		fill: currentColor;
+	}
+
+	&:hover {
+		border-color: $si-accent;
+		color: $si-accent;
+		background: $si-tint;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $si-accent;
+		outline-offset: 2px;
+	}
+
+	&.is-selected {
+		border-color: transparent;
+		color: #fff;
+		background: $si-accent;
+		box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+	}
+}
+
+// a small tag on a panel title, like "New"
+// solid, so it stands out on the light header of an open panel too
+.siBadge {
+	margin-left: 8px;
+	padding: 3px 8px;
+	border-radius: 999px;
+	color: #fff;
+	background: $si-accent;
+	font-size: 10px;
+	line-height: 1.2;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	vertical-align: 1px;
+}
+
+// help links as cards
+.siHelpCards {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+
+.siHelpCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 86px;
+	padding: 12px 8px;
+	border-radius: 10px;
+	color: #fff !important;
+	background: $si-accent;
+	box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+	font-size: 12.5px;
+	font-weight: 600;
+	text-align: center;
+	text-decoration: none;
+	transition: transform 0.15s, box-shadow 0.15s;
+
+	svg {
+		width: 26px;
+		height: 26px;
+		fill: currentColor;
+	}
+
+	&:hover,
+	&:focus-visible {
+		color: #fff;
+		background: $si-accent-dark;
+		transform: translateY(-2px);
+		box-shadow: 0 8px 16px rgba(5, 150, 105, 0.3);
+	}
+
+	&:focus-visible {
+		outline: 2px solid $si-accent-dark;
+		outline-offset: 2px;
+	}
+}
+
+// the tip's text: wraps instead of running off the sidebar
+.components-tooltip.siTipBubble {
+	max-width: 240px;
+	padding: 8px 11px;
+	border-radius: 8px;
+	background: #1e1e1e;
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.45;
+	text-align: left;
+	white-space: normal;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}

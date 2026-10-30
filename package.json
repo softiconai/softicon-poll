@@ -1,0 +1,26 @@
+{
+	"name": "softicon-poll",
+	"version": "1.0.0",
+	"description": "Poll and survey block for the WordPress block editor, votes stay on your own site",
+	"main": "build/index.js",
+	"scripts": {
+		"lint": "eslint src",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"format": "wp-scripts format",
+		"tools": "[ -d ../softicon-tools ] && node ../softicon-tools/sync.js src/vendor/softicon-tools softicon-poll || true",
+		"prestart": "npm run -s tools",
+		"prebuild": "npm run -s tools",
+		"start": "wp-scripts start --webpack-copy-php",
+		"build": "wp-scripts build --webpack-copy-php",
+		"i18n-pot": "wp i18n make-pot . languages/softicon-poll.pot --exclude=\"src,node_modules\"",
+		"find-ds": "find . -name '.DS_Store' -not -path './node_modules/*' -delete",
+		"prezip": "[ -d node_modules ] || npm ci --no-audit --no-fund",
+		"zip": "rm -f softicon-poll.zip && printf '→ Building block\\n' && (npm run -s build >/dev/null 2>&1 || npm run build) && printf '→ Translations\\n' && (npm run -s i18n-pot >/dev/null 2>&1 || npm run i18n-pot) && npm run -s find-ds && printf '→ Zipping\\n' && cd .. && zip -rq softicon-poll/softicon-poll.zip softicon-poll/softicon-poll.php softicon-poll/uninstall.php softicon-poll/index.php softicon-poll/includes softicon-poll/src softicon-poll/build softicon-poll/languages softicon-poll/readme.txt softicon-poll/package.json softicon-poll/webpack.config.js -x '*/.DS_Store' '*.map'",
+		"postzip": "printf '\\n✔ Zip ready: %s\\n  %s files, %s\\n\\n' \"$PWD/softicon-poll.zip\" \"$(unzip -l softicon-poll.zip | tail -1 | awk '{print $2}')\" \"$(du -h softicon-poll.zip | cut -f1 | tr -d ' ')\"",
+		"bundle": "npm run lint && npm run zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^27.9.0"
+	}
+}

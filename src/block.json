@@ -1,0 +1,55 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "softicon/poll",
+	"version": "1.0.0",
+	"title": "Poll",
+	"category": "widgets",
+	"description": "Ask a question and let visitors vote. Votes are saved on your own site.",
+	"keywords": [ "poll", "vote", "voting", "survey", "question" ],
+	"textdomain": "softicon-poll",
+	"attributes": {
+		"pollId": { "type": "string", "default": "" },
+		"question": { "type": "string", "default": "" },
+		"options": {
+			"type": "array",
+			"default": [
+				{ "id": "o1", "text": "" },
+				{ "id": "o2", "text": "" }
+			]
+		},
+		"multiple": { "type": "boolean", "default": false },
+		"maxChoices": { "type": "number", "default": 0 },
+		"showResults": { "type": "string", "default": "after" },
+		"resultsFormat": { "type": "string", "default": "both" },
+		"showTotal": { "type": "boolean", "default": true },
+		"closed": { "type": "boolean", "default": false },
+		"endDate": { "type": "string", "default": "" },
+		"loginOnly": { "type": "boolean", "default": false },
+		"animateBars": { "type": "boolean", "default": true },
+		"bgColor": { "type": "string", "default": "" },
+		"textColor": { "type": "string", "default": "" },
+		"accentColor": { "type": "string", "default": "" },
+		"barBgColor": { "type": "string", "default": "" },
+		"borderColor": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"example": {
+		"attributes": {
+			"question": "Which feature should we build next?",
+			"options": [
+				{ "id": "o1", "text": "Dark mode" },
+				{ "id": "o2", "text": "Mobile app" },
+				{ "id": "o3", "text": "Offline mode" }
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
