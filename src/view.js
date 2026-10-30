@@ -99,7 +99,10 @@ class Poll {
 		}
 
 		if ( state.needsLogin ) {
-			this.say( __( 'Please log in to vote.', 'softicon-poll' ), this.config.login );
+			// back to this page after logging in
+			const login = new URL( this.config.login, window.location.href );
+			login.searchParams.set( 'redirect_to', window.location.href );
+			this.say( __( 'Please log in to vote.', 'softicon-poll' ), login.toString() );
 		} else if ( state.voted && ! state.results ) {
 			this.say( 'closed' === this.config.showResults && state.open ? __( 'Thanks for voting! The results will be shown when the poll closes.', 'softicon-poll' ) : __( 'Thanks for voting!', 'softicon-poll' ) );
 		}
