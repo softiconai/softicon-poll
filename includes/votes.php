@@ -12,6 +12,17 @@ class votes {
     public function __construct()
     {
         add_action('admin_init', array( __CLASS__, 'maybe_install' ));
+        add_action('admin_init', array( $this, 'privacy_policy' ));
+    }
+
+    // suggested text for the site's privacy policy (Settings > Privacy > Policy guide)
+    public function privacy_policy() {
+        if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+            return;
+        }
+        $text = '<p>' . __( 'When you vote in a poll on this site, we save which answers you chose. To allow one vote per person, we also save a scrambled code made from your user account if you are logged in, or else from your IP address. Your IP address itself is not saved, and the code cannot be turned back into it.', 'softicon-poll' ) . '</p>'
+            . '<p>' . __( 'If you are not logged in, your browser also gets a cookie named alpl_voted_ followed by the poll\'s id, for one year, so the site remembers that you voted. The votes stay on this site and are not sent to anyone else.', 'softicon-poll' ) . '</p>';
+        wp_add_privacy_policy_content( 'SoftIcon Poll', wp_kses_post( $text ) );
     }
 
     public static function table() {
@@ -44,11 +55,57 @@ class votes {
         }
     }
 
-    // the visitor's address; behind a proxy that hides it, a site can return the real one with this filter
+    // Cloudflare's addresses, https://www.cloudflare.com/ips/
+    const CLOUDFLARE = array(
+        '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22', '141.101.64.0/18', '108.162.192.0/18',
+        '190.93.240.0/20', '188.114.96.0/20', '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
+        '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22',
+        '2400:cb00::/32', '2606:4700::/32', '2803:f800::/32', '2405:b500::/32', '2405:8100::/32', '2a06:98c0::/29', '2c0f:f248::/32',
+    );
+
+    // the visitor's address. Behind Cloudflare every request comes from one of its servers, which would let
+    // one visitor vote for the whole site; its header is used only when the request really comes from Cloudflare,
+    // anyone else could fake it. Behind another proxy a site can return the real address with the filter.
     public static function ip() {
         $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+        if ( isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) && self::in_ranges( $ip, self::CLOUDFLARE ) ) {
+            $visitor = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] ) );
+            if ( filter_var( $visitor, FILTER_VALIDATE_IP ) ) {
+                $ip = $visitor;
+            }
+        }
+
         $ip = apply_filters( 'alpl_voter_ip', $ip );
         return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : '';
+    }
+
+    // IPv4 and IPv6 CIDR ranges
+    public static function in_ranges( $ip, $ranges ) {
+        $address = filter_var( $ip, FILTER_VALIDATE_IP ) ? inet_pton( $ip ) : false;
+        if ( false === $address ) {
+            return false;
+        }
+        foreach ( $ranges as $range ) {
+            list( $subnet, $bits ) = explode( '/', $range );
+            $subnet = inet_pton( $subnet );
+            if ( false === $subnet || strlen( $subnet ) !== strlen( $address ) ) {
+                continue;
+            }
+            $bytes = intdiv( (int) $bits, 8 );
+            $rest  = (int) $bits % 8;
+            if ( substr( $address, 0, $bytes ) !== substr( $subnet, 0, $bytes ) ) {
+                continue;
+            }
+            if ( ! $rest ) {
+                return true;
+            }
+            $mask = ( 0xff << ( 8 - $rest ) ) & 0xff;
+            if ( ( ord( $address[ $bytes ] ) & $mask ) === ( ord( $subnet[ $bytes ] ) & $mask ) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // logged-in visitors are counted by account, others by address; the poll id in the hash
