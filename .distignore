@@ -1,0 +1,10 @@
+.distignore
+.DS_Store
+.git
+.gitignore
+README.md
+node_modules
+package-lock.json
+.eslintrc.js
+softicon-poll.zip
+.wordpress-org

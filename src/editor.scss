@@ -1,0 +1,117 @@
+// block settings panels shared by SoftIcon blocks (copied from ../softicon-tools by npm run tools)
+@import "./vendor/softicon-tools/styles/panels";
+
+.alplHelp {
+	margin: 8px 0 0;
+	color: #757575;
+	font-size: 12px;
+}
+
+.alplWarn {
+	color: #b32d2e;
+}
+
+// a field's buttons and hints, kept close together
+.alplStack {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 10px;
+
+	.alplHelp {
+		margin: 0;
+	}
+}
+
+.alplButtons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.alplModalButtons {
+	justify-content: flex-end;
+	margin-top: 16px;
+}
+
+.alplVotes {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		margin: 0;
+		padding: 6px 0;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	span {
+		overflow-wrap: anywhere;
+	}
+}
+
+.alplDatePicker {
+	padding: 8px;
+}
+
+// the block in the editor
+.wp-block-softicon-poll {
+	.alpl_question {
+		cursor: text;
+	}
+
+	.alplAnswer {
+		cursor: default;
+	}
+
+	.alplAnswerText {
+		display: flex;
+		flex: 1;
+		min-width: 0;
+	}
+
+	.alplAnswerTools {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 2px;
+		opacity: 0;
+		transition: opacity 0.15s;
+
+		.components-button {
+			color: inherit;
+		}
+
+		.components-button.is-link {
+			margin-inline: 4px;
+			font-size: 12px;
+		}
+	}
+
+	.alplAnswer:hover .alplAnswerTools,
+	.alplAnswer:focus-within .alplAnswerTools {
+		opacity: 1;
+	}
+
+	.alplAdd {
+		margin-top: 10px;
+	}
+
+	.alplNotice {
+		margin: 10px 0 0;
+		font-size: 13px;
+		opacity: 0.75;
+	}
+
+	.alpl_results .alplNotice {
+		margin: 0 0 12px;
+	}
+
+	.alpl_vote {
+		cursor: default;
+	}
+}
