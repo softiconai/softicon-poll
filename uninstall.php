@@ -7,3 +7,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 global $wpdb;
 $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'alpl_votes' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- removes this plugin's own table on uninstall
 delete_option( 'alpl_db_version' );
+// which post each poll belongs to
+delete_post_meta_by_key( '_alpl_poll' );
