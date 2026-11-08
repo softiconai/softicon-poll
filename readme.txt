@@ -1,6 +1,6 @@
 === SoftIcon Poll ===
 Contributors: softiconai
-Tags: poll, poll block, survey, voting, vote
+Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -13,6 +13,8 @@ A poll block for the block editor. Votes are saved on your own site, with no acc
 == Description ==
 
 **SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and no data sent anywhere.
+
+https://www.youtube.com/watch?v=rA7Lb3rCvKo
 
 = Why choose SoftIcon Poll? =
 
@@ -95,6 +97,17 @@ Deleting the plugin removes the votes table, its setting and the note of which p
 = Where is the source code? =
 
 The plugin includes its unminified source in the `src` folder; the files in `build` are made from it with `npm run build`. It is also on GitHub: [github.com/softiconai/softicon-poll](https://github.com/softiconai/softicon-poll).
+
+== Screenshots ==
+
+1. A poll on the page: the visitor picks an answer and votes.
+2. The results after voting: percent and number of votes for each answer, the visitor's answer in bold, and the total.
+3. Ready-made polls: Rating, Reactions (number of votes only) and Yes / No, each with its own accent color.
+4. Answers with images, "Choose up to 2 answers" and an end date.
+5. The question and answers are written right in the block. The Results panel sets when and how the results show.
+6. The current votes in the block settings, with Refresh and Reset votes.
+7. The Style tab: background, text, accent, bar and border colors.
+8. Ready-made polls in the block inserter: search for "poll".
 
 == Changelog ==
 
