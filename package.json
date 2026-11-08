@@ -1,6 +1,6 @@
 {
 	"name": "softicon-poll",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Poll and survey block for the WordPress block editor, votes stay on your own site",
 	"main": "build/index.js",
 	"scripts": {
