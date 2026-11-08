@@ -185,11 +185,7 @@ class Rest {
 	private static function respond( $data ) {
 		$response = rest_ensure_response( $data );
 		// per visitor, a CDN must not keep one visitor's answer for the next
-		foreach ( wp_get_nocache_headers() as $name => $value ) {
-			if ( $value ) {
-				$response->header( $name, $value );
-			}
-		}
+		$response->set_headers( array_merge( $response->get_headers(), array_filter( wp_get_nocache_headers() ) ) );
 		return $response;
 	}
 
