@@ -1,10 +1,10 @@
-=== SoftIcon Poll ===
+=== SoftIcon Poll – Poll & Survey Block ===
 Contributors: softiconai
 Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,9 @@ The plugin includes its unminified source in the `src` folder; the files in `bui
 8. Ready-made polls in the block inserter: search for "poll".
 
 == Changelog ==
+
+= 1.0.2 =
+* New name in the plugin list: SoftIcon Poll – Poll & Survey Block.
 
 = 1.0.1 =
 * The voting REST responses set their no-cache headers through set_headers(), so the plugin passes the Block Directory check.

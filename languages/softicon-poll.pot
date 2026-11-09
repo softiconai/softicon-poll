@@ -2,21 +2,21 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SoftIcon Poll 1.0.0\n"
+"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/softicon-poll\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-05T00:25:23+00:00\n"
+"POT-Creation-Date: 2026-11-09T16:53:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
 
 #. Plugin Name of the plugin
 #: softicon-poll.php
-msgid "SoftIcon Poll"
+msgid "SoftIcon Poll – Poll & Survey Block"
 msgstr ""
 
 #. Description of the plugin
@@ -49,7 +49,7 @@ msgid "Choose one or more answers."
 msgstr ""
 
 #: build/render.php:56
-#: includes/class-rest.php:246
+#: includes/class-rest.php:242
 #: build/view.js:2
 msgid "This poll is closed."
 msgstr ""
@@ -93,24 +93,24 @@ msgstr ""
 msgid "This poll could not be found."
 msgstr ""
 
-#: includes/class-rest.php:197
+#: includes/class-rest.php:193
 msgid "Please vote on the site itself."
 msgstr ""
 
-#: includes/class-rest.php:236
+#: includes/class-rest.php:232
 msgid "Too many votes from your network. Please try again in a minute."
 msgstr ""
 
-#: includes/class-rest.php:249
+#: includes/class-rest.php:245
 #: build/view.js:2
 msgid "Please log in to vote."
 msgstr ""
 
-#: includes/class-rest.php:251
+#: includes/class-rest.php:247
 msgid "You have already voted."
 msgstr ""
 
-#: includes/class-rest.php:259
+#: includes/class-rest.php:255
 msgid "Please choose a valid answer."
 msgstr ""
 
