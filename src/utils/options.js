@@ -20,6 +20,14 @@ export const formats = [
 	{ label: __( 'Votes', 'softicon-poll' ), value: 'count', icon: icons.count },
 ];
 
+export const layouts = [
+	{ label: __( 'List', 'softicon-poll' ), value: 0, icon: icons.list },
+	// short labels, four tiles fit the sidebar
+	{ label: __( '2 cols', 'softicon-poll' ), value: 2, icon: icons.cols2 },
+	{ label: __( '3 cols', 'softicon-poll' ), value: 3, icon: icons.cols3 },
+	{ label: __( '4 cols', 'softicon-poll' ), value: 4, icon: icons.cols4 },
+];
+
 // the cards in the Help panel
 export const helpCards = [
 	{ href: 'https://wordpress.org/support/plugin/softicon-poll/', label: __( 'Get support', 'softicon-poll' ), icon: shared.support },

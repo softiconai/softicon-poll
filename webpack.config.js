@@ -5,5 +5,10 @@ const plugins = defaultConfig.plugins.filter(p => !(Object.values(p).length === 
 
 module.exports = {
 	...defaultConfig,
+	// the dashboard script, includes/class-dashboard.php loads it
+	entry: () => ({
+		...defaultConfig.entry(),
+		dashboard: './src/dashboard/index.js'
+	}),
 	plugins
 };

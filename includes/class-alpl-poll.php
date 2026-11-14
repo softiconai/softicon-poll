@@ -25,10 +25,17 @@ class ALPL_Poll {
 		require_once ALPL_PLUGIN_PATH . 'includes/class-block.php';
 		require_once ALPL_PLUGIN_PATH . 'includes/class-votes.php';
 		require_once ALPL_PLUGIN_PATH . 'includes/class-rest.php';
+		require_once ALPL_PLUGIN_PATH . 'includes/class-shortcode.php';
+		require_once ALPL_PLUGIN_PATH . 'includes/class-dashboard.php';
 
 		new ALPL_Poll\Block();
 		new ALPL_Poll\Votes();
 		new ALPL_Poll\Rest();
+		new ALPL_Poll\Shortcode();
+		add_action( 'rest_api_init', array( 'ALPL_Poll\Dashboard', 'routes' ) );
+		if ( is_admin() ) {
+			new ALPL_Poll\Dashboard();
+		}
 
 		// add-ons such as SoftIcon Poll Pro hook in here
 		do_action( 'alpl_loaded' );

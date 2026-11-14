@@ -5,9 +5,9 @@ import { hasText, resultRows, totalText } from '../../utils/functions';
 
 // the results as visitors see them; made-up numbers while the poll has no votes, so colors can be tried
 const ResultsPreview = ( { attributes, results } ) => {
-	const { multiple, resultsFormat, showTotal } = attributes;
+	const { multiple, resultsFormat, showTotal, sortResults } = attributes;
 	// blank answers are left out on the page too
-	const options = attributes.options.filter( ( option ) => hasText( option.text ) || option.image?.url );
+	let options = attributes.options.filter( ( option ) => hasText( option.text ) || option.image?.url );
 	const real = !! results?.voters;
 
 	const counts = {};
@@ -16,6 +16,10 @@ const ResultsPreview = ( { attributes, results } ) => {
 	} );
 	const voters = real ? results.voters : Object.values( counts ).reduce( ( sum, count ) => sum + count, 0 );
 	const rows = resultRows( { counts, voters }, resultsFormat );
+	// most votes first, like on the page
+	if ( sortResults ) {
+		options = [ ...options ].sort( ( a, b ) => counts[ b.id ] - counts[ a.id ] );
+	}
 
 	// the bars grow in once, like on the page
 	const [ grown, setGrown ] = useState( false );

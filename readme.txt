@@ -4,7 +4,7 @@ Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,15 +27,21 @@ https://www.youtube.com/watch?v=rA7Lb3rCvKo
 = Features =
 
 * Question and any number of answers, with an optional image for each answer
+* Answers as a list, or as image cards in 2, 3 or 4 columns
+* Shuffle the answers, so each visitor sees them in a new order
 * Ready-made polls in the inserter: Yes / No, Rating, Reactions (emoji) and Multiple choice
 * One answer, or several answers with an optional limit ("Choose up to 2 answers")
 * Show the results after voting, always (with a "View results" link), only when the poll is closed, or never
 * Results as percent, number of votes or both, with animated bars and the total number of votes
-* End date and time, or close the poll by hand
+* Results sorted with the most votes first (optional), and a "Your vote" tag beside the visitor's answer
+* Four designs: Default, Card, Minimal and Pill
+* Your own text for the Vote button and the thank-you message
+* End date and time, or close the poll by hand, with an optional countdown ("Voting ends in 3 hours")
 * Only logged-in users can vote (optional); others get a link to log in and come back
 * Current results and a "Reset votes" button in the block settings
-* Colors for the background, text, accent, bars and border; wide and full width alignment
+* Colors for the background, text, accent, bars, border and the Vote button; font size and corner radius; wide and full width alignment
 * Works in posts, pages, synced patterns, templates and template parts (for example a poll in the footer of every page)
+* A shortcode for the Classic Editor, widgets and page builders such as Elementor, Divi, Beaver Builder, WPBakery, Bricks and Oxygen, for example `[softicon_poll id="123"]`
 * Translation ready and right-to-left ready
 
 == Installation ==
@@ -74,9 +80,13 @@ Yes. The page holds only the question and answers. Whether the visitor has voted
 
 Only in polls that allow several answers. The percent is the share of people who voted that picked that answer, so if every voter picks two answers the shares add up to 200%.
 
+= Does it work with the Classic Editor or page builders? =
+
+Yes. Go to Poll → All Polls in the admin menu, click Add a poll, write the question and answers in the block editor and publish it. The list shows its shortcode, such as `[softicon_poll id="123"]`, and a click copies it. Paste it in the Classic Editor, a text widget, Elementor's Shortcode widget (the poll shows in Elementor's preview too), a Code module in Divi, an HTML module in Beaver Builder, a Text Block in WPBakery, or the Shortcode element in Bricks and Oxygen. Change the poll there later and every page with its shortcode shows the change. All pages with the same shortcode share one set of votes. Poll → Dashboard lists every poll on the site, with its shortcode, under the Polls tab.
+
 = Can I put a poll in the sidebar or footer? =
 
-Yes, with a block theme: add it to a template or template part (for example the footer) in the Site Editor, and it works on every page that uses it. With a classic theme's widget area, put the poll in a synced pattern and add that pattern to the widget area.
+Yes, with a block theme: add it to a template or template part (for example the footer) in the Site Editor, and it works on every page that uses it. With a classic theme's widget area, put the poll's shortcode in a Shortcode or Text widget, or put the poll in a synced pattern and add that pattern to the widget area.
 
 = What happens if I copy a poll to another post? =
 
@@ -110,6 +120,19 @@ The plugin includes its unminified source in the `src` folder; the files in `bui
 8. Ready-made polls in the block inserter: search for "poll".
 
 == Changelog ==
+
+= 1.1.0 =
+* New: four designs for the poll, Default, Card, Minimal and Pill, in the block's Styles.
+* New: your own text for the Vote button and the thank-you message (Texts panel).
+* New: "Most votes first" sorts the results by votes.
+* New: a "Your vote" tag beside the answer the visitor picked.
+* New: answers as image cards in 2, 3 or 4 columns (Layout in the Answers panel).
+* New: "Shuffle the answers" shows them in a new order for each visitor.
+* New: a countdown to the end date.
+* New: colors for the Vote button and its text, and font size and corner radius controls.
+* New: a shortcode for the Classic Editor, widgets and page builders. Make a poll under Poll → All Polls, publish it and paste its shortcode, such as `[softicon_poll id="123"]`. In Elementor's Shortcode widget the poll shows right away in the editor.
+* New: a Poll dashboard in the admin menu (Poll → Dashboard): getting started for the block editor, the Classic Editor, page builders and themes; a list of every poll on the site with the post it is in, open or closed, the number of voters and its shortcode; and help with quick answers.
+* Fix: colors from a theme palette written as rgb() or rgba() now show on the page too (WordPress 7.1 removes rgb() from a block's style, so they are saved as hex).
 
 = 1.0.2 =
 * New name in the plugin list: SoftIcon Poll – Poll & Survey Block.

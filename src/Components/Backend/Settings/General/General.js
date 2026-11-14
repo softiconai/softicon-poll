@@ -3,8 +3,8 @@ import { useState } from '@wordpress/element';
 import { Button, DateTimePicker, Dropdown, Modal, TextControl } from '@wordpress/components';
 import { dateI18n, getDate, getSettings, isInTheFuture } from '@wordpress/date';
 import { FieldHead, HelpCards, Panel, Tiles, ToggleRow } from '../../../../vendor/softicon-tools/components/Panels';
-import { formats, helpCards, showResultsOptions } from '../../../../utils/options';
-import { hasText } from '../../../../utils/functions';
+import { formats, helpCards, layouts, showResultsOptions } from '../../../../utils/options';
+import { columnCount, hasText } from '../../../../utils/functions';
 
 // a 12-hour clock when the site's time format has am/pm
 const is12Hour = /a(?!\\)/i.test( getSettings().formats.time.toLowerCase().replace( /\\\\/g, '' ).split( '' ).reverse().join( '' ) );
@@ -53,7 +53,7 @@ const Votes = ( { options, votes } ) => {
 };
 
 const General = ( { attributes, setAttributes, votes } ) => {
-	const { options, multiple, maxChoices, showResults, resultsFormat, showTotal, closed, endDate, loginOnly } = attributes;
+	const { options, multiple, maxChoices, shuffle, columns, showResults, resultsFormat, showTotal, sortResults, closed, endDate, countdown, loginOnly, voteText, thanksText } = attributes;
 	const set = ( key ) => ( val ) => setAttributes( { [ key ]: val } );
 	// the stored date has no zone, it is the site's time
 	const ended = endDate && ! isInTheFuture( endDate );
@@ -73,6 +73,10 @@ const General = ( { attributes, setAttributes, votes } ) => {
 					onChange={ ( val ) => setAttributes( { maxChoices: Math.max( 0, parseInt( val, 10 ) || 0 ) } ) } __next40pxDefaultSize __nextHasNoMarginBottom />
 			</div> }
 
+			<ToggleRow label={ __( 'Shuffle the answers', 'softicon-poll' ) } tip={ __( 'Each visitor sees the answers in a new order, so the first one gets no extra votes. The editor and the results keep your order.', 'softicon-poll' ) } checked={ shuffle } onChange={ set( 'shuffle' ) } />
+
+			<Tiles label={ __( 'Layout', 'softicon-poll' ) } tip={ __( 'Columns show the answers as cards, best with an image on each answer. Phones show two columns at most.', 'softicon-poll' ) } value={ columnCount( columns ) } options={ layouts } onChange={ set( 'columns' ) } />
+
 			<p className="alplHelp">{ __( 'Write the answers in the block. Press Enter for the next one.', 'softicon-poll' ) }</p>
 		</Panel>
 
@@ -81,6 +85,20 @@ const General = ( { attributes, setAttributes, votes } ) => {
 
 			<Tiles label={ __( 'Show as', 'softicon-poll' ) } value={ resultsFormat } options={ formats } onChange={ set( 'resultsFormat' ) } />
 			<ToggleRow label={ __( 'Total votes', 'softicon-poll' ) } tip={ __( 'The number of people who voted, under the results.', 'softicon-poll' ) } checked={ showTotal } onChange={ set( 'showTotal' ) } />
+			<ToggleRow label={ __( 'Most votes first', 'softicon-poll' ) } tip={ __( 'The results are sorted by votes. Answers with the same number keep their order.', 'softicon-poll' ) } checked={ sortResults } onChange={ set( 'sortResults' ) } />
+		</Panel>
+
+		<Panel id="texts" title={ __( 'Texts', 'softicon-poll' ) }>
+			<div>
+				<FieldHead label={ __( 'Vote button', 'softicon-poll' ) } tip={ __( 'Leave empty for "Vote" in the visitor\'s language.', 'softicon-poll' ) } />
+				<TextControl label={ __( 'Vote button', 'softicon-poll' ) } hideLabelFromVision value={ voteText } placeholder={ __( 'Vote', 'softicon-poll' ) }
+					onChange={ set( 'voteText' ) } __next40pxDefaultSize __nextHasNoMarginBottom />
+			</div>
+			<div>
+				<FieldHead label={ __( 'Thank-you message', 'softicon-poll' ) } tip={ __( 'Shown after voting. Leave empty for "Thanks for voting!" in the visitor\'s language.', 'softicon-poll' ) } />
+				<TextControl label={ __( 'Thank-you message', 'softicon-poll' ) } hideLabelFromVision value={ thanksText } placeholder={ __( 'Thanks for voting!', 'softicon-poll' ) }
+					onChange={ set( 'thanksText' ) } __next40pxDefaultSize __nextHasNoMarginBottom />
+			</div>
 		</Panel>
 
 		<Panel id="voting" title={ __( 'Voting', 'softicon-poll' ) }>
@@ -98,6 +116,7 @@ const General = ( { attributes, setAttributes, votes } ) => {
 						</div> } />
 					{ endDate && <Button variant="tertiary" isDestructive onClick={ () => setAttributes( { endDate: '' } ) }>{ __( 'Remove', 'softicon-poll' ) }</Button> }
 				</div>
+				{ endDate && ! ended && <ToggleRow label={ __( 'Countdown', 'softicon-poll' ) } tip={ __( 'Shows the time left, like "Voting ends in 3 hours", instead of the date.', 'softicon-poll' ) } checked={ countdown } onChange={ set( 'countdown' ) } /> }
 				{ ended && <p className="alplHelp alplWarn">{ __( 'This date has passed, the poll is closed.', 'softicon-poll' ) }</p> }
 			</div>
 

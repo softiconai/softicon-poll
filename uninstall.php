@@ -9,3 +9,5 @@ $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'alpl_v
 delete_option( 'alpl_db_version' );
 // which post each poll belongs to
 delete_post_meta_by_key( '_alpl_poll' );
+// the dashboard's review request
+delete_option( 'alpl_review' );

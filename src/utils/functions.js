@@ -46,12 +46,36 @@ export const newOptionId = ( options ) => {
 	return id;
 };
 
-export const cssVars = ( { bgColor, textColor, accentColor, barBgColor, borderColor } ) => ( {
-	'--alpl-bg': bgColor || undefined,
-	'--alpl-text': textColor || undefined,
-	'--alpl-accent': accentColor || undefined,
-	'--alpl-bar-bg': barBgColor || undefined,
-	'--alpl-border': borderColor || undefined,
+// the same check as Block::color() in PHP, so the editor shows what the page will: hex or a preset var(), rgb(a) as hex
+export const safeColor = ( value ) => {
+	const color = 'string' === typeof value ? value.trim() : '';
+	if ( /^(#[0-9a-f]{3,8}|var\(--[a-z0-9-]+\))$/i.test( color ) ) {
+		return color;
+	}
+	const rgb = color.match( /^rgba?\(\s*(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})(?:\s*[,/]\s*([0-9.]+)(%?))?\s*\)$/i );
+	if ( ! rgb ) {
+		return undefined;
+	}
+	const hex = ( n ) => Math.round( Math.min( 255, n ) ).toString( 16 ).padStart( 2, '0' );
+	const alpha = rgb[ 4 ] ? hex( Math.min( 1, rgb[ 4 ] / ( rgb[ 5 ] ? 100 : 1 ) ) * 255 ) : '';
+	return '#' + hex( +rgb[ 1 ] ) + hex( +rgb[ 2 ] ) + hex( +rgb[ 3 ] ) + alpha;
+};
+
+// 2 to 4 columns, else 0 (a list); the same rounding as render.php's absint()
+export const columnCount = ( columns ) => {
+	const count = Math.min( 4, Math.floor( Number( columns ) || 0 ) );
+	return count > 1 ? count : 0;
+};
+
+export const cssVars = ( { bgColor, textColor, accentColor, barBgColor, borderColor, buttonColor, buttonTextColor, columns } ) => ( {
+	'--alpl-bg': safeColor( bgColor ),
+	'--alpl-text': safeColor( textColor ),
+	'--alpl-accent': safeColor( accentColor ),
+	'--alpl-bar-bg': safeColor( barBgColor ),
+	'--alpl-border': safeColor( borderColor ),
+	'--alpl-button': safeColor( buttonColor ),
+	'--alpl-button-text': safeColor( buttonTextColor ),
+	'--alpl-columns': columnCount( columns ) || undefined,
 } );
 
 // media library items and fresh uploads keep the alt text in different places

@@ -214,6 +214,22 @@ class Votes {
 		return $results;
 	}
 
+	// the number of people who voted in each of these polls, in one query (the dashboard's Polls tab)
+	public static function voters( $poll_ids ) {
+		global $wpdb;
+		$poll_ids = array_values( array_unique( array_map( 'strval', (array) $poll_ids ) ) );
+		if ( ! $poll_ids ) {
+			return array();
+		}
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT poll_id, COUNT(*) AS voters FROM %i WHERE option_id = %s AND poll_id IN (' . implode( ', ', array_fill( 0, count( $poll_ids ), '%s' ) ) . ') GROUP BY poll_id', self::table(), self::BALLOT, ...$poll_ids ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- this plugin's own table, read on the dashboard only; one %s per poll id, passed spread
+
+		$voters = array();
+		foreach ( (array) $rows as $row ) {
+			$voters[ $row->poll_id ] = (int) $row->voters;
+		}
+		return $voters;
+	}
+
 	public static function reset( $poll_id ) {
 		global $wpdb;
 		$wpdb->delete( self::table(), array( 'poll_id' => $poll_id ), array( '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table

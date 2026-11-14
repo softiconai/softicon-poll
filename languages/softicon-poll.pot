@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.0.2\n"
+"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/softicon-poll\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-09T16:53:48+00:00\n"
+"POT-Creation-Date: 2026-11-14T03:34:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
@@ -35,7 +35,7 @@ msgid "https://profiles.wordpress.org/softiconai/"
 msgstr ""
 
 #. translators: %d: how many answers a visitor may pick
-#: build/render.php:50
+#: build/render.php:65
 #: build/index.js:7
 #, php-format,js-format
 msgid "Choose up to %d answer."
@@ -43,50 +43,94 @@ msgid_plural "Choose up to %d answers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/render.php:51
+#: build/render.php:66
 #: build/index.js:7
 msgid "Choose one or more answers."
 msgstr ""
 
-#: build/render.php:56
+#: build/render.php:71
 #: includes/class-rest.php:242
-#: build/view.js:2
+#: build/view.js:3
 msgid "This poll is closed."
 msgstr ""
 
 #. translators: %s: the date and time the poll closes
-#: build/render.php:59
+#: build/render.php:74
 #, php-format
 msgid "Voting ends on %s."
 msgstr ""
 
 #. translators: %d: the answer's position, like 1
-#: build/render.php:79
+#: build/render.php:94
 #: build/index.js:3
 #: build/index.js:8
 #, php-format,js-format
 msgid "Answer %d"
 msgstr ""
 
-#: build/render.php:99
+#: build/render.php:114
+#: includes/class-dashboard.php:40
+#: includes/class-shortcode.php:35
+#: build/dashboard.js:1
 msgid "Poll"
 msgstr ""
 
-#: build/render.php:113
+#: build/render.php:128
+#: build/index.js:4
 #: build/index.js:8
 msgid "Vote"
 msgstr ""
 
-#: build/render.php:115
+#: build/render.php:130
 msgid "View results"
 msgstr ""
 
-#: build/render.php:134
+#: build/render.php:149
 msgid "Back to vote"
 msgstr ""
 
-#: build/render.php:142
+#: build/render.php:157
 msgid "Please turn on JavaScript to vote."
+msgstr ""
+
+#: includes/class-dashboard.php:28
+msgid "SoftIcon Poll in 30 seconds"
+msgstr ""
+
+#: includes/class-dashboard.php:39
+#: includes/class-dashboard.php:48
+#: includes/class-dashboard.php:327
+msgid "SoftIcon Poll"
+msgstr ""
+
+#: includes/class-dashboard.php:48
+#: includes/class-dashboard.php:60
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-dashboard.php:66
+#: includes/class-dashboard.php:98
+#: build/index.js:4
+msgid "Help"
+msgstr ""
+
+#: includes/class-dashboard.php:96
+msgid "Welcome"
+msgstr ""
+
+#: includes/class-dashboard.php:97
+#: includes/class-shortcode.php:34
+#: includes/class-shortcode.php:36
+msgid "Polls"
+msgstr ""
+
+#: includes/class-dashboard.php:160
+#: includes/class-dashboard.php:243
+msgid "(no title)"
+msgstr ""
+
+#: includes/class-dashboard.php:331
+msgid "The Poll dashboard needs JavaScript."
 msgstr ""
 
 #: includes/class-rest.php:128
@@ -102,7 +146,7 @@ msgid "Too many votes from your network. Please try again in a minute."
 msgstr ""
 
 #: includes/class-rest.php:245
-#: build/view.js:2
+#: build/view.js:3
 msgid "Please log in to vote."
 msgstr ""
 
@@ -114,12 +158,574 @@ msgstr ""
 msgid "Please choose a valid answer."
 msgstr ""
 
+#: includes/class-shortcode.php:37
+#: includes/class-shortcode.php:38
+#: build/dashboard.js:1
+#: build/dashboard.js:3
+#: build/dashboard.js:7
+msgid "Add a poll"
+msgstr ""
+
+#: includes/class-shortcode.php:39
+msgid "Edit poll"
+msgstr ""
+
+#: includes/class-shortcode.php:40
+msgid "All Polls"
+msgstr ""
+
+#: includes/class-shortcode.php:41
+msgid "No polls yet."
+msgstr ""
+
+#: includes/class-shortcode.php:42
+msgid "No polls in the trash."
+msgstr ""
+
+#: includes/class-shortcode.php:43
+#: build/dashboard.js:7
+msgid "Search polls"
+msgstr ""
+
+#: includes/class-shortcode.php:98
+#: includes/class-shortcode.php:103
+#: build/dashboard.js:7
+#: build/index.js:4
+msgid "Shortcode"
+msgstr ""
+
+#: includes/class-shortcode.php:103
+msgid "Click to copy"
+msgstr ""
+
+#: includes/class-shortcode.php:113
+#: build/dashboard.js:1
+#: build/dashboard.js:8
+#: build/index.js:4
+msgid "Copied"
+msgstr ""
+
 #: includes/class-votes.php:27
 msgid "When you vote in a poll on this site, we save which answers you chose. To allow one vote per person, we also save a scrambled code made from your user account if you are logged in, or else from your IP address. Your IP address itself is not saved, and the code cannot be turned back into it."
 msgstr ""
 
 #: includes/class-votes.php:28
 msgid "If you are not logged in, your browser also gets a cookie named alpl_voted_ followed by the poll's id, for one year, so the site remembers that you voted. The votes stay on this site and are not sent to anyone else."
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Poll dashboard"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Our plugins"
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:7
+msgid "Video"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Close"
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:8
+msgid "Enjoying SoftIcon Poll?"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "A quick review on WordPress.org helps other people find it, and it means a lot to our small team."
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:8
+msgid "Leave a review"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Maybe later"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "I already did"
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:8
+#: build/index.js:4
+msgid "Copy"
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:5
+msgid "Your polls"
+msgstr ""
+
+#. translators: %s: poll title
+#. translators: %s: the poll's question
+#: build/dashboard.js:2
+#: build/dashboard.js:5
+#, js-format
+msgid "Copy the shortcode of %s"
+msgstr ""
+
+#. translators: %d: number of polls
+#: build/dashboard.js:3
+#, js-format
+msgid "See all %d poll"
+msgid_plural "See all %d polls"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/dashboard.js:3
+msgid "No polls yet. Make one and its shortcode shows up here, ready to copy."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Make the poll"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Go to Poll → All Polls → Add a poll. It opens with the Poll block: write the question and the answers, then publish."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Copy its shortcode"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Every poll has a shortcode in the All Polls list and in the block's Shortcode panel. Your polls are listed here too."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Block editor"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Add the Poll block"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Create a page"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "In any page or post, click <b>+</b> and search for <b>Poll</b>, or type <code>/poll</code> in an empty line."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Write the question and the answers"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Type them right in the block, with an image for any answer. The inserter also has ready-made polls: Yes / No, Rating, Reactions and Multiple choice."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Choose when the results show, and publish"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "The results, an end date, the design and the colors are in the block's sidebar. Visitors vote as soon as the page is published."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Classic editor"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Paste it in the Classic Editor"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Paste the shortcode where the poll goes, in the Visual or the Text tab, then update the page. It works in text and Shortcode widgets too."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Copy the shortcode"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Elementor & builders"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Add a Shortcode widget"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "In <b>Elementor</b>, drag the <b>Shortcode</b> widget onto the page and paste the shortcode; the poll shows in Elementor's preview too. Other builders work the same way:"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Code module"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "HTML module"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Text Block"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Shortcode element"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Theme / PHP"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Block theme: add the block to a template"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Open the Site Editor"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Your theme is a block theme. In Appearance → Editor, open a template or a template part, such as the footer, and add the Poll block like on any page."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Any theme: print the shortcode"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Make the poll under Poll → All Polls, then show it from a template file, such as <code>single.php</code>, with:"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Copy the PHP code"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Getting started"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Pick where you build your pages; the steps follow."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Where you build your pages"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "On this site"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Fastest start"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Open a new page, type <code>/poll</code> and press Enter: the block is ready for your question."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Ask your visitors, right on your own site"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Polls and quick surveys made in the block editor. The votes stay in your own database, work on cached pages and need no account."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "See your polls"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Videos"
+msgstr ""
+
+#: build/dashboard.js:3
+#: build/index.js:4
+msgid "Loading…"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "No polls yet"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Add the Poll block to any page or post, or make a poll under Poll → All Polls and use its shortcode. Every poll shows up here once it is saved."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Open"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Closed"
+msgstr ""
+
+#. translators: %s: the date and time the poll closes
+#: build/dashboard.js:4
+#, js-format
+msgid "Ends %s"
+msgstr ""
+
+#: build/dashboard.js:4
+msgid "Not found"
+msgstr ""
+
+#: build/dashboard.js:4
+msgid "(no question)"
+msgstr ""
+
+#: build/dashboard.js:4
+msgid "View"
+msgstr ""
+
+#: build/dashboard.js:5
+msgid "Only polls made under Poll → All Polls have a shortcode."
+msgstr ""
+
+#: build/dashboard.js:5
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#. translators: %d: the number of polls shown
+#: build/dashboard.js:6
+#, js-format
+msgid "The newest %d polls on this site."
+msgstr ""
+
+#. translators: %d: the number of polls
+#: build/dashboard.js:7
+#, js-format
+msgid "%d poll on this site, in pages, posts, patterns, templates and under All Polls."
+msgid_plural "%d polls on this site, in pages, posts, patterns, templates and under All Polls."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/dashboard.js:7
+#: build/index.js:8
+msgid "Question"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Where"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Status"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Voters"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "No poll matches your search."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Plugin"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Theme"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Browser"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Do I need an account or an outside service?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "No. Everything runs on your own site, and the votes are saved in your own database, in a table named wp_alpl_votes (with your table prefix)."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "How does \"one vote per person\" work?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "A logged-in visitor votes once per account. Other visitors are recognised by a browser cookie and by a scrambled code made from the IP address, so clearing cookies does not allow a second vote. People who share one connection, like a family or an office, share one IP address: turn on \"Only logged-in users\" in the Voting panel if every account should vote once."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Does it work with the Classic Editor or page builders?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Yes. Go to Poll → All Polls, click Add a poll, write the question and the answers and publish. The list shows its shortcode, such as [softicon_poll id=\"123\"]; paste it in the Classic Editor, a widget, Elementor's Shortcode widget, a Code module in Divi, an HTML module in Beaver Builder, a Text Block in WPBakery or the Shortcode element in Bricks and Oxygen."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Does it work with caching plugins?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Yes. The page holds only the question and the answers. Whether the visitor has voted, and the results, are loaded from your site when the poll comes into view, so a cached page still shows the current results and a poll you have closed."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "My site is behind Cloudflare or another proxy. Does that matter?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Behind Cloudflare the plugin reads the visitor's real address from Cloudflare's header, but only when the request really comes from Cloudflare. Behind another proxy every visitor may seem to have the same address; return the real one with the alpl_voter_ip filter."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Why do the percentages add up to more than 100%?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Only in polls that allow several answers. The percent is the share of people who voted that picked that answer, so if every voter picks two answers the shares add up to 200%."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Can I put a poll in the sidebar or footer?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Yes. With a block theme, add it to a template or template part, such as the footer, in the Site Editor. With a classic theme, put the poll's shortcode in a Shortcode or Text widget, or put the poll in a synced pattern and add that pattern to the widget area."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "What happens if I copy a poll to another post?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "The copy gets its own new id when you open it in the editor, so the two polls keep separate votes. A poll inside a synced pattern keeps one set of votes wherever the pattern is used."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "How do I reset the votes?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Select the poll, open the Votes panel in the block settings and click \"Reset votes\". You are asked to confirm first."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Is it GDPR friendly?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "The plugin saves the chosen answers and a scrambled code made from the user account or the IP address, which can't be turned back into the address. Visitors who are not logged in get a cookie for one year. Suggested text for your privacy policy is under Settings → Privacy → Policy Guide."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "What is removed when I delete the plugin?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "The votes table, its settings and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Support forum"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Ask on WordPress.org; the people who build the plugin answer, and you can search past answers."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Visit the forum"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Questions and answers"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Every question from the plugin page, in one list."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Read the FAQ"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "The whole plugin in half a minute."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Watch here"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Email"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Write to us"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Support"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "How can we help?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "A real person reads every message: the developers who build SoftIcon Poll."
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Search the answers"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Quick answers"
+msgstr ""
+
+#. translators: %d: the number of answers that match the search
+#: build/dashboard.js:8
+#, js-format
+msgid "%d found"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "The questions people ask most"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "No quick answer for that."
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "Ask in the forum"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "All questions and answers"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "Your site details"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "Paste these into your forum topic or email, with the address of the page and what you see. They are only copied, never sent."
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "A review helps other people find it and keeps it free."
+msgstr ""
+
+#: build/dashboard.js:8
+#: build/index.js:2
+msgid "More plugins"
+msgstr ""
+
+#: build/dashboard.js:8
+msgid "Source on GitHub"
 msgstr ""
 
 #: build/index.js:2
@@ -169,15 +775,27 @@ msgid "Votes"
 msgstr ""
 
 #: build/index.js:2
+msgid "List"
+msgstr ""
+
+#: build/index.js:2
+msgid "2 cols"
+msgstr ""
+
+#: build/index.js:2
+msgid "3 cols"
+msgstr ""
+
+#: build/index.js:2
+msgid "4 cols"
+msgstr ""
+
+#: build/index.js:2
 msgid "Get support"
 msgstr ""
 
 #: build/index.js:2
 msgid "Rate Poll"
-msgstr ""
-
-#: build/index.js:2
-msgid "More plugins"
 msgstr ""
 
 #. translators: %s: number of people who voted
@@ -209,15 +827,7 @@ msgid "Cancel"
 msgstr ""
 
 #: build/index.js:4
-msgid "Loading…"
-msgstr ""
-
-#: build/index.js:4
 msgid "The votes show here once the post is saved."
-msgstr ""
-
-#: build/index.js:4
-msgid "Help"
 msgstr ""
 
 #: build/index.js:4
@@ -242,6 +852,22 @@ msgstr ""
 
 #: build/index.js:4
 msgid "0 means any number of answers."
+msgstr ""
+
+#: build/index.js:4
+msgid "Shuffle the answers"
+msgstr ""
+
+#: build/index.js:4
+msgid "Each visitor sees the answers in a new order, so the first one gets no extra votes. The editor and the results keep your order."
+msgstr ""
+
+#: build/index.js:4
+msgid "Layout"
+msgstr ""
+
+#: build/index.js:4
+msgid "Columns show the answers as cards, best with an image on each answer. Phones show two columns at most."
 msgstr ""
 
 #: build/index.js:4
@@ -273,6 +899,39 @@ msgid "The number of people who voted, under the results."
 msgstr ""
 
 #: build/index.js:4
+msgid "Most votes first"
+msgstr ""
+
+#: build/index.js:4
+msgid "The results are sorted by votes. Answers with the same number keep their order."
+msgstr ""
+
+#: build/index.js:4
+msgid "Texts"
+msgstr ""
+
+#: build/index.js:4
+msgid "Vote button"
+msgstr ""
+
+#: build/index.js:4
+msgid "Leave empty for \"Vote\" in the visitor's language."
+msgstr ""
+
+#: build/index.js:4
+msgid "Thank-you message"
+msgstr ""
+
+#: build/index.js:4
+msgid "Shown after voting. Leave empty for \"Thanks for voting!\" in the visitor's language."
+msgstr ""
+
+#: build/index.js:4
+#: build/view.js:3
+msgid "Thanks for voting!"
+msgstr ""
+
+#: build/index.js:4
 msgid "Voting"
 msgstr ""
 
@@ -298,6 +957,14 @@ msgstr ""
 
 #: build/index.js:4
 msgid "Remove"
+msgstr ""
+
+#: build/index.js:4
+msgid "Countdown"
+msgstr ""
+
+#: build/index.js:4
+msgid "Shows the time left, like \"Voting ends in 3 hours\", instead of the date."
 msgstr ""
 
 #: build/index.js:4
@@ -341,7 +1008,15 @@ msgid "Border"
 msgstr ""
 
 #: build/index.js:4
-msgid "Accent colors the bars, the chosen answer and the Vote button. Without it the button follows your theme. The toolbar's chart button previews the results."
+msgid "Button"
+msgstr ""
+
+#: build/index.js:4
+msgid "Button text"
+msgstr ""
+
+#: build/index.js:4
+msgid "Accent colors the bars, the chosen answer and the Vote button. Button colors win over the accent. Without either the button follows your theme. Font size and corner radius are in the Typography and Border panels. The toolbar's chart button previews the results."
 msgstr ""
 
 #: build/index.js:4
@@ -357,6 +1032,14 @@ msgid "The bars grow when the results appear. Visitors who prefer less motion se
 msgstr ""
 
 #: build/index.js:4
+msgid "Publish the poll first, the shortcode shows only published polls."
+msgstr ""
+
+#: build/index.js:4
+msgid "Paste it in the Classic Editor, a widget, or a page builder: the Shortcode widget in Elementor, a Code module in Divi, an HTML module in Beaver Builder, a Text Block in WPBakery, or the Shortcode element in Bricks and Oxygen."
+msgstr ""
+
+#: build/index.js:4
 #: build/view.js:1
 #, js-format
 msgid "%1$d%%"
@@ -365,7 +1048,7 @@ msgstr ""
 #: build/index.js:4
 #: build/index.js:5
 #: build/view.js:1
-#: build/view.js:2
+#: build/view.js:3
 #, js-format
 msgid "%s vote"
 msgid_plural "%s votes"
@@ -378,7 +1061,7 @@ msgid "Sample results, this poll has no votes yet."
 msgstr ""
 
 #: build/index.js:5
-#: build/view.js:2
+#: build/view.js:3
 #, js-format
 msgid "%s voter"
 msgid_plural "%s voters"
@@ -554,10 +1237,6 @@ msgid "Ask a question…"
 msgstr ""
 
 #: build/index.js:8
-msgid "Question"
-msgstr ""
-
-#: build/index.js:8
 msgid "Replace image"
 msgstr ""
 
@@ -586,20 +1265,29 @@ msgid "Write at least two answers, the poll shows on the page only then."
 msgstr ""
 
 #. translators: %1$d: a share of the votes, like 40
-#: build/view.js:2
+#. translators: %s: how long until the poll closes, like "in 3 hours"
+#: build/view.js:3
+#, js-format
+msgid "Voting ends %s."
+msgstr ""
+
+#: build/view.js:3
 msgid "The poll could not be loaded. Please reload the page."
 msgstr ""
 
-#: build/view.js:2
+#: build/view.js:3
+msgid "Your vote"
+msgstr ""
+
+#: build/view.js:3
+msgid "The results will be shown when the poll closes."
+msgstr ""
+
+#: build/view.js:3
 msgid "Thanks for voting! The results will be shown when the poll closes."
 msgstr ""
 
-#: build/view.js:2
-#: build/view.js:3
-msgid "Thanks for voting!"
-msgstr ""
-
-#: build/view.js:3
+#: build/view.js:4
 msgid "Your vote could not be saved. Please try again."
 msgstr ""
 
@@ -636,4 +1324,24 @@ msgstr ""
 #: build/block.json
 msgctxt "block keyword"
 msgid "question"
+msgstr ""
+
+#: build/block.json
+msgctxt "block style label"
+msgid "Default"
+msgstr ""
+
+#: build/block.json
+msgctxt "block style label"
+msgid "Card"
+msgstr ""
+
+#: build/block.json
+msgctxt "block style label"
+msgid "Minimal"
+msgstr ""
+
+#: build/block.json
+msgctxt "block style label"
+msgid "Pill"
 msgstr ""

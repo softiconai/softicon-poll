@@ -49,14 +49,20 @@
 		gap: 10px;
 	}
 
+	// a row, or a card in the column layout (.alpl_grid sets the variable);
+	// the grid lines do nothing in a row
 	.alpl_option {
-		display: flex;
+		display: var(--alpl-option-display, flex);
+		grid-template-columns: auto minmax(0, 1fr);
+		align-content: start;
 		align-items: center;
 		gap: 12px;
 		margin: 0;
-		padding: 12px 14px;
+		padding: var(--alpl-option-padding, 12px 14px);
 		border: 1px solid var(--alpl-line);
-		border-radius: 8px;
+		border-width: var(--alpl-option-border, 1px);
+		border-radius: var(--alpl-option-radius, 8px);
+		background: var(--alpl-option-bg, none);
 		cursor: pointer;
 		transition: border-color 0.15s, background-color 0.15s;
 
@@ -114,6 +120,12 @@
 		margin-top: 16px;
 	}
 
+	// a font size set on the block also sizes the button, not the theme's size
+	&[class*="-font-size"] .alpl_vote,
+	&[style*="font-size"] .alpl_vote {
+		font-size: inherit;
+	}
+
 	.alpl_vote:disabled {
 		cursor: not-allowed;
 		opacity: 0.55;
@@ -123,6 +135,17 @@
 		border-color: var(--alpl-accent-color);
 		background: var(--alpl-accent-color);
 		color: #fff;
+	}
+
+	// the button's own colors win over the accent;
+	// the colon keeps --alpl-button from matching --alpl-button-text
+	&[style*="--alpl-button:"] .alpl_vote {
+		border-color: var(--alpl-button);
+		background: var(--alpl-button);
+	}
+
+	&[style*="--alpl-button-text:"] .alpl_vote {
+		color: var(--alpl-button-text);
 	}
 
 	.alpl_link {
@@ -177,6 +200,17 @@
 
 	.alpl_row.is-mine .alpl_text {
 		font-weight: 600;
+	}
+
+	// view.js adds it beside the visitor's own answer
+	.alpl_yours {
+		flex: none;
+		padding: 1px 8px;
+		border-radius: 99px;
+		background: color-mix(in srgb, var(--alpl-accent-color) 14%, transparent);
+		font-size: 0.75em;
+		font-weight: 600;
+		white-space: nowrap;
 	}
 
 	.alpl_row_value {
@@ -251,6 +285,83 @@
 
 	&.alpl_busy {
 		cursor: progress;
+	}
+
+	// answers as cards: the image on top, the radio and the text under it
+	&.alpl_grid {
+		--alpl-option-display: grid;
+
+		.alpl_options {
+			grid-template-columns: repeat(var(--alpl-columns, 2), minmax(0, 1fr));
+
+			@media (max-width: 600px) {
+				grid-template-columns: repeat(min(var(--alpl-columns, 2), 2), minmax(0, 1fr));
+			}
+		}
+
+		.alpl_option .alpl_image {
+			grid-column: 1 / -1;
+			grid-row: 1;
+			width: 100%;
+			height: auto;
+			aspect-ratio: 4 / 3;
+		}
+	}
+
+	// block styles (block.json "styles") set the variables the answers read;
+	// the tints follow the text color, so dark themes work too
+	&.is-style-card {
+		--alpl-line: var(--alpl-border, transparent);
+		--alpl-option-bg: color-mix(in srgb, currentcolor 5%, transparent);
+		background: var(--alpl-bg, color-mix(in srgb, currentcolor 3%, transparent));
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+	}
+
+	&.is-style-minimal {
+		--alpl-option-padding: 12px 4px;
+		--alpl-option-border: 0 0 1px;
+		--alpl-option-radius: 0;
+		padding-inline: 0;
+		border-color: var(--alpl-border, transparent);
+		border-radius: 0;
+
+		.alpl_options {
+			gap: 0;
+		}
+	}
+
+	// cards keep a gap between them; minimal answers otherwise sit edge to edge
+	&.is-style-minimal.alpl_grid .alpl_options {
+		gap: 10px;
+	}
+
+	// with a background or border color the poll keeps its padding
+	&.is-style-minimal[style*="--alpl-bg"],
+	&.is-style-minimal[style*="--alpl-border"] {
+		padding-inline: 24px;
+		border-radius: 12px;
+	}
+
+	&.is-style-pill {
+		--alpl-option-padding: 12px 20px;
+		// round on one line, not an oval when a long answer wraps
+		--alpl-option-radius: 1.5em;
+		border-radius: 24px;
+
+		.alpl_vote {
+			padding-inline: 28px;
+			border-radius: 999px;
+		}
+
+		.alpl_bar {
+			height: 14px;
+		}
+	}
+
+	// pill cards: less padding and radius, narrow cards keep room for text
+	&.is-style-pill.alpl_grid {
+		--alpl-option-padding: 12px;
+		--alpl-option-radius: 18px;
 	}
 
 	.screen-reader-text {

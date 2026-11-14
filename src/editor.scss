@@ -55,6 +55,14 @@
 	}
 }
 
+.alplCode {
+	padding: 6px 8px;
+	border-radius: 2px;
+	background: #f0f0f0;
+	font-size: 12px;
+	word-break: break-all;
+}
+
 .alplDatePicker {
 	padding: 8px;
 }
@@ -76,8 +84,11 @@
 		min-width: 0;
 	}
 
+	// on a card (column layout) the tools take their own line
 	.alplAnswerTools {
 		display: flex;
+		grid-column: 1 / -1;
+		justify-self: end;
 		flex: none;
 		align-items: center;
 		gap: 2px;

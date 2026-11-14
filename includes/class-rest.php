@@ -12,7 +12,7 @@ class Rest {
 	const NS         = 'softicon-poll/v1';
 	const RATE_LIMIT = 20; // votes per address per minute
 	// posts shown on pages that are not their own: a poll in one of these can be voted on from any page
-	const SHARED = array( 'wp_template', 'wp_template_part', 'wp_block' );
+	const SHARED = array( 'wp_template', 'wp_template_part', 'wp_block', Shortcode::TYPE );
 
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'routes' ) );

@@ -199,11 +199,19 @@ class Block {
 		return ! $settings['endDate'] || $settings['endDate']->getTimestamp() > time();
 	}
 
-	// hex, rgb(a), hsl(a) or a preset var(), anything else is dropped
+	// hex or a preset var(); WordPress drops rgb() from a block's style attribute, so rgb(a) becomes hex.
+	// src/utils/functions.js safeColor() does the same for the editor. Anything else is dropped.
 	public static function color( $value ) {
 		$value = is_string( $value ) ? trim( $value ) : '';
-		if ( preg_match( '/^(#[0-9a-f]{3,8}|(rgb|hsl)a?\([0-9.,%\s\/]+\)|var\(--[a-z0-9-]+\))$/i', $value ) ) {
+		if ( preg_match( '/^(#[0-9a-f]{3,8}|var\(--[a-z0-9-]+\))$/i', $value ) ) {
 			return $value;
+		}
+		if ( preg_match( '/^rgba?\(\s*(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})(?:\s*[,\/]\s*([0-9.]+)(%?))?\s*\)$/i', $value, $m ) ) {
+			$hex = sprintf( '#%02x%02x%02x', min( 255, (int) $m[1] ), min( 255, (int) $m[2] ), min( 255, (int) $m[3] ) );
+			if ( isset( $m[4] ) && '' !== $m[4] ) {
+				$hex .= sprintf( '%02x', (int) round( min( 1, (float) $m[4] / ( '%' === $m[5] ? 100 : 1 ) ) * 255 ) );
+			}
+			return $hex;
 		}
 		return '';
 	}

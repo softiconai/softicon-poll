@@ -1,7 +1,21 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { resultRows, totalText } from './utils/functions';
 
 // a REST path under the plugin's namespace, for pretty and plain (?rest_route=) permalinks
+// "Voting ends in 3 hours" in the page's language, rounded up so the last second says "in 1 second";
+// empty when the browser has no Intl.RelativeTimeFormat, the server's date then stays
+const countdownText = ( left ) => {
+	const units = [ [ 'day', 86400000 ], [ 'hour', 3600000 ], [ 'minute', 60000 ], [ 'second', 1000 ] ];
+	const [ unit, size ] = units.find( ( [ , ms ] ) => left >= ms ) || units[ 3 ];
+	try {
+		const when = new Intl.RelativeTimeFormat( document.documentElement.lang || undefined, { numeric: 'always' } ).format( Math.max( 1, Math.ceil( left / size ) ), unit );
+		/* translators: %s: how long until the poll closes, like "in 3 hours" */
+		return sprintf( __( 'Voting ends %s.', 'softicon-poll' ), when );
+	} catch ( e ) {
+		return '';
+	}
+};
+
 const endpoint = ( api, path, params = {} ) => {
 	const url = new URL( api, window.location.href );
 	const route = url.searchParams.get( 'rest_route' );
@@ -47,6 +61,8 @@ class Poll {
 		this.total = q( '.alpl_total' );
 		this.message = q( '.alpl_message' );
 		this.rows = [ ...el.querySelectorAll( '.alpl_row' ) ];
+		// the author's order, sorting starts from it so ties keep their place
+		this.order = [ ...this.rows ];
 		this.state = null;
 	}
 
@@ -59,6 +75,31 @@ class Poll {
 		this.showButton?.addEventListener( 'click', () => this.showResults( true ) );
 		this.backButton?.addEventListener( 'click', () => this.showForm() );
 		this.load();
+		if ( this.config.end * 1000 > Date.now() ) {
+			this.tick();
+			this.timer = setInterval( () => this.tick(), 1000 );
+		}
+	}
+
+	// "Voting ends in 3 hours", in the page's language; at the end the server says whether the poll closed
+	tick() {
+		const left = ( this.config.end * 1000 ) - Date.now();
+		if ( left <= 0 ) {
+			this.stopTimer();
+			setTimeout( () => this.load(), 1500 );
+			return;
+		}
+		const text = countdownText( left );
+		if ( text ) {
+			this.meta( text );
+		} else {
+			this.stopTimer();
+		}
+	}
+
+	stopTimer() {
+		clearInterval( this.timer );
+		this.timer = null;
 	}
 
 	async load() {
@@ -83,6 +124,7 @@ class Poll {
 		} );
 
 		if ( ! state.open ) {
+			this.stopTimer();
 			this.meta( __( 'This poll is closed.', 'softicon-poll' ) );
 		}
 
@@ -104,7 +146,7 @@ class Poll {
 			login.searchParams.set( 'redirect_to', window.location.href );
 			this.say( __( 'Please log in to vote.', 'softicon-poll' ), login.toString() );
 		} else if ( state.voted && ! state.results ) {
-			this.say( 'closed' === this.config.showResults && state.open ? __( 'Thanks for voting! The results will be shown when the poll closes.', 'softicon-poll' ) : __( 'Thanks for voting!', 'softicon-poll' ) );
+			this.say( this.thanks( 'closed' === this.config.showResults && state.open ) );
 		}
 	}
 
@@ -137,11 +179,20 @@ class Poll {
 		const { results, choices } = this.state;
 		const rows = resultRows( results, this.config.format );
 
+		// most votes first; the list's order is what screen readers read too
+		if ( this.config.sort ) {
+			const count = ( row ) => results.counts?.[ row.dataset.option ] || 0;
+			this.rows = [ ...this.order ].sort( ( a, b ) => count( b ) - count( a ) );
+			this.rows[ 0 ]?.parentNode.append( ...this.rows );
+		}
+
 		this.rows.forEach( ( row ) => {
 			const data = rows[ row.dataset.option ] || { percent: 0, value: '' };
+			const mine = choices.includes( row.dataset.option );
 			row.querySelector( '.alpl_row_value' ).textContent = data.value;
-			row.classList.toggle( 'is-mine', choices.includes( row.dataset.option ) );
+			row.classList.toggle( 'is-mine', mine );
 			row.classList.toggle( 'is-top', data.top );
+			this.yours( row, mine );
 			row.style.setProperty( '--alpl-percent', '0%' );
 		} );
 
@@ -158,6 +209,27 @@ class Poll {
 		} ) ) );
 	}
 
+	// a "Your vote" tag beside the visitor's answer, made here so the page's HTML stays the same
+	yours( row, mine ) {
+		let tag = row.querySelector( '.alpl_yours' );
+		if ( mine && ! tag ) {
+			tag = Object.assign( this.el.ownerDocument.createElement( 'span' ), { className: 'alpl_yours', textContent: __( 'Your vote', 'softicon-poll' ) } );
+			row.querySelector( '.alpl_row_label' ).append( tag );
+		}
+		if ( tag ) {
+			tag.hidden = ! mine;
+		}
+	}
+
+	// the author's own thank-you text, or the default one
+	thanks( later = false ) {
+		const own = ( this.config.thanks || '' ).trim();
+		if ( ! own ) {
+			return later ? __( 'Thanks for voting! The results will be shown when the poll closes.', 'softicon-poll' ) : __( 'Thanks for voting!', 'softicon-poll' );
+		}
+		return later ? own + ' ' + __( 'The results will be shown when the poll closes.', 'softicon-poll' ) : own;
+	}
+
 	totalText( voters ) {
 		return totalText( voters, this.config.multiple );
 	}
@@ -165,7 +237,9 @@ class Poll {
 	// the results as one sentence for screen readers
 	summary() {
 		const rows = resultRows( this.state.results, this.config.format );
-		const parts = this.rows.map( ( row ) => row.querySelector( '.alpl_row_label' ).textContent.trim() + ': ' + ( rows[ row.dataset.option ]?.value || '' ) );
+		// the answer's text only, not the hidden "Your vote" tag
+		const name = ( row ) => row.querySelector( '.alpl_text' )?.textContent.trim() || row.querySelector( '.alpl_image' )?.alt.trim() || '';
+		const parts = this.rows.map( ( row ) => name( row ) + ': ' + ( rows[ row.dataset.option ]?.value || '' ) );
 		return parts.join( ', ' ) + '. ' + ( this.config.showTotal ? this.totalText( this.state.results.voters ) + '.' : '' );
 	}
 
@@ -194,7 +268,7 @@ class Poll {
 			if ( ok ) {
 				this.apply( data );
 				if ( data.results ) {
-					this.say( __( 'Thanks for voting!', 'softicon-poll' ), '', this.summary() );
+					this.say( this.thanks(), '', this.summary() );
 				}
 			} else if ( data.data?.state ) {
 				this.apply( data.data.state );
@@ -245,9 +319,46 @@ const start = ( el ) => {
 	}
 };
 
+// done at once for every poll, before one starts near the screen, so nothing jumps in view:
+// the author's button text, and the answers in a new order for each visitor (the HTML may be cached)
+const prepare = ( el ) => {
+	// boot() runs again when a page builder redraws a widget; a poll is prepared once
+	if ( el.alplReady ) {
+		return;
+	}
+	el.alplReady = true;
+	let config;
+	try {
+		config = JSON.parse( el.dataset.alpl );
+	} catch ( e ) {
+		return;
+	}
+	// the countdown's first text, so the date does not show first and then change
+	const meta = el.querySelector( ':scope > .alpl_meta' );
+	const left = ( ( config.end || 0 ) * 1000 ) - Date.now();
+	if ( meta && left > 0 ) {
+		meta.textContent = countdownText( left ) || meta.textContent;
+	}
+	const text = ( config.vote || '' ).trim();
+	const button = el.querySelector( '.alpl_vote' );
+	if ( text && button ) {
+		button.textContent = text;
+	}
+	const list = el.querySelector( '.alpl_options' );
+	if ( config.shuffle && list ) {
+		const items = [ ...list.children ];
+		for ( let i = items.length - 1; i > 0; i-- ) {
+			const j = Math.floor( Math.random() * ( i + 1 ) );
+			[ items[ i ], items[ j ] ] = [ items[ j ], items[ i ] ];
+		}
+		list.append( ...items );
+	}
+};
+
 // a poll asks the server for its state only when it gets near the screen
 const boot = () => {
-	const polls = [ ...document.querySelectorAll( '.alpl_poll[data-alpl]' ) ];
+	const polls = [ ...document.querySelectorAll( '.alpl_poll[data-alpl]' ) ].filter( ( el ) => ! el.alpl );
+	polls.forEach( prepare );
 	if ( ! ( 'IntersectionObserver' in window ) ) {
 		polls.forEach( start );
 		return;
@@ -265,4 +376,27 @@ if ( 'loading' === document.readyState ) {
 	document.addEventListener( 'DOMContentLoaded', boot );
 } else {
 	boot();
+}
+
+// many calls in a row (Elementor calls once per element) look for new polls once
+let queued = false;
+const bootSoon = () => {
+	if ( ! queued ) {
+		queued = true;
+		requestAnimationFrame( () => {
+			queued = false;
+			boot();
+		} );
+	}
+};
+
+// polls added to the page later (a shortcode loaded by a popup or a builder) start with this event
+window.addEventListener( 'alpl:boot', bootSoon );
+
+// Elementor's editor preview draws a widget again after each change, such as a Shortcode widget with a poll
+const elementor = () => window.elementorFrontend?.hooks?.addAction( 'frontend/element_ready/global', bootSoon );
+if ( window.elementorFrontend?.hooks ) {
+	elementor();
+} else {
+	window.jQuery?.( window ).on( 'elementor/frontend/init', elementor );
 }

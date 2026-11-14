@@ -13,11 +13,13 @@ if ( '' === $alpl['id'] || count( $alpl['options'] ) < 2 ) {
 // colors become css variables so the stylesheet keeps the fallbacks
 $alpl_style = '';
 foreach ( array(
-	'bgColor'     => '--alpl-bg',
-	'textColor'   => '--alpl-text',
-	'accentColor' => '--alpl-accent',
-	'barBgColor'  => '--alpl-bar-bg',
-	'borderColor' => '--alpl-border',
+	'bgColor'         => '--alpl-bg',
+	'textColor'       => '--alpl-text',
+	'accentColor'     => '--alpl-accent',
+	'barBgColor'      => '--alpl-bar-bg',
+	'borderColor'     => '--alpl-border',
+	'buttonColor'     => '--alpl-button',
+	'buttonTextColor' => '--alpl-button-text',
 ) as $alpl_attr => $alpl_var ) {
 	$alpl_color = ALPL_Poll\Block::color( $attributes[ $alpl_attr ] ?? '' );
 	if ( $alpl_color ) {
@@ -37,9 +39,22 @@ $alpl_config = array(
 	'showResults' => $alpl['showResults'],
 	'format'      => $alpl['format'],
 	'showTotal'   => $alpl['showTotal'],
+	// view.js puts these in with textContent, never as HTML
+	'sort'        => ! empty( $attributes['sortResults'] ),
+	'vote'        => (string) ( $attributes['voteText'] ?? '' ),
+	'thanks'      => (string) ( $attributes['thanksText'] ?? '' ),
+	'shuffle'     => ! empty( $attributes['shuffle'] ),
+	// the countdown needs the closing time; the open/closed state still comes from the server
+	'end'         => ! empty( $attributes['countdown'] ) && $alpl['endDate'] && ALPL_Poll\Block::is_open( $alpl ) ? $alpl['endDate']->getTimestamp() : 0,
 );
 
-$alpl_class = 'alpl_poll' . ( $alpl['animate'] ? ' alpl_animate' : '' ) . ( ALPL_Poll\Block::color( $attributes['accentColor'] ?? '' ) ? ' alpl_has_accent' : '' );
+// answers with images as cards, 2 to 4 per row
+$alpl_columns = min( 4, absint( $attributes['columns'] ?? 0 ) );
+if ( $alpl_columns > 1 ) {
+	$alpl_style .= '--alpl-columns:' . $alpl_columns . ';';
+}
+
+$alpl_class = 'alpl_poll' . ( $alpl['animate'] ? ' alpl_animate' : '' ) . ( ALPL_Poll\Block::color( $attributes['accentColor'] ?? '' ) ? ' alpl_has_accent' : '' ) . ( $alpl_columns > 1 ? ' alpl_grid' : '' );
 $alpl_qid   = wp_unique_id( 'alpl_q_' );
 $alpl_hid   = wp_unique_id( 'alpl_h_' );
 $alpl_has_q = '' !== trim( wp_strip_all_tags( $alpl['question'] ) );

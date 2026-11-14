@@ -10,11 +10,11 @@ import Settings from './Settings/Settings';
 import ResultsPreview from './ResultsPreview';
 import useVotes from './useVotes';
 import { icons } from '../../utils/icons';
-import { cssVars, hasText, newOptionId, newPollId, toImage } from '../../utils/functions';
+import { columnCount, cssVars, hasText, newOptionId, newPollId, safeColor, toImage } from '../../utils/functions';
 
 const Edit = ( props ) => {
 	const { attributes, setAttributes, clientId, name } = props;
-	const { pollId, question, options, multiple, maxChoices, animateBars, accentColor } = attributes;
+	const { pollId, question, options, multiple, maxChoices, animateBars, accentColor, voteText, columns } = attributes;
 	const [ preview, setPreview ] = useState( false );
 	const [ focusId, setFocusId ] = useState( null );
 	const answerRefs = useRef( {} );
@@ -105,7 +105,7 @@ const Edit = ( props ) => {
 
 	const blockProps = useBlockProps( {
 		ref: assetsRef,
-		className: 'alpl_poll' + ( animateBars ? ' alpl_animate' : '' ) + ( accentColor ? ' alpl_has_accent' : '' ),
+		className: 'alpl_poll' + ( animateBars ? ' alpl_animate' : '' ) + ( safeColor( accentColor ) ? ' alpl_has_accent' : '' ) + ( columnCount( columns ) ? ' alpl_grid' : '' ),
 		style: cssVars( attributes ),
 	} );
 
@@ -172,7 +172,7 @@ const Edit = ( props ) => {
 				{ filled < 2 && <p className="alplNotice">{ __( 'Write at least two answers, the poll shows on the page only then.', 'softicon-poll' ) }</p> }
 
 				<div className="alpl_actions">
-					<span className="alpl_vote wp-element-button" aria-hidden="true">{ __( 'Vote', 'softicon-poll' ) }</span>
+					<span className="alpl_vote wp-element-button" aria-hidden="true">{ voteText?.trim() || __( 'Vote', 'softicon-poll' ) }</span>
 				</div>
 			</> }
 		</div>

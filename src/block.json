@@ -2,12 +2,18 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "softicon/poll",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"title": "Poll",
 	"category": "widgets",
 	"description": "Ask a question and let visitors vote. Votes are saved on your own site.",
 	"keywords": [ "poll", "vote", "voting", "survey", "question" ],
 	"textdomain": "softicon-poll",
+	"styles": [
+		{ "name": "default", "label": "Default", "isDefault": true },
+		{ "name": "card", "label": "Card" },
+		{ "name": "minimal", "label": "Minimal" },
+		{ "name": "pill", "label": "Pill" }
+	],
 	"attributes": {
 		"pollId": { "type": "string", "default": "" },
 		"question": { "type": "string", "default": "" },
@@ -20,22 +26,38 @@
 		},
 		"multiple": { "type": "boolean", "default": false },
 		"maxChoices": { "type": "number", "default": 0 },
+		"shuffle": { "type": "boolean", "default": false },
+		"columns": { "type": "number", "default": 0 },
 		"showResults": { "type": "string", "default": "after" },
 		"resultsFormat": { "type": "string", "default": "both" },
 		"showTotal": { "type": "boolean", "default": true },
+		"sortResults": { "type": "boolean", "default": false },
 		"closed": { "type": "boolean", "default": false },
 		"endDate": { "type": "string", "default": "" },
+		"countdown": { "type": "boolean", "default": false },
 		"loginOnly": { "type": "boolean", "default": false },
+		"voteText": { "type": "string", "default": "" },
+		"thanksText": { "type": "string", "default": "" },
 		"animateBars": { "type": "boolean", "default": true },
 		"bgColor": { "type": "string", "default": "" },
 		"textColor": { "type": "string", "default": "" },
 		"accentColor": { "type": "string", "default": "" },
 		"barBgColor": { "type": "string", "default": "" },
-		"borderColor": { "type": "string", "default": "" }
+		"borderColor": { "type": "string", "default": "" },
+		"buttonColor": { "type": "string", "default": "" },
+		"buttonTextColor": { "type": "string", "default": "" }
 	},
 	"supports": {
 		"html": false,
-		"align": [ "wide", "full" ]
+		"align": [ "wide", "full" ],
+		"typography": {
+			"fontSize": true,
+			"__experimentalDefaultControls": { "fontSize": true }
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"__experimentalDefaultControls": { "radius": true }
+		}
 	},
 	"example": {
 		"attributes": {
