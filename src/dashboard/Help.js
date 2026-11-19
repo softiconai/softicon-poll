@@ -11,7 +11,7 @@ const EMAIL = 'softiconai@gmail.com';
 const answers = () => [
 	{
 		q: __( 'Do I need an account or an outside service?', 'softicon-poll' ),
-		a: __( 'No. Everything runs on your own site, and the votes are saved in your own database, in a table named wp_alpl_votes (with your table prefix).', 'softicon-poll' ),
+		a: __( 'No. Everything runs on your own site, and the votes are saved in your own database, in a table named wp_alpl_votes (with your table prefix). The only outside service is an optional opt-in for you, the site admin.', 'softicon-poll' ),
 	},
 	{
 		q: __( 'How does "one vote per person" work?', 'softicon-poll' ),
@@ -50,8 +50,12 @@ const answers = () => [
 		a: __( 'The plugin saves the chosen answers and a scrambled code made from the user account or the IP address, which can\'t be turned back into the address. Visitors who are not logged in get a cookie for one year. Suggested text for your privacy policy is under Settings → Privacy → Policy Guide.', 'softicon-poll' ),
 	},
 	{
+		q: __( 'Does the plugin collect any data?', 'softicon-poll' ),
+		a: __( 'Nothing from your visitors. From you, only if you click "Allow & Continue" on the opt-in: your name and email, your site address, title and language, and the WordPress, PHP and plugin versions, through Freemius. You can opt out from the Plugins page at any time.', 'softicon-poll' ),
+	},
+	{
 		q: __( 'What is removed when I delete the plugin?', 'softicon-poll' ),
-		a: __( 'The votes table, its settings and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it.', 'softicon-poll' ),
+		a: __( 'The votes table, its settings, the opt-in choice and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it.', 'softicon-poll' ),
 	},
 ];
 

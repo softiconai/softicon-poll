@@ -121,6 +121,8 @@ class Dashboard {
 			'icon'    => ALPL_PLUGIN_URL . 'assets/images/icon-128x128.png',
 			'videos'  => $videos,
 			'review'  => self::review(),
+			// the message after the Freemius opt-in screen (vendor/fs-lite): thanks, or the confirmation email to click
+			'notice'  => function_exists( 'softicon_poll_fs' ) ? softicon_poll_fs()->notice() : null,
 			'urls'    => array(
 				'newPage'  => admin_url( 'post-new.php?post_type=page' ),
 				'newPoll'  => admin_url( 'post-new.php?post_type=' . Shortcode::TYPE ),

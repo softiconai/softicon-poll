@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SoftIcon Poll – Poll & Survey Block
  * Description: A poll block for the block editor. Votes are saved on your own site, no account or outside service needed.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: softiconai
@@ -19,9 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALPL_PLUGIN_VERSION', '1.1.0' );
+define( 'ALPL_PLUGIN_VERSION', '1.1.1' );
 define( 'ALPL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ALPL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// the optional Freemius opt-in, see includes/freemius.php
+require_once ALPL_PLUGIN_PATH . 'includes/freemius.php';
 
 require_once ALPL_PLUGIN_PATH . 'includes/class-alpl-poll.php';
 ALPL_Poll::get_instance();

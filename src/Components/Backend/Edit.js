@@ -1,7 +1,7 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { dispatch, useDispatch, useSelect } from '@wordpress/data';
 import { BlockControls, MediaUpload, MediaUploadCheck, RichText, store as blockEditorStore, useBlockProps } from '@wordpress/block-editor';
 import { Button, ToolbarButton, ToolbarGroup } from '@wordpress/components';
 // copied from the shared softicon-tools folder by `npm run tools` (prebuild), edit it there
@@ -11,6 +11,22 @@ import ResultsPreview from './ResultsPreview';
 import useVotes from './useVotes';
 import { icons } from '../../utils/icons';
 import { columnCount, cssVars, hasText, newOptionId, newPollId, safeColor, toImage } from '../../utils/functions';
+import guide from '../../utils/guide';
+
+// the steps for the way picked on the Welcome tab (utils/guide.js), until the poll has its question and two answers
+const Steps = () => <ol className="alplGuide">
+	<li>{ __( 'Write your question and at least two answers, right here in the block.', 'softicon-poll' ) }</li>
+	{ 'shortcode' === guide ? <>
+		<li>{ __( 'Give the poll a title, then click Publish.', 'softicon-poll' ) }</li>
+		<li>{ __( 'Copy its shortcode from the Shortcode panel in the sidebar and paste it in your page: the Classic Editor, an Elementor Shortcode widget or any page builder.', 'softicon-poll' ) }</li>
+	</> : <>
+		<li>{ __( 'Choose when the results show, and the colors, in the sidebar on the right.', 'softicon-poll' ) }</li>
+		<li>{ __( 'Click Publish: the poll shows on the page.', 'softicon-poll' ) }</li>
+	</> }
+</ol>;
+
+// once the poll is written, the next step stays in view at the top of the editor
+let guided = false;
 
 const Edit = ( props ) => {
 	const { attributes, setAttributes, clientId, name } = props;
@@ -89,6 +105,16 @@ const Edit = ( props ) => {
 	};
 
 	const filled = options.filter( ( option ) => hasText( option.text ) || option.image?.url ).length;
+	const ready = hasText( question ) && filled >= 2;
+	useEffect( () => {
+		if ( ! guide || ! ready || guided ) {
+			return;
+		}
+		guided = true;
+		dispatch( 'core/notices' ).createInfoNotice( 'shortcode' === guide
+			? __( 'Your poll is ready. Give it a title and click Publish, then copy its shortcode from the Shortcode panel in the sidebar.', 'softicon-poll' )
+			: __( 'Your poll is ready. Choose when the results show in the sidebar, then click Publish.', 'softicon-poll' ), { id: 'alpl-guide' } );
+	}, [ ready ] );
 	// the same line the page shows above the answers
 	const hint = maxChoices && maxChoices < filled
 		? sprintf(
@@ -120,6 +146,7 @@ const Edit = ( props ) => {
 		</BlockControls>
 
 		<div { ...blockProps }>
+			{ guide && ! ready && <Steps /> }
 			<RichText tagName="div" className="alpl_question" value={ question } onChange={ ( val ) => setAttributes( { question: val } ) }
 				placeholder={ __( 'Ask a question…', 'softicon-poll' ) } allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] } aria-label={ __( 'Question', 'softicon-poll' ) } />
 

@@ -22,3 +22,6 @@ svn.txt
 elevenlabs.txt
 .elevenlabs_key
 marketing/
+
+# Promo and tutorial videos, kept out of the repo and the release zip
+videos/

@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.1.0\n"
+"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/softicon-poll\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-14T03:34:20+00:00\n"
+"POT-Creation-Date: 2026-11-19T03:17:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
@@ -49,7 +49,7 @@ msgid "Choose one or more answers."
 msgstr ""
 
 #: build/render.php:71
-#: includes/class-rest.php:242
+#: includes/class-rest.php:318
 #: build/view.js:3
 msgid "This poll is closed."
 msgstr ""
@@ -99,7 +99,7 @@ msgstr ""
 
 #: includes/class-dashboard.php:39
 #: includes/class-dashboard.php:48
-#: includes/class-dashboard.php:327
+#: includes/class-dashboard.php:329
 msgid "SoftIcon Poll"
 msgstr ""
 
@@ -124,37 +124,37 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: includes/class-dashboard.php:160
-#: includes/class-dashboard.php:243
+#: includes/class-dashboard.php:162
+#: includes/class-dashboard.php:245
 msgid "(no title)"
 msgstr ""
 
-#: includes/class-dashboard.php:331
+#: includes/class-dashboard.php:333
 msgid "The Poll dashboard needs JavaScript."
 msgstr ""
 
-#: includes/class-rest.php:128
+#: includes/class-rest.php:156
 msgid "This poll could not be found."
 msgstr ""
 
-#: includes/class-rest.php:193
+#: includes/class-rest.php:225
 msgid "Please vote on the site itself."
 msgstr ""
 
-#: includes/class-rest.php:232
+#: includes/class-rest.php:308
 msgid "Too many votes from your network. Please try again in a minute."
 msgstr ""
 
-#: includes/class-rest.php:245
+#: includes/class-rest.php:321
 #: build/view.js:3
 msgid "Please log in to vote."
 msgstr ""
 
-#: includes/class-rest.php:247
+#: includes/class-rest.php:323
 msgid "You have already voted."
 msgstr ""
 
-#: includes/class-rest.php:255
+#: includes/class-rest.php:331
 msgid "Please choose a valid answer."
 msgstr ""
 
@@ -189,6 +189,7 @@ msgstr ""
 
 #: includes/class-shortcode.php:98
 #: includes/class-shortcode.php:103
+#: build/dashboard.js:3
 #: build/dashboard.js:7
 #: build/index.js:4
 msgid "Shortcode"
@@ -211,6 +212,238 @@ msgstr ""
 
 #: includes/class-votes.php:28
 msgid "If you are not logged in, your browser also gets a cookie named alpl_voted_ followed by the poll's id, for one year, so the site remembers that you voted. The votes stay on this site and are not sent to anyone else."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:75
+#: vendor/fs-lite/fs-lite.php:92
+msgid "Opt in"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:375
+msgid "You are not allowed to do this."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:391
+msgid "This link has expired. Please opt in again from the Poll dashboard."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:495
+#: vendor/fs-lite/fs-lite.php:569
+msgid "Could not reach Freemius. Please try again."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:507
+msgid "Opt Out"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:509
+msgid "Opt In"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:518
+msgid "I no longer need the plugin"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:519
+msgid "I could not figure out how to set it up"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:519
+msgid "Where did you get stuck?"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:520
+msgid "It is not what I was looking for"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:520
+msgid "What were you looking for?"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:521
+msgid "I found a better plugin"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:521
+msgid "Which plugin?"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:522
+msgid "I only needed it for a short time"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:523
+msgid "It is not working"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:523
+msgid "What did not work? We would like to fix it."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:524
+msgid "I need a feature it does not have"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:524
+msgid "Which feature?"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:525
+msgid "It broke my site"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:526
+msgid "It is a temporary deactivation, I am fixing something"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:527
+msgid "Other"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:527
+msgid "A few words help us improve the plugin"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:568
+msgid "Stop sending usage data to SoftIcon through Freemius? You can opt in again at any time."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:572
+msgid "Quick question before you go"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:573
+msgid "Why are you deactivating SoftIcon Poll? Your answer helps us make it better."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:575
+msgid "Only your answer and an anonymous site ID are sent, when the plugin is deleted. No name or email unless you opted in before."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:576
+msgid "Skip & Deactivate"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:577
+#: build/index.js:4
+msgid "Cancel"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:578
+msgid "Submit & Deactivate"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:597
+msgid "Never miss an important update"
+msgstr ""
+
+#. translators: %s: the admin's first name or user name
+#: vendor/fs-lite/fs-lite.php:599
+#, php-format
+msgid "Hi %s! Opt in to get emails about security fixes and new features, and to share some basic site data with SoftIcon through Freemius. It helps us make SoftIcon Poll better. If you skip, the plugin works just the same."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:600
+msgid "What is shared"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:602
+msgid "Your profile"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:602
+msgid "Name and email address"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:603
+msgid "Your site"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:603
+msgid "Site address, title and language, WordPress and PHP versions"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:604
+msgid "Plugin events"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:604
+msgid "SoftIcon Poll version, activation, deactivation and uninstall"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:606
+msgid "Nothing about your posts, visitors, other plugins or themes. You can opt out at any time from the Plugins page."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:607
+msgid "Freemius privacy policy"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:611
+msgid "Allow & Continue"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:611
+msgid "Connecting…"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:611
+#: vendor/fs-lite/fs-lite.php:649
+msgid "Could not reach Freemius right now. Please try again later."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:613
+msgid "Skip"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:617
+msgid "Check your email"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:618
+msgid "We sent a confirmation email to"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:620
+msgid "Click the button in that email to finish. Until then, nothing is sent."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:621
+msgid "Not in your inbox?"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:622
+msgid "Look in your Spam or Junk folder (and Promotions in Gmail). Mark the email as \"Not spam\", then click the button in it."
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:623
+msgid "Go to the Poll dashboard"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:624
+msgid "Send the email again"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:627
+msgid "Powered by Freemius"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:628
+msgid "Privacy Policy"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:629
+msgid "Terms of Service"
+msgstr ""
+
+#: vendor/fs-lite/fs-lite.php:642
+msgid "Thank you! You will now hear about important SoftIcon Poll updates."
+msgstr ""
+
+#. translators: %s: email address
+#: vendor/fs-lite/fs-lite.php:646
+#, php-format
+msgid "Almost done: open the email we sent to %s and click the button in it. Not in your inbox? Look in your Spam or Junk folder and mark it as \"Not spam\"."
 msgstr ""
 
 #: build/dashboard.js:1
@@ -428,15 +661,43 @@ msgid "Open a new page, type <code>/poll</code> and press Enter: the block is re
 msgstr ""
 
 #: build/dashboard.js:3
+msgid "Block"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Add the poll right inside a page or post, in the block editor."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Open a new page"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Make the poll once, then paste its shortcode in the Classic Editor, Elementor or any page builder."
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Make a poll"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "How do you want to add your poll?"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "Fits this site"
+msgstr ""
+
+#: build/dashboard.js:3
+msgid "See your polls"
+msgstr ""
+
+#: build/dashboard.js:3
 msgid "Ask your visitors, right on your own site"
 msgstr ""
 
 #: build/dashboard.js:3
 msgid "Polls and quick surveys made in the block editor. The votes stay in your own database, work on cached pages and need no account."
-msgstr ""
-
-#: build/dashboard.js:3
-msgid "See your polls"
 msgstr ""
 
 #: build/dashboard.js:3
@@ -542,7 +803,7 @@ msgid "Do I need an account or an outside service?"
 msgstr ""
 
 #: build/dashboard.js:7
-msgid "No. Everything runs on your own site, and the votes are saved in your own database, in a table named wp_alpl_votes (with your table prefix)."
+msgid "No. Everything runs on your own site, and the votes are saved in your own database, in a table named wp_alpl_votes (with your table prefix). The only outside service is an optional opt-in for you, the site admin."
 msgstr ""
 
 #: build/dashboard.js:7
@@ -618,11 +879,19 @@ msgid "The plugin saves the chosen answers and a scrambled code made from the us
 msgstr ""
 
 #: build/dashboard.js:7
+msgid "Does the plugin collect any data?"
+msgstr ""
+
+#: build/dashboard.js:7
+msgid "Nothing from your visitors. From you, only if you click \"Allow & Continue\" on the opt-in: your name and email, your site address, title and language, and the WordPress, PHP and plugin versions, through Freemius. You can opt out from the Plugins page at any time."
+msgstr ""
+
+#: build/dashboard.js:7
 msgid "What is removed when I delete the plugin?"
 msgstr ""
 
 #: build/dashboard.js:7
-msgid "The votes table, its settings and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it."
+msgid "The votes table, its settings, the opt-in choice and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it."
 msgstr ""
 
 #: build/dashboard.js:7
@@ -823,10 +1092,6 @@ msgid "Every vote of this poll is deleted and everyone can vote again. This cann
 msgstr ""
 
 #: build/index.js:4
-msgid "Cancel"
-msgstr ""
-
-#: build/index.js:4
 msgid "The votes show here once the post is saved."
 msgstr ""
 
@@ -936,6 +1201,18 @@ msgid "Voting"
 msgstr ""
 
 #: build/index.js:4
+msgid "Only logged-in users"
+msgstr ""
+
+#: build/index.js:4
+msgid "Visitors who are not logged in see a link to log in. Each account votes once."
+msgstr ""
+
+#: build/index.js:4
+msgid "Each visitor votes once, checked by browser and by a scrambled form of the IP address. The address itself is never saved."
+msgstr ""
+
+#: build/index.js:4
 msgid "Poll closed"
 msgstr ""
 
@@ -969,18 +1246,6 @@ msgstr ""
 
 #: build/index.js:4
 msgid "This date has passed, the poll is closed."
-msgstr ""
-
-#: build/index.js:4
-msgid "Only logged-in users"
-msgstr ""
-
-#: build/index.js:4
-msgid "Visitors who are not logged in see a link to log in. Each account votes once."
-msgstr ""
-
-#: build/index.js:4
-msgid "Each visitor votes once, checked by browser and by a scrambled form of the IP address. The address itself is never saved."
 msgstr ""
 
 #: build/index.js:4
@@ -1067,6 +1332,26 @@ msgid "%s voter"
 msgid_plural "%s voters"
 msgstr[0] ""
 msgstr[1] ""
+
+#: build/index.js:6
+msgid "Write your question and at least two answers, right here in the block."
+msgstr ""
+
+#: build/index.js:6
+msgid "Give the poll a title, then click Publish."
+msgstr ""
+
+#: build/index.js:6
+msgid "Copy its shortcode from the Shortcode panel in the sidebar and paste it in your page: the Classic Editor, an Elementor Shortcode widget or any page builder."
+msgstr ""
+
+#: build/index.js:6
+msgid "Choose when the results show, and the colors, in the sidebar on the right."
+msgstr ""
+
+#: build/index.js:6
+msgid "Click Publish: the poll shows on the page."
+msgstr ""
 
 #: build/index.js:6
 msgid "Yes / No poll"
@@ -1222,6 +1507,14 @@ msgstr ""
 
 #: build/index.js:6
 msgid "Which of these do you use?"
+msgstr ""
+
+#: build/index.js:6
+msgid "Your poll is ready. Give it a title and click Publish, then copy its shortcode from the Shortcode panel in the sidebar."
+msgstr ""
+
+#: build/index.js:6
+msgid "Your poll is ready. Choose when the results show in the sidebar, then click Publish."
 msgstr ""
 
 #: build/index.js:8

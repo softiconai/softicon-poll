@@ -4,7 +4,7 @@ Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,14 +12,14 @@ A poll block for the block editor. Votes are saved on your own site, with no acc
 
 == Description ==
 
-**SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and no data sent anywhere.
+**SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and nothing about your visitors is sent anywhere.
 
 https://www.youtube.com/watch?v=rA7Lb3rCvKo
 
 = Why choose SoftIcon Poll? =
 
 * **Block first** – the question and answers are edited in place, and the results can be previewed in the editor with your colors.
-* **Your data stays with you** – votes are saved in a table on your own site. Nothing is sent to another server.
+* **Your data stays with you** – votes are saved in a table on your own site. Nothing about your visitors or their votes is sent to another server.
 * **Works with caching plugins** – the page can be cached; the vote and the results come from your site's REST API.
 * **One vote per person** – by account for logged-in visitors, otherwise by a browser cookie and a scrambled code made from the IP address. The IP address itself is never saved.
 * **Accessible** – real radio buttons and checkboxes, full keyboard use, and the results are read out to screen readers.
@@ -44,6 +44,12 @@ https://www.youtube.com/watch?v=rA7Lb3rCvKo
 * A shortcode for the Classic Editor, widgets and page builders such as Elementor, Divi, Beaver Builder, WPBakery, Bricks and Oxygen, for example `[softicon_poll id="123"]`
 * Translation ready and right-to-left ready
 
+= Privacy =
+
+Polls on your pages contact no external service: the votes and the results go only between the visitor's browser and your own site.
+
+In the admin, after activation, the plugin asks once if you want to share basic data with us through Freemius (wp.freemius.com, api.freemius.com). It is optional, and nothing about you or your site is sent unless you click "Allow & Continue". See "Does the plugin collect any data?" below. Freemius [terms](https://freemius.com/terms/) and [privacy policy](https://freemius.com/privacy/).
+
 == Installation ==
 
 1. In your WordPress admin go to Plugins > Add New, search for "SoftIcon Poll" and click Install, then Activate. Or upload the plugin folder to `/wp-content/plugins/` and activate it on the Plugins screen.
@@ -54,7 +60,7 @@ https://www.youtube.com/watch?v=rA7Lb3rCvKo
 
 = Do I need an account or an outside service? =
 
-No. Everything runs on your own site, and the votes are saved in your own database (in a table named `wp_alpl_votes`, with your table prefix).
+No. Everything runs on your own site, and the votes are saved in your own database (in a table named `wp_alpl_votes`, with your table prefix). The only outside service is an optional opt-in for you, the site admin; see "Does the plugin collect any data?".
 
 = How does "one vote per person" work? =
 
@@ -100,9 +106,32 @@ Select the poll, open the Votes panel in the block settings and click "Reset vot
 
 The plugin saves the chosen answers and a scrambled code made from the user account or the IP address; the code can't be turned back into the address. Visitors who are not logged in get a cookie named `alpl_voted_` followed by the poll's id, for one year. Suggested text for your privacy policy is added under Settings > Privacy > Policy Guide.
 
+= Does the plugin collect any data? =
+
+**From your visitors: nothing.** The votes are saved on your own site, and nothing about your visitors is sent anywhere.
+
+**From you, the site admin: only if you say yes.** After activation, the plugin asks once if you would like to opt in. Click "Skip" and nothing about you or your site is ever sent; the plugin works exactly the same either way.
+
+If you click "Allow & Continue", this is shared with us through [Freemius](https://freemius.com), the service we use to manage our users:
+
+* **Your profile:** your first name, last name and email address.
+* **Your site:** the site address, title and language, and an anonymous site ID (a one-way code made on your site, so the same site is not counted twice).
+* **Versions:** your WordPress, PHP and SoftIcon Poll versions.
+* **Plugin events:** when the plugin is activated, deactivated, updated or deleted.
+
+We never collect your posts, pages, polls or votes, anything about your visitors, or the list of your other plugins and themes.
+
+**Why we ask:** to email you about security fixes and important new features, to know which WordPress and PHP versions we must keep supporting, and to learn what to improve.
+
+**Changed your mind?** Click "Opt Out" under SoftIcon Poll on the Plugins page and nothing more is sent. To have your data deleted, email us at softiconai@gmail.com.
+
+**When you deactivate the plugin**, a short form asks why. Answering is optional ("Skip & Deactivate" is always there). If you choose a reason, it is sent only when you delete the plugin. If you never opted in, only the reason and the anonymous site ID are sent, never your name or email.
+
+The opt-in is a small built-in client (vendor/fs-lite/fs-lite.php) instead of the full Freemius SDK. It connects to wp.freemius.com and api.freemius.com and nowhere else. If your server is not allowed to reach Freemius, your browser sends the same opt-in to wp.freemius.com instead, and Freemius sends you back to the plugin's dashboard.
+
 = What is removed when I delete the plugin? =
 
-Deleting the plugin removes the votes table, its setting and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it.
+Deleting the plugin removes the votes table, its settings, the opt-in choice and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it.
 
 = Where is the source code? =
 
@@ -120,6 +149,12 @@ The plugin includes its unminified source in the `src` folder; the files in `bui
 8. Ready-made polls in the block inserter: search for "poll".
 
 == Changelog ==
+
+= 1.1.1 =
+* Faster pages with many polls: the polls on a page now load together in one request instead of one request each.
+* "Only logged-in users" is now at the top of the Voting panel, so it is easier to find.
+* New: the Welcome tab of the Poll dashboard asks how you want to add your poll: as a Block (a new page with an empty poll) or with a Shortcode (a new poll under All Polls, for the Classic Editor and page builders). The way that fits your site is marked, and the poll then shows the steps for the way you picked. After activation the dashboard opens.
+* New: an optional opt-in after activation, on a screen of its own, for security and feature update emails, through Freemius. "Allow & Continue" or "Skip" then opens the Poll dashboard. Nothing about you or your site is sent unless you click "Allow & Continue", and your visitors are never tracked. See "Does the plugin collect any data?" in the FAQ.
 
 = 1.1.0 =
 * New: four designs for the poll, Default, Card, Minimal and Pill, in the block's Styles.

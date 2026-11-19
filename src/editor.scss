@@ -114,6 +114,26 @@
 		margin-top: 10px;
 	}
 
+	// the steps for the way picked on the dashboard's Welcome tab (Edit.js)
+	.alplGuide {
+		margin: 0 0 16px;
+		padding: 12px 16px 12px 34px;
+		border-left: 3px solid #9f1239;
+		border-radius: 4px;
+		background: #fff1f2;
+		color: #1e1e1e;
+		font-size: 13px;
+		line-height: 1.5;
+
+		li {
+			margin: 0 0 4px;
+		}
+
+		li:last-child {
+			margin-bottom: 0;
+		}
+	}
+
 	.alplNotice {
 		margin: 10px 0 0;
 		font-size: 13px;

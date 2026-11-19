@@ -102,6 +102,10 @@ const General = ( { attributes, setAttributes, votes } ) => {
 		</Panel>
 
 		<Panel id="voting" title={ __( 'Voting', 'softicon-poll' ) }>
+			<ToggleRow label={ __( 'Only logged-in users', 'softicon-poll' ) } tip={ __( 'Visitors who are not logged in see a link to log in. Each account votes once.', 'softicon-poll' ) } checked={ loginOnly } onChange={ set( 'loginOnly' ) } />
+
+			{ ! loginOnly && <p className="alplHelp">{ __( 'Each visitor votes once, checked by browser and by a scrambled form of the IP address. The address itself is never saved.', 'softicon-poll' ) }</p> }
+
 			<ToggleRow label={ __( 'Poll closed', 'softicon-poll' ) } tip={ __( 'No more votes. Visitors see the results unless they are set to Never.', 'softicon-poll' ) } checked={ closed } onChange={ set( 'closed' ) } />
 
 			<div className="alplStack">
@@ -119,10 +123,6 @@ const General = ( { attributes, setAttributes, votes } ) => {
 				{ endDate && ! ended && <ToggleRow label={ __( 'Countdown', 'softicon-poll' ) } tip={ __( 'Shows the time left, like "Voting ends in 3 hours", instead of the date.', 'softicon-poll' ) } checked={ countdown } onChange={ set( 'countdown' ) } /> }
 				{ ended && <p className="alplHelp alplWarn">{ __( 'This date has passed, the poll is closed.', 'softicon-poll' ) }</p> }
 			</div>
-
-			<ToggleRow label={ __( 'Only logged-in users', 'softicon-poll' ) } tip={ __( 'Visitors who are not logged in see a link to log in. Each account votes once.', 'softicon-poll' ) } checked={ loginOnly } onChange={ set( 'loginOnly' ) } />
-
-			{ ! loginOnly && <p className="alplHelp">{ __( 'Each visitor votes once, checked by browser and by a scrambled form of the IP address. The address itself is never saved.', 'softicon-poll' ) }</p> }
 		</Panel>
 
 		<Panel id="votes" title={ __( 'Votes', 'softicon-poll' ) }>

@@ -162,8 +162,14 @@ class Votes {
 		return isset( $_COOKIE[ $name ] ) && hash_equals( self::cookie_value( $poll_id ), sanitize_text_field( wp_unslash( $_COOKIE[ $name ] ) ) );
 	}
 
+	// this visitor's answers in the polls given to prime(), for this request only
+	private static $choices = array();
+
 	// [] when this voter hasn't voted, else the answers, with the ballot row for a vote whose answers were removed
 	public static function choices_of( $poll_id, $voter ) {
+		if ( isset( self::$choices[ $poll_id . '|' . $voter ] ) ) {
+			return self::$choices[ $poll_id . '|' . $voter ];
+		}
 		global $wpdb;
 		return $wpdb->get_col( $wpdb->prepare( 'SELECT option_id FROM %i WHERE poll_id = %s AND voter_hash = %s', self::table(), $poll_id, $voter ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- per visitor, not worth caching
 	}
@@ -171,8 +177,9 @@ class Votes {
 	// false when the voter already has a ballot: of requests sent at the same time only the first gets one in
 	public static function add( $poll_id, $voter, $choices ) {
 		global $wpdb;
-		$now   = current_time( 'mysql', true );
-		$first = $wpdb->query( $wpdb->prepare( 'INSERT IGNORE INTO %i (poll_id, option_id, voter_hash, created) VALUES (%s, %s, %s, %s)', self::table(), $poll_id, self::BALLOT, $voter, $now ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
+		self::$choices = array();
+		$now           = current_time( 'mysql', true );
+		$first         = $wpdb->query( $wpdb->prepare( 'INSERT IGNORE INTO %i (poll_id, option_id, voter_hash, created) VALUES (%s, %s, %s, %s)', self::table(), $poll_id, self::BALLOT, $voter, $now ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
 		if ( 1 !== $first ) {
 			return false;
 		}
@@ -197,10 +204,15 @@ class Votes {
 		}
 
 		global $wpdb;
-		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT option_id, COUNT(*) AS votes FROM %i WHERE poll_id = %s GROUP BY option_id', self::table(), $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- cached below
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT option_id, COUNT(*) AS votes FROM %i WHERE poll_id = %s GROUP BY option_id', self::table(), $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- cached by keep()
 
+		return self::keep( $poll_id, (array) $rows );
+	}
+
+	// one poll's counted rows into its results, kept in the cache for a minute
+	private static function keep( $poll_id, $rows ) {
 		$counts = array();
-		foreach ( (array) $rows as $row ) {
+		foreach ( $rows as $row ) {
 			$counts[ $row->option_id ] = (int) $row->votes;
 		}
 		$voters = isset( $counts[ self::BALLOT ] ) ? $counts[ self::BALLOT ] : 0;
@@ -212,6 +224,46 @@ class Votes {
 		);
 		wp_cache_set( $poll_id, $results, self::CACHE, MINUTE_IN_SECONDS );
 		return $results;
+	}
+
+	// this visitor's answers in the polls of one page, in one query; choices_of() answers from them after
+	public static function prime( $poll_ids ) {
+		global $wpdb;
+		$poll_ids = array_values( array_unique( array_map( 'strval', (array) $poll_ids ) ) );
+		if ( ! $poll_ids ) {
+			return;
+		}
+		$voters = array();
+		foreach ( $poll_ids as $poll_id ) {
+			$voter                                    = self::voter( $poll_id );
+			$voters[ $poll_id ]                       = $voter;
+			self::$choices[ $poll_id . '|' . $voter ] = array();
+		}
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT poll_id, option_id, voter_hash FROM %i WHERE poll_id IN (' . implode( ', ', array_fill( 0, count( $poll_ids ), '%s' ) ) . ') AND voter_hash IN (' . implode( ', ', array_fill( 0, count( $poll_ids ), '%s' ) ) . ')', self::table(), ...$poll_ids, ...array_values( $voters ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- per visitor, not worth caching; one %s per poll id and per voter, passed spread
+		foreach ( (array) $rows as $row ) {
+			// a voter hash is made with its poll's id, so it matches in its own poll only
+			if ( isset( $voters[ $row->poll_id ] ) && $voters[ $row->poll_id ] === $row->voter_hash ) {
+				self::$choices[ $row->poll_id . '|' . $row->voter_hash ][] = $row->option_id;
+			}
+		}
+	}
+
+	// the results of the polls not in the cache, in one query; results() answers from the cache after
+	public static function prime_results( $poll_ids ) {
+		global $wpdb;
+		$poll_ids = array_values( array_unique( array_map( 'strval', (array) $poll_ids ) ) );
+		$missing  = array_values( array_filter( $poll_ids, fn( $poll_id ) => ! is_array( wp_cache_get( $poll_id, self::CACHE ) ) ) );
+		if ( ! $missing ) {
+			return;
+		}
+		$rows    = $wpdb->get_results( $wpdb->prepare( 'SELECT poll_id, option_id, COUNT(*) AS votes FROM %i WHERE poll_id IN (' . implode( ', ', array_fill( 0, count( $missing ), '%s' ) ) . ') GROUP BY poll_id, option_id', self::table(), ...$missing ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- cached by keep(); one %s per poll id, passed spread
+		$by_poll = array_fill_keys( $missing, array() );
+		foreach ( (array) $rows as $row ) {
+			$by_poll[ $row->poll_id ][] = $row;
+		}
+		foreach ( $by_poll as $poll_id => $poll_rows ) {
+			self::keep( (string) $poll_id, $poll_rows );
+		}
 	}
 
 	// the number of people who voted in each of these polls, in one query (the dashboard's Polls tab)
@@ -232,6 +284,7 @@ class Votes {
 
 	public static function reset( $poll_id ) {
 		global $wpdb;
+		self::$choices = array();
 		$wpdb->delete( self::table(), array( 'poll_id' => $poll_id ), array( '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
 		wp_cache_delete( $poll_id, self::CACHE );
 	}

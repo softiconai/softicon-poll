@@ -11,6 +11,7 @@ class Rest {
 
 	const NS         = 'softicon-poll/v1';
 	const RATE_LIMIT = 20; // votes per address per minute
+	const BATCH      = 50; // polls per request to /results
 	// posts shown on pages that are not their own: a poll in one of these can be voted on from any page
 	const SHARED = array( 'wp_template', 'wp_template_part', 'wp_block', Shortcode::TYPE );
 
@@ -29,6 +30,29 @@ class Rest {
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'results' ),
 				'permission_callback' => '__return_true',
+			)
+		);
+
+		// the polls of one page in one request, so a page with many polls doesn't send one request each
+		register_rest_route(
+			self::NS,
+			'/results',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'batch' ),
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'ids' => array(
+						'type'     => 'array',
+						'required' => true,
+						'items'    => array(
+							'type'    => 'string',
+							'pattern' => '^[a-z0-9]{6,32}$',
+						),
+						'minItems' => 1,
+						'maxItems' => self::BATCH,
+					),
+				),
 			)
 		);
 
@@ -105,6 +129,10 @@ class Rest {
 	// browsers send Origin with requests from other sites: a form there may not vote for its visitors,
 	// nor a script read how they voted
 	private static function cross_site( \WP_REST_Request $request ) {
+		// a <script> tag on another site sends no Origin, but asks for JSONP to read the answer
+		if ( null !== $request->get_param( '_jsonp' ) ) {
+			return true;
+		}
 		$origin = $request->get_header( 'origin' );
 		if ( ! $origin ) {
 			return false;
@@ -132,34 +160,38 @@ class Rest {
 		return $settings;
 	}
 
+	// a poll for logged-in users counts accounts only, not the browser
+	private static function cookie( $settings ) {
+		return ! $settings['loginOnly'] && Votes::has_cookie( $settings['id'] );
+	}
+
+	// may this visitor see the results now
+	private static function shows( $settings, $voted, $open ) {
+		switch ( $settings['showResults'] ) {
+			case 'always':
+				return true;
+			case 'closed':
+				return ! $open;
+			case 'never':
+				return current_user_can( 'edit_post', $settings['owner'] );
+			default:
+				return $voted || ! $open;
+		}
+	}
+
 	// what view.js needs: can this visitor vote, what did they choose, and the results when they may see them
 	private static function state( $settings ) {
-		$id   = $settings['id'];
-		$rows = Votes::choices_of( $id, Votes::voter( $id ) );
-		// a poll for logged-in users counts accounts only, not the browser
-		$cookie      = ! $settings['loginOnly'] && Votes::has_cookie( $id );
+		$id          = $settings['id'];
+		$rows        = Votes::choices_of( $id, Votes::voter( $id ) );
+		$cookie      = self::cookie( $settings );
 		$voted       = (bool) $rows || $cookie;
 		$open        = Block::is_open( $settings );
 		$needs_login = $settings['loginOnly'] && ! is_user_logged_in();
 		// a match by address alone may be someone else on the same network: they learn a vote was cast, not which
 		$own = is_user_logged_in() || $cookie;
 
-		switch ( $settings['showResults'] ) {
-			case 'always':
-				$show = true;
-				break;
-			case 'closed':
-				$show = ! $open;
-				break;
-			case 'never':
-				$show = current_user_can( 'edit_post', $settings['owner'] );
-				break;
-			default:
-				$show = $voted || ! $open;
-		}
-
 		$results = null;
-		if ( $show ) {
+		if ( self::shows( $settings, $voted, $open ) ) {
 			$all    = Votes::results( $id );
 			$counts = array();
 			// votes for answers removed since then are left out
@@ -199,6 +231,50 @@ class Rest {
 		}
 		$settings = self::poll( $request['id'] );
 		return is_wp_error( $settings ) ? $settings : self::respond( self::state( $settings ) );
+	}
+
+	// { polls: { id: state }, errors: { id: message } }: a poll that can't be shown doesn't stop the others
+	public function batch( \WP_REST_Request $request ) {
+		if ( self::cross_site( $request ) ) {
+			return self::other_site_error();
+		}
+		$ids = array_values( array_unique( array_map( 'strval', (array) $request['ids'] ) ) );
+		Block::owners( $ids );
+
+		$found  = array();
+		$errors = array();
+		foreach ( $ids as $id ) {
+			$settings = self::poll( $id );
+			if ( is_wp_error( $settings ) ) {
+				$errors[ $id ] = $settings->get_error_message();
+			} else {
+				$found[ $id ] = $settings;
+			}
+		}
+
+		Votes::prime( array_keys( $found ) );
+		// results are counted only for the polls whose results this visitor may see
+		$shown = array();
+		foreach ( $found as $id => $settings ) {
+			$id    = (string) $id;
+			$voted = (bool) Votes::choices_of( $id, Votes::voter( $id ) ) || self::cookie( $settings );
+			if ( self::shows( $settings, $voted, Block::is_open( $settings ) ) ) {
+				$shown[] = $id;
+			}
+		}
+		Votes::prime_results( $shown );
+
+		$polls = array();
+		foreach ( $found as $id => $settings ) {
+			$polls[ $id ] = self::state( $settings );
+		}
+
+		return self::respond(
+			array(
+				'polls'  => (object) $polls,
+				'errors' => (object) $errors,
+			)
+		);
 	}
 
 	// counts requests per address for a minute; the address is hashed for the key too

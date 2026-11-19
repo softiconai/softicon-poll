@@ -47,6 +47,77 @@ const request = async ( config, path, { method = 'GET', params, body } = {} ) =>
 	return { ok: response.ok, data };
 };
 
+// polls that start together ask for their state in one request, 50 at most (the server's limit)
+const BATCH = 50;
+let waiting = null;
+
+const ask = ( poll ) => request( poll.config, 'results/' + poll.config.id ).then( ( { ok, data } ) => {
+	if ( ! ok ) {
+		throw data;
+	}
+	return data;
+} );
+
+const sendGroup = async ( group ) => {
+	const ids = [ ...new Set( group.map( ( item ) => item.poll.config.id ) ) ];
+	// one config for the request, so a stale nonce dropped by request() is dropped for every poll
+	const shared = { ...group[ 0 ].poll.config };
+	let response;
+	try {
+		response = await request( shared, 'results', { params: { ids: ids.join( ',' ) } } );
+	} catch ( e ) {
+		response = { ok: false, data: {} };
+	}
+	group.forEach( ( { poll } ) => {
+		poll.config.nonce = shared.nonce;
+	} );
+	const { ok, data } = response;
+
+	if ( ok && data.polls ) {
+		group.forEach( ( { poll, resolve, reject } ) => {
+			const state = data.polls[ poll.config.id ];
+			if ( state ) {
+				resolve( state );
+			} else {
+				reject( { message: data.errors?.[ poll.config.id ] } );
+			}
+		} );
+		return;
+	}
+	// an answer from WordPress, such as the plugin's own refusal or a busy server, is the same for every poll
+	if ( data.code && 'rest_no_route' !== data.code ) {
+		group.forEach( ( { reject } ) => reject( data ) );
+		return;
+	}
+	// the route is missing or blocked before WordPress, such as by a firewall: one request each
+	group.forEach( ( { poll, resolve, reject } ) => ask( poll ).then( resolve, reject ) );
+};
+
+const flush = () => {
+	const queue = waiting;
+	waiting = null;
+	// a page normally has one API address and nonce; polls with different ones go in their own requests
+	const groups = new Map();
+	queue.forEach( ( item ) => {
+		const key = item.poll.config.api + '|' + ( item.poll.config.nonce || '' );
+		groups.set( key, [ ...( groups.get( key ) || [] ), item ] );
+	} );
+	groups.forEach( ( group ) => {
+		for ( let i = 0; i < group.length; i += BATCH ) {
+			sendGroup( group.slice( i, i + BATCH ) );
+		}
+	} );
+};
+
+const loadState = ( poll ) => new Promise( ( resolve, reject ) => {
+	if ( ! waiting ) {
+		waiting = [];
+		// after the current IntersectionObserver callback, which starts every poll near the screen at once
+		setTimeout( flush );
+	}
+	waiting.push( { poll, resolve, reject } );
+} );
+
 class Poll {
 	constructor( el ) {
 		this.el = el;
@@ -105,11 +176,7 @@ class Poll {
 	async load() {
 		this.el.classList.add( 'alpl_busy' );
 		try {
-			const { ok, data } = await request( this.config, 'results/' + this.config.id );
-			if ( ! ok ) {
-				throw data;
-			}
-			this.apply( data );
+			this.apply( await loadState( this ) );
 		} catch ( error ) {
 			this.say( error?.message || __( 'The poll could not be loaded. Please reload the page.', 'softicon-poll' ) );
 		} finally {
@@ -355,7 +422,8 @@ const prepare = ( el ) => {
 	}
 };
 
-// a poll asks the server for its state only when it gets near the screen
+// nothing is asked of the server until a poll gets near the screen; then every poll on the page starts,
+// so they share one request instead of one each while the visitor scrolls
 const boot = () => {
 	const polls = [ ...document.querySelectorAll( '.alpl_poll[data-alpl]' ) ].filter( ( el ) => ! el.alpl );
 	polls.forEach( prepare );
@@ -363,12 +431,12 @@ const boot = () => {
 		polls.forEach( start );
 		return;
 	}
-	const observer = new IntersectionObserver( ( entries ) => entries.forEach( ( entry ) => {
-		if ( entry.isIntersecting ) {
-			observer.unobserve( entry.target );
-			start( entry.target );
+	const observer = new IntersectionObserver( ( entries ) => {
+		if ( entries.some( ( entry ) => entry.isIntersecting ) ) {
+			observer.disconnect();
+			polls.forEach( start );
 		}
-	} ), { rootMargin: '300px 0px' } );
+	}, { rootMargin: '300px 0px' } );
 	polls.forEach( ( el ) => observer.observe( el ) );
 };
 

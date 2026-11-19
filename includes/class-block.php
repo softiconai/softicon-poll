@@ -23,6 +23,7 @@ class Block {
 		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
 			return;
 		}
+		self::$owners = array();
 
 		$ids = array();
 		if ( false !== strpos( $post->post_content, '<!-- wp:' . self::NAME . ' ' ) ) {
@@ -41,6 +42,7 @@ class Block {
 
 	// a deleted post takes its polls' votes along
 	public function forget_ids( $post_id ) {
+		self::$owners = array();
 		foreach ( array_map( 'strval', get_post_meta( $post_id, self::META, false ) ) as $id ) {
 			self::release( $post_id, $id, true );
 		}
@@ -73,10 +75,36 @@ class Block {
 		}
 	}
 
+	// owners looked up together by owners(), for this request only
+	private static $owners = array();
+
 	// the post the poll id was first saved in, 0 when none has it
 	public static function owner( $poll_id ) {
+		if ( isset( self::$owners[ $poll_id ] ) ) {
+			return self::$owners[ $poll_id ];
+		}
 		global $wpdb;
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s ORDER BY meta_id ASC LIMIT 1", self::META, $poll_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- asked once when a poll opens in the editor
+	}
+
+	// the owners of many polls in one query, for the polls of one page; owner() answers from them after
+	public static function owners( $poll_ids ) {
+		global $wpdb;
+		$poll_ids = array_values( array_unique( array_map( 'strval', (array) $poll_ids ) ) );
+		if ( ! $poll_ids ) {
+			return;
+		}
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value IN (" . implode( ', ', array_fill( 0, count( $poll_ids ), '%s' ) ) . ') ORDER BY meta_id ASC', self::META, ...$poll_ids ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- per visitor request; one %s per poll id, passed spread
+
+		$found = array_fill_keys( $poll_ids, 0 );
+		foreach ( (array) $rows as $row ) {
+			// the oldest row is the owner
+			if ( isset( $found[ $row->meta_value ] ) && ! $found[ $row->meta_value ] ) {
+				$found[ $row->meta_value ] = (int) $row->post_id;
+			}
+		}
+		// + keeps ids made of digits as they are, array_merge() would renumber them
+		self::$owners = $found + self::$owners;
 	}
 
 	// the block has its own General and Style tabs; without this WordPress adds its Settings/Styles tabs above them
@@ -238,8 +266,25 @@ class Block {
 
 	// the poll's saved attributes in its own post, so a vote is checked against the current answers
 	public static function find( $post_id, $poll_id ) {
-		$post = get_post( $post_id );
-		return $post && '' !== $poll_id ? self::find_in( parse_blocks( $post->post_content ), $poll_id ) : null;
+		static $parsed = array();
+		$post          = get_post( $post_id );
+		if ( ! $post || '' === $poll_id ) {
+			return null;
+		}
+		// many polls of one post are looked up in one request: the post is parsed once, again only if it changed;
+		// the last 10 posts are kept, so many large posts don't fill the memory
+		$hash = md5( $post->post_content );
+		if ( ! isset( $parsed[ $post->ID ] ) || $hash !== $parsed[ $post->ID ]['hash'] ) {
+			unset( $parsed[ $post->ID ] );
+			if ( count( $parsed ) >= 10 ) {
+				unset( $parsed[ array_key_first( $parsed ) ] );
+			}
+			$parsed[ $post->ID ] = array(
+				'hash'   => $hash,
+				'blocks' => parse_blocks( $post->post_content ),
+			);
+		}
+		return self::find_in( $parsed[ $post->ID ]['blocks'], $poll_id );
 	}
 
 	private static function find_in( $blocks, $poll_id ) {

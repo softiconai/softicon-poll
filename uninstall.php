@@ -11,3 +11,8 @@ delete_option( 'alpl_db_version' );
 delete_post_meta_by_key( '_alpl_poll' );
 // the dashboard's review request
 delete_option( 'alpl_review' );
+
+// the Freemius opt-in: WordPress runs this file instead of fs-lite's uninstall hook, so it is called here. It tells
+// Freemius about the uninstall only if the admin opted in, or chose a reason when deactivating, then removes its option.
+require_once __DIR__ . '/includes/freemius.php';
+SofticonPoll\fs_lite::uninstall();

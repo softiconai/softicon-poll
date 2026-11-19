@@ -4,6 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import Header from './Header';
 import VideoPopup from './VideoPopup';
 import useRoute from './useRoute';
+import { OptInNotice } from './OptIn';
 
 const keys = ( config ) => config.tabs.map( ( tab ) => tab.key );
 
@@ -46,6 +47,7 @@ const App = ( { config, tabs } ) => {
 	return <>
 		<Header config={ config } active={ tab } />
 		<div className="alpl-dash-body">
+			{ config.notice && <OptInNotice notice={ config.notice } /> }
 			{ config.review && <Review review={ config.review } /> }
 			<Content config={ config } play={ setVideo } />
 		</div>
