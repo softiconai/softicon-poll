@@ -44,6 +44,12 @@ https://www.youtube.com/watch?v=rA7Lb3rCvKo
 * A shortcode for the Classic Editor, widgets and page builders such as Elementor, Divi, Beaver Builder, WPBakery, Bricks and Oxygen, for example `[softicon_poll id="123"]`
 * Translation ready and right-to-left ready
 
+= Members-only polls =
+
+Only want members to vote? Turn on "Only logged-in users" in the Voting panel. Visitors who are not logged in still see the poll, with a link to log in, and come right back to the same page to vote. Each account votes once.
+
+https://www.youtube.com/watch?v=xaLxre2veIs
+
 = Privacy =
 
 Polls on your pages contact no external service: the votes and the results go only between the visitor's browser and your own site.
@@ -66,7 +72,7 @@ No. Everything runs on your own site, and the votes are saved in your own databa
 
 A logged-in visitor votes once per account. A visitor who is not logged in is recognised by a browser cookie and by a scrambled code made from the IP address, so clearing cookies does not allow a second vote.
 
-People who share one internet connection, for example a family or an office, share one IP address, so only one of them can vote while not logged in. If that matters for your poll, turn on "Only logged-in users" in the Voting panel: then every account votes once.
+People who share one internet connection, for example a family or an office, share one IP address, so only one of them can vote while not logged in. If that matters for your poll, turn on "Only logged-in users" in the Voting panel: then every account votes once. See how in this video: [Members-only polls](https://www.youtube.com/watch?v=xaLxre2veIs).
 
 = My site is behind Cloudflare or another proxy. Does that matter? =
 

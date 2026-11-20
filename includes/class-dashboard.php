@@ -26,6 +26,7 @@ class Dashboard {
 	public static function videos() {
 		return array(
 			'https://www.youtube.com/watch?v=rA7Lb3rCvKo' => __( 'SoftIcon Poll in 30 seconds', 'softicon-poll' ),
+			'https://www.youtube.com/watch?v=xaLxre2veIs' => __( 'Members-only polls: only logged-in users can vote', 'softicon-poll' ),
 		);
 	}
 
