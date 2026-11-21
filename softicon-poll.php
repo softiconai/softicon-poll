@@ -19,14 +19,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ALPL_PLUGIN_VERSION', '1.1.1' );
-define( 'ALPL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( 'ALPL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+if ( function_exists( 'softicon_poll_fs' ) ) {
+	// SoftIcon Poll Pro (or another copy) is already loaded; activating this one switches the other off
+	register_activation_hook(
+		__FILE__,
+		function () {
+			foreach ( array( 'softicon-poll/softicon-poll.php', 'softicon-poll-pro/softicon-poll.php' ) as $alpl_plugin ) {
+				if ( plugin_basename( __FILE__ ) !== $alpl_plugin && is_plugin_active( $alpl_plugin ) ) {
+					deactivate_plugins( $alpl_plugin );
+				}
+			}
+		}
+	);
+} else {
+	define( 'ALPL_PLUGIN_VERSION', '1.1.1' );
+	define( 'ALPL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+	define( 'ALPL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-// the optional Freemius opt-in, see includes/freemius.php
-require_once ALPL_PLUGIN_PATH . 'includes/freemius.php';
+	// the optional Freemius opt-in, see includes/freemius.php
+	require_once ALPL_PLUGIN_PATH . 'includes/freemius.php';
 
-require_once ALPL_PLUGIN_PATH . 'includes/class-alpl-poll.php';
-ALPL_Poll::get_instance();
+	require_once ALPL_PLUGIN_PATH . 'includes/class-alpl-poll.php';
+	ALPL_Poll::get_instance();
 
-register_activation_hook( __FILE__, array( 'ALPL_Poll\Votes', 'install' ) );
+	register_activation_hook( __FILE__, array( 'ALPL_Poll\Votes', 'install' ) );
+}

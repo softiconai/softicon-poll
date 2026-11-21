@@ -162,21 +162,25 @@ class Rest {
 
 	// a poll for logged-in users counts accounts only, not the browser
 	private static function cookie( $settings ) {
-		return ! $settings['loginOnly'] && Votes::has_cookie( $settings['id'] );
+		return (bool) apply_filters( 'alpl_cookie', ! $settings['loginOnly'] && Votes::has_cookie( $settings['id'] ), $settings );
 	}
 
-	// may this visitor see the results now
+	// may this visitor see the results now; an add-on may hide them for its own reasons (alpl_shows_results)
 	private static function shows( $settings, $voted, $open ) {
 		switch ( $settings['showResults'] ) {
 			case 'always':
-				return true;
+				$shows = true;
+				break;
 			case 'closed':
-				return ! $open;
+				$shows = ! $open;
+				break;
 			case 'never':
-				return current_user_can( 'edit_post', $settings['owner'] );
+				$shows = current_user_can( 'edit_post', $settings['owner'] );
+				break;
 			default:
-				return $voted || ! $open;
+				$shows = $voted || ! $open;
 		}
+		return (bool) apply_filters( 'alpl_shows_results', $shows, $settings, $voted, $open );
 	}
 
 	// what view.js needs: can this visitor vote, what did they choose, and the results when they may see them
@@ -204,7 +208,7 @@ class Rest {
 			);
 		}
 
-		return array(
+		$state = array(
 			'open'       => $open,
 			'voted'      => $voted,
 			'choices'    => $own ? array_values( array_diff( $rows, array( Votes::BALLOT ) ) ) : array(),
@@ -212,6 +216,8 @@ class Rest {
 			'needsLogin' => $open && ! $voted && $needs_login,
 			'results'    => $results,
 		);
+		// an add-on may change it, such as letting a voter change the vote (canVote while voted) or adding a message
+		return apply_filters( 'alpl_state', $state, $settings );
 	}
 
 	private static function respond( $data ) {
@@ -321,8 +327,11 @@ class Rest {
 			return self::refuse( 'alpl_login', __( 'Please log in to vote.', 'softicon-poll' ), 403, $state );
 		}
 		$voted = __( 'You have already voted.', 'softicon-poll' );
-		if ( $state['voted'] ) {
+		if ( $state['voted'] && ! $state['canVote'] ) {
 			return self::refuse( 'alpl_voted', $voted, 409, $state );
+		}
+		if ( ! $state['canVote'] ) {
+			return self::refuse( 'alpl_refused', ! empty( $state['message'] ) ? $state['message'] : __( 'You cannot vote in this poll.', 'softicon-poll' ), 403, $state );
 		}
 
 		$allowed = wp_list_pluck( $settings['options'], 'id' );
@@ -331,11 +340,24 @@ class Rest {
 			return new \WP_Error( 'alpl_invalid', __( 'Please choose a valid answer.', 'softicon-poll' ), array( 'status' => 400 ) );
 		}
 
-		$id = $settings['id'];
+		// an add-on's own checks, such as a CAPTCHA: a WP_Error refuses the vote
+		$check = apply_filters( 'alpl_vote_check', true, $settings, $choices, $request );
+		if ( is_wp_error( $check ) ) {
+			$data = (array) $check->get_error_data();
+			return self::refuse( $check->get_error_code(), $check->get_error_message(), isset( $data['status'] ) ? $data['status'] : 400, $state );
+		}
+
+		$id    = $settings['id'];
+		$voter = Votes::voter( $id );
+		// a changed vote, allowed by an add-on through alpl_state: the old answers go first
+		if ( $state['voted'] ) {
+			Votes::forget( $id, $voter );
+		}
 		// another request of the same voter got in first
-		if ( ! Votes::add( $id, Votes::voter( $id ), $choices ) ) {
+		if ( ! Votes::add( $id, $voter, $choices ) ) {
 			return self::refuse( 'alpl_voted', $voted, 409, self::state( $settings ) );
 		}
+		do_action( 'alpl_vote_recorded', $id, $choices, $settings, $request, $voter );
 
 		// the browser remembers the vote too, for visitors whose address changes
 		if ( ! $settings['loginOnly'] ) {

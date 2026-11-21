@@ -47,6 +47,8 @@ $alpl_config = array(
 	// the countdown needs the closing time; the open/closed state still comes from the server
 	'end'         => ! empty( $attributes['countdown'] ) && $alpl['endDate'] && ALPL_Poll\Block::is_open( $alpl ) ? $alpl['endDate']->getTimestamp() : 0,
 );
+// add-ons such as SoftIcon Poll Pro add their own settings for view.js
+$alpl_config = apply_filters( 'alpl_view_config', $alpl_config, $alpl, $attributes );
 
 // answers with images as cards, 2 to 4 per row
 $alpl_columns = min( 4, absint( $attributes['columns'] ?? 0 ) );

@@ -219,12 +219,10 @@ class Block {
 		return $date ? $date : null;
 	}
 
-	// closed by hand or past the end date
+	// closed by hand or past the end date; an add-on may close it for its own reasons (alpl_is_open)
 	public static function is_open( $settings ) {
-		if ( $settings['closed'] ) {
-			return false;
-		}
-		return ! $settings['endDate'] || $settings['endDate']->getTimestamp() > time();
+		$open = ! $settings['closed'] && ( ! $settings['endDate'] || $settings['endDate']->getTimestamp() > time() );
+		return (bool) apply_filters( 'alpl_is_open', $open, $settings );
 	}
 
 	// hex or a preset var(); WordPress drops rgb() from a block's style attribute, so rgb(a) becomes hex.

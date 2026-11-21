@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { RichText } from '@wordpress/block-editor';
 import { useEffect, useState } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { hasText, resultRows, totalText } from '../../utils/functions';
 
 // the results as visitors see them; made-up numbers while the poll has no votes, so colors can be tried
@@ -28,7 +29,7 @@ const ResultsPreview = ( { attributes, results } ) => {
 		return () => cancelAnimationFrame( frame );
 	}, [] );
 
-	return <div className="alpl_results">
+	const preview = <div className="alpl_results">
 		{ ! real && <p className="alplNotice">{ __( 'Sample results, this poll has no votes yet.', 'softicon-poll' ) }</p> }
 		<ul className="alpl_rows">
 			{ options.map( ( option ) => <li key={ option.id } className={ 'alpl_row' + ( rows[ option.id ].top ? ' is-top' : '' ) } style={ { '--alpl-percent': ( grown ? rows[ option.id ].percent : 0 ) + '%' } }>
@@ -46,6 +47,8 @@ const ResultsPreview = ( { attributes, results } ) => {
 			<span className="alpl_total">{ totalText( voters, multiple ) }</span>
 		</div> }
 	</div>;
+	// an add-on such as SoftIcon Poll Pro may draw the results another way, such as a pie chart
+	return applyFilters( 'alpl.block.resultsPreview', preview, { attributes, options, counts, voters, rows, real, grown } );
 };
 
 export default ResultsPreview;

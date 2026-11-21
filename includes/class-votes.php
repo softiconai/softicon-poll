@@ -145,7 +145,9 @@ class Votes {
 	// keeps the same visitor from being linked across polls
 	public static function voter( $poll_id ) {
 		$user = get_current_user_id();
-		return wp_hash( ( $user ? 'user:' . $user : 'ip:' . self::network() ) . '|' . $poll_id );
+		$who  = $user ? 'user:' . $user : 'ip:' . self::network();
+		// an add-on may count the same visitor again later, such as once a day (alpl_voter)
+		return apply_filters( 'alpl_voter', wp_hash( $who . '|' . $poll_id ), $poll_id, $who );
 	}
 
 	public static function cookie( $poll_id ) {
@@ -282,10 +284,27 @@ class Votes {
 		return $voters;
 	}
 
+	// one voter's ballot and answers, before a changed vote is saved again
+	public static function forget( $poll_id, $voter ) {
+		global $wpdb;
+		self::$choices = array();
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
+			self::table(),
+			array(
+				'poll_id'    => $poll_id,
+				'voter_hash' => $voter,
+			),
+			array( '%s', '%s' )
+		);
+		wp_cache_delete( $poll_id, self::CACHE );
+	}
+
 	public static function reset( $poll_id ) {
 		global $wpdb;
 		self::$choices = array();
 		$wpdb->delete( self::table(), array( 'poll_id' => $poll_id ), array( '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- this plugin's own table
 		wp_cache_delete( $poll_id, self::CACHE );
+		// add-ons remove their own data of the poll too
+		do_action( 'alpl_votes_reset', $poll_id );
 	}
 }

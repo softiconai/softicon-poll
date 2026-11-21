@@ -45,7 +45,19 @@
 		"barBgColor": { "type": "string", "default": "" },
 		"borderColor": { "type": "string", "default": "" },
 		"buttonColor": { "type": "string", "default": "" },
-		"buttonTextColor": { "type": "string", "default": "" }
+		"buttonTextColor": { "type": "string", "default": "" },
+		"liveResults": { "type": "boolean", "default": false },
+		"liveInterval": { "type": "number", "default": 10 },
+		"otherAnswer": { "type": "boolean", "default": false },
+		"otherLabel": { "type": "string", "default": "" },
+		"captcha": { "type": "boolean", "default": false },
+		"voteAgain": { "type": "string", "default": "never" },
+		"changeVote": { "type": "boolean", "default": false },
+		"voteRoles": { "type": "array", "default": [], "items": { "type": "string" } },
+		"voteLimit": { "type": "number", "default": 0 },
+		"resultsChart": { "type": "string", "default": "bars" },
+		"minVotes": { "type": "number", "default": 0 },
+		"resultsRoles": { "type": "array", "default": [], "items": { "type": "string" } }
 	},
 	"supports": {
 		"html": false,

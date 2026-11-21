@@ -2,6 +2,7 @@
 // (includes/class-dashboard.php polls())
 import { useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
 import { useApi } from './api';
 import Status from './Status';
 import { Code } from './Copy';
@@ -33,6 +34,8 @@ const State = ( { poll } ) => {
 const Row = ( { poll } ) => <tr>
 	<td className="alpl-polls-question">
 		<strong>{ poll.question || <em>{ __( '(no question)', 'softicon-poll' ) }</em> }</strong>
+		{ /* links under the question, added by an add-on such as SoftIcon Poll Pro (its Analytics) */ }
+		{ applyFilters( 'alpl.dashboard.pollLinks', null, poll ) }
 	</td>
 	<td className="alpl-polls-post">
 		{ poll.post.edit ? <a href={ poll.post.edit }>{ poll.post.title }</a> : poll.post.title }

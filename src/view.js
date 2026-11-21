@@ -137,6 +137,18 @@ class Poll {
 		this.state = null;
 	}
 
+	// tells add-ons such as SoftIcon Poll Pro what happened: alpl:ready, alpl:state, alpl:results, alpl:beforevote
+	// the same detail object goes to the listeners, so what they set on it (such as cancel) comes back here
+	emit( name, detail = {} ) {
+		detail.poll = this;
+		this.el.dispatchEvent( new CustomEvent( name, { bubbles: true, detail } ) );
+	}
+
+	// a request to the plugin's REST routes with this poll's address and nonce, for add-ons
+	fetch( path, options ) {
+		return request( this.config, path, options );
+	}
+
 	init() {
 		this.form.addEventListener( 'submit', ( event ) => {
 			event.preventDefault();
@@ -185,6 +197,11 @@ class Poll {
 	}
 
 	apply( state ) {
+		this.applyState( state );
+		this.emit( 'alpl:state', { state } );
+	}
+
+	applyState( state ) {
 		this.state = state;
 		this.inputs.forEach( ( input ) => {
 			input.checked = state.choices.includes( input.value );
@@ -211,7 +228,9 @@ class Poll {
 			// back to this page after logging in
 			const login = new URL( this.config.login, window.location.href );
 			login.searchParams.set( 'redirect_to', window.location.href );
-			this.say( __( 'Please log in to vote.', 'softicon-poll' ), login.toString() );
+			this.say( state.message || __( 'Please log in to vote.', 'softicon-poll' ), login.toString() );
+		} else if ( state.message ) {
+			this.say( state.message );
 		} else if ( state.voted && ! state.results ) {
 			this.say( this.thanks( 'closed' === this.config.showResults && state.open ) );
 		}
@@ -260,20 +279,30 @@ class Poll {
 			row.classList.toggle( 'is-mine', mine );
 			row.classList.toggle( 'is-top', data.top );
 			this.yours( row, mine );
-			row.style.setProperty( '--alpl-percent', '0%' );
+			if ( this.results.hidden ) {
+				row.style.setProperty( '--alpl-percent', '0%' );
+			}
 		} );
 
 		this.total.textContent = this.config.showTotal ? this.totalText( results.voters ) : '';
+		// results already in view (new numbers from an add-on's live update) move from where they are
+		const fresh = this.results.hidden;
 		this.form.hidden = true;
 		this.results.hidden = false;
 		if ( this.backButton ) {
 			this.backButton.hidden = ! peek;
 		}
 
-		// two frames so the bars grow from zero
-		requestAnimationFrame( () => requestAnimationFrame( () => this.rows.forEach( ( row ) => {
+		const grow = () => this.rows.forEach( ( row ) => {
 			row.style.setProperty( '--alpl-percent', ( rows[ row.dataset.option ]?.percent || 0 ) + '%' );
-		} ) ) );
+		} );
+		if ( fresh ) {
+			// two frames so the bars grow from zero
+			requestAnimationFrame( () => requestAnimationFrame( grow ) );
+		} else {
+			grow();
+		}
+		this.emit( 'alpl:results', { rows, peek } );
 	}
 
 	// a "Your vote" tag beside the visitor's answer, made here so the page's HTML stays the same
@@ -331,11 +360,21 @@ class Poll {
 		this.voteButton.disabled = true;
 		this.el.classList.add( 'alpl_busy' );
 		try {
-			const { ok, data } = await request( this.config, 'vote', { method: 'POST', body: { poll: this.config.id, choices } } );
+			// add-ons add their fields to the vote, wait for a token, or stop it with a message
+			const body = { poll: this.config.id, choices };
+			const detail = { body, wait: [], cancel: '' };
+			this.emit( 'alpl:beforevote', detail );
+			await Promise.all( detail.wait );
+			if ( detail.cancel ) {
+				this.say( detail.cancel );
+				this.limit();
+				return;
+			}
+			const { ok, data } = await request( this.config, 'vote', { method: 'POST', body } );
 			if ( ok ) {
 				this.apply( data );
 				if ( data.results ) {
-					this.say( this.thanks(), '', this.summary() );
+					this.say( data.message || this.thanks(), '', this.summary() );
 				}
 			} else if ( data.data?.state ) {
 				this.apply( data.data.state );
@@ -379,6 +418,7 @@ const start = ( el ) => {
 	}
 	try {
 		el.alpl = new Poll( el );
+		el.alpl.emit( 'alpl:ready' );
 		el.alpl.init();
 	} catch ( e ) {
 		// eslint-disable-next-line no-console
