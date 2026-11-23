@@ -148,3 +148,96 @@
 		cursor: default;
 	}
 }
+
+// the free plugin: a Pro setting's card (src/Components/Backend/ProNotice.js)
+.alplProNotice {
+	position: relative;
+	overflow: hidden;
+	padding: 14px 14px 12px;
+	border: 1px solid $si-line;
+	border-radius: 12px;
+	background:
+		radial-gradient(140% 100% at 100% 0, rgba(245, 158, 11, 0.12), transparent 50%),
+		linear-gradient(160deg, $si-tint 0%, #fff 65%);
+
+	p {
+		margin: 0;
+		overflow-wrap: break-word;
+	}
+}
+
+.alplProNoticeHead {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px !important;
+	color: #1e1e1e;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+// a gold crown in a soft circle
+.alplProNoticeCrown {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #fbbf24, #f59e0b);
+	box-shadow: 0 2px 6px -1px rgba(245, 158, 11, 0.5);
+
+	svg {
+		width: 14px;
+		height: 14px;
+		fill: #fff;
+	}
+}
+
+.alplProNoticeText {
+	color: #3c434a;
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+// the dashboard's Pricing, a full width button
+.alplProNotice .components-external-link.alplProNoticeLink {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	margin-top: 12px;
+	padding: 9px 12px;
+	border-radius: 8px;
+	background: linear-gradient(135deg, $si-accent, $si-accent-dark);
+	box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08), 0 6px 14px -6px rgba(5, 150, 105, 0.6);
+	color: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: transform 0.15s, box-shadow 0.15s;
+
+	&:hover,
+	&:focus {
+		color: #fff;
+		box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08), 0 10px 20px -8px rgba(5, 150, 105, 0.7);
+		transform: translateY(-1px);
+	}
+
+	.components-external-link__contents,
+	.components-external-link__icon {
+		color: #fff;
+		text-decoration: none;
+	}
+}
+
+// the feature's short video, under the button
+.alplProNotice .components-external-link.alplProNoticeVideo {
+	display: flex;
+	margin-top: 12px;
+	color: #3c434a;
+	font-size: 12px;
+	font-weight: 500;
+}

@@ -24,6 +24,7 @@ const Settings = ( { attributes, setAttributes, votes } ) => {
 
 				{ /* Add-ons append their own panels to either tab, with the same panel parts (one accordion) */ }
 				{ applyFilters( 'alpl.block.inspector', null, { tab: tab.name, attributes, setAttributes, ui: { Panel, FieldHead, ToggleRow, Tiles, ColorRow } } ) }
+
 			</PanelGroup> }
 		</TabPanel>
 	</InspectorControls>;

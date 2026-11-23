@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-19T03:17:23+00:00\n"
+"POT-Creation-Date: 2026-11-22T16:23:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
@@ -35,7 +35,7 @@ msgid "https://profiles.wordpress.org/softiconai/"
 msgstr ""
 
 #. translators: %d: how many answers a visitor may pick
-#: build/render.php:65
+#: build/render.php:67
 #: build/index.js:7
 #, php-format,js-format
 msgid "Choose up to %d answer."
@@ -43,93 +43,135 @@ msgid_plural "Choose up to %d answers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/render.php:66
+#: build/render.php:68
 #: build/index.js:7
 msgid "Choose one or more answers."
 msgstr ""
 
-#: build/render.php:71
-#: includes/class-rest.php:318
+#: build/render.php:73
+#: includes/class-rest.php:324
 #: build/view.js:3
 msgid "This poll is closed."
 msgstr ""
 
 #. translators: %s: the date and time the poll closes
-#: build/render.php:74
+#: build/render.php:76
 #, php-format
 msgid "Voting ends on %s."
 msgstr ""
 
 #. translators: %d: the answer's position, like 1
-#: build/render.php:94
+#: build/render.php:96
 #: build/index.js:3
 #: build/index.js:8
 #, php-format,js-format
 msgid "Answer %d"
 msgstr ""
 
-#: build/render.php:114
-#: includes/class-dashboard.php:40
+#: build/render.php:116
+#: includes/class-dashboard.php:169
 #: includes/class-shortcode.php:35
 #: build/dashboard.js:1
 msgid "Poll"
 msgstr ""
 
-#: build/render.php:128
+#: build/render.php:130
 #: build/index.js:4
 #: build/index.js:8
 msgid "Vote"
 msgstr ""
 
-#: build/render.php:130
+#: build/render.php:132
 msgid "View results"
 msgstr ""
 
-#: build/render.php:149
+#: build/render.php:151
 msgid "Back to vote"
 msgstr ""
 
-#: build/render.php:157
+#: build/render.php:159
 msgid "Please turn on JavaScript to vote."
 msgstr ""
 
-#: includes/class-dashboard.php:28
+#: includes/class-dashboard.php:156
 msgid "SoftIcon Poll in 30 seconds"
 msgstr ""
 
-#: includes/class-dashboard.php:39
-#: includes/class-dashboard.php:48
-#: includes/class-dashboard.php:329
+#: includes/class-dashboard.php:157
+msgid "Members-only polls: only logged-in users can vote"
+msgstr ""
+
+#: includes/class-dashboard.php:168
+#: includes/class-dashboard.php:177
+#: includes/class-dashboard.php:531
 msgid "SoftIcon Poll"
 msgstr ""
 
-#: includes/class-dashboard.php:48
-#: includes/class-dashboard.php:60
+#: includes/class-dashboard.php:177
+#: includes/class-dashboard.php:189
 msgid "Dashboard"
 msgstr ""
 
-#: includes/class-dashboard.php:66
-#: includes/class-dashboard.php:98
-#: build/index.js:4
-msgid "Help"
+#: includes/class-dashboard.php:191
+#: includes/class-dashboard.php:239
+msgid "Free vs Pro"
 msgstr ""
 
-#: includes/class-dashboard.php:96
+#: includes/class-dashboard.php:198
+#: build/dashboard.js:3
+msgid "Video tutorials"
+msgstr ""
+
+#: includes/class-dashboard.php:228
 msgid "Welcome"
 msgstr ""
 
-#: includes/class-dashboard.php:97
+#: includes/class-dashboard.php:229
 #: includes/class-shortcode.php:34
 #: includes/class-shortcode.php:36
 msgid "Polls"
 msgstr ""
 
-#: includes/class-dashboard.php:162
-#: includes/class-dashboard.php:245
+#: includes/class-dashboard.php:238
+#: build/dashboard.js:15
+msgid "Pricing"
+msgstr ""
+
+#: includes/class-dashboard.php:241
+#: build/index.js:4
+msgid "Help"
+msgstr ""
+
+#: includes/class-dashboard.php:258
+msgid "Manage"
+msgstr ""
+
+#: includes/class-dashboard.php:260
+msgid "Analytics"
+msgstr ""
+
+#: includes/class-dashboard.php:260
+msgid "Votes, answers and exports"
+msgstr ""
+
+#: includes/class-dashboard.php:261
+msgid "Settings"
+msgstr ""
+
+#: includes/class-dashboard.php:261
+msgid "CAPTCHA for your polls"
+msgstr ""
+
+#: includes/class-dashboard.php:340
+#: includes/class-dashboard.php:432
 msgid "(no title)"
 msgstr ""
 
-#: includes/class-dashboard.php:333
+#: includes/class-dashboard.php:531
+msgid "SoftIcon Poll Pro"
+msgstr ""
+
+#: includes/class-dashboard.php:535
 msgid "The Poll dashboard needs JavaScript."
 msgstr ""
 
@@ -137,30 +179,33 @@ msgstr ""
 msgid "This poll could not be found."
 msgstr ""
 
-#: includes/class-rest.php:225
+#: includes/class-rest.php:231
 msgid "Please vote on the site itself."
 msgstr ""
 
-#: includes/class-rest.php:308
+#: includes/class-rest.php:314
 msgid "Too many votes from your network. Please try again in a minute."
 msgstr ""
 
-#: includes/class-rest.php:321
+#: includes/class-rest.php:327
 #: build/view.js:3
 msgid "Please log in to vote."
 msgstr ""
 
-#: includes/class-rest.php:323
+#: includes/class-rest.php:329
 msgid "You have already voted."
 msgstr ""
 
-#: includes/class-rest.php:331
+#: includes/class-rest.php:334
+msgid "You cannot vote in this poll."
+msgstr ""
+
+#: includes/class-rest.php:340
 msgid "Please choose a valid answer."
 msgstr ""
 
 #: includes/class-shortcode.php:37
 #: includes/class-shortcode.php:38
-#: build/dashboard.js:1
 #: build/dashboard.js:3
 #: build/dashboard.js:7
 msgid "Add a poll"
@@ -297,6 +342,7 @@ msgid "It is a temporary deactivation, I am fixing something"
 msgstr ""
 
 #: vendor/fs-lite/fs-lite.php:527
+#: build/dashboard.js:16
 msgid "Other"
 msgstr ""
 
@@ -447,11 +493,27 @@ msgid "Almost done: open the email we sent to %s and click the button in it. Not
 msgstr ""
 
 #: build/dashboard.js:1
+msgid "Locked"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Poll Pro"
+msgstr ""
+
+#: build/dashboard.js:1
 msgid "Poll dashboard"
 msgstr ""
 
 #: build/dashboard.js:1
 msgid "Our plugins"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Pro active"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "Upgrade to Pro"
 msgstr ""
 
 #: build/dashboard.js:1
@@ -483,6 +545,17 @@ msgstr ""
 
 #: build/dashboard.js:1
 msgid "I already did"
+msgstr ""
+
+#: build/dashboard.js:1
+#: build/dashboard.js:16
+#: build/dashboard.js:17
+#: build/index.js:4
+msgid "Pro"
+msgstr ""
+
+#: build/dashboard.js:1
+msgid "This is a Pro feature."
 msgstr ""
 
 #: build/dashboard.js:1
@@ -701,7 +774,7 @@ msgid "Polls and quick surveys made in the block editor. The votes stay in your 
 msgstr ""
 
 #: build/dashboard.js:3
-msgid "Videos"
+msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: build/dashboard.js:3
@@ -747,10 +820,6 @@ msgstr ""
 msgid "Only polls made under Poll → All Polls have a shortcode."
 msgstr ""
 
-#: build/dashboard.js:5
-msgid "Something went wrong. Please try again."
-msgstr ""
-
 #. translators: %d: the number of polls shown
 #: build/dashboard.js:6
 #, js-format
@@ -779,6 +848,7 @@ msgid "Status"
 msgstr ""
 
 #: build/dashboard.js:7
+#: build/dashboard.js:16
 msgid "Voters"
 msgstr ""
 
@@ -997,6 +1067,365 @@ msgstr ""
 msgid "Source on GitHub"
 msgstr ""
 
+#: build/dashboard.js:8
+msgid "Try Pro without risk"
+msgstr ""
+
+#. translators: %d: number of days
+#: build/dashboard.js:9
+#, js-format
+msgid "If Pro is not right for you, tell us within %d days and you get all your money back, no questions asked."
+msgstr ""
+
+#: build/dashboard.js:9
+msgid "If Pro is not right for you, tell us and we will make it right."
+msgstr ""
+
+#. translators: %s: email address
+#: build/dashboard.js:10
+#, js-format
+msgid "Any problem or question? Email us at %s, a real person from our team will help you."
+msgstr ""
+
+#: build/dashboard.js:10
+msgid "We build SoftIcon Poll for the people who use it, and your satisfaction comes first."
+msgstr ""
+
+#. translators: %d: number of days
+#: build/dashboard.js:11
+#, js-format
+msgid "%d-day money-back guarantee"
+msgstr ""
+
+#. translators: %s: email address
+#: build/dashboard.js:12
+#, js-format
+msgid "Questions? %s"
+msgstr ""
+
+#: build/dashboard.js:12
+msgid "one-time"
+msgstr ""
+
+#: build/dashboard.js:12
+msgid "per year"
+msgstr ""
+
+#: build/dashboard.js:12
+msgid "per month"
+msgstr ""
+
+#: build/dashboard.js:12
+msgid "Unlimited websites"
+msgstr ""
+
+#. translators: %d: number of websites
+#: build/dashboard.js:13
+#, js-format
+msgid "%d website"
+msgid_plural "%d websites"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/dashboard.js:13
+msgid "Get Pro"
+msgstr ""
+
+#. translators: %d: number of days
+#: build/dashboard.js:14
+#, js-format
+msgid "Start %d-day free trial"
+msgid_plural "Start %d-day free trial"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of days
+#: build/dashboard.js:15
+#, js-format
+msgid "Try Pro free for %d day"
+msgid_plural "Try Pro free for %d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/dashboard.js:15
+msgid "Every Pro feature on one website. Cancel before the trial ends and you pay nothing."
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Every Pro feature on one website, no card needed. When the trial ends, pick a plan or keep using the free plugin."
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "The Pro plans could not be loaded right now. Please try again later."
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "SoftIcon Poll Pro is coming soon."
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Pay once, use it for life"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Pick your plan"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Every plan has all Pro features; pick how many websites you need."
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Every free feature"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Secure checkout by Freemius. Pro replaces the free plugin and keeps every poll and vote."
+msgstr ""
+
+#: build/dashboard.js:15
+#: build/dashboard.js:17
+msgid "Compare Free and Pro"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Included"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Not included"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "In Free and Pro"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Only in Pro"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Compare"
+msgstr ""
+
+#: build/dashboard.js:15
+msgid "Free vs Pro at a glance"
+msgstr ""
+
+#. translators: %s: number of features
+#: build/dashboard.js:16
+#, js-format
+msgid "See what you get when you upgrade. %s features are only in Pro."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Free"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Free forever, everything you need to run polls on your site."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "forever"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "You already have it"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Plans for more websites"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Feature breakdown"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Filter features"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Filter features…"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Feature"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "No features match."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Saturday morning"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Friday evening"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Sunday afternoon"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Period"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "7 days"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "30 days"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "90 days"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Download CSV"
+msgstr ""
+
+#: build/dashboard.js:16
+#: build/index.js:2
+#: build/index.js:4
+msgid "Votes"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Votes per day"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Written answers"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Which day suits the workshop?"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Share"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "None"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Votes are not checked for robots."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Free, and usually no puzzle for visitors."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Free plan; visitors may get a picture puzzle."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "No box to tick; Google scores each vote."
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "CAPTCHA service"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Site key"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Secret key"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Save settings"
+msgstr ""
+
+#: build/dashboard.js:16
+msgid "Try it"
+msgstr ""
+
+#. translators: %s: the Pro feature, such as Poll analytics
+#: build/dashboard.js:17
+#, js-format
+msgid "A working demo of %s with sample data. Click around; nothing is saved."
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Insights"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Poll analytics"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "See when people vote, how each answer does, and share a poll with a QR code."
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Votes over time, by hour, day or month"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Today, 7, 30 or 90 days, all time, or your own dates"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Every vote or a summary as a CSV file"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Read the answers people wrote in \"Other\""
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "A QR code, a vote page and a full-screen presentation for each poll"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Site"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "CAPTCHA and settings"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Stop robots from voting with the CAPTCHA service you like."
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Cloudflare Turnstile, hCaptcha or Google reCAPTCHA v3"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Checked on your server, so a robot cannot skip it"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Its script loads only on pages with such a poll"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Turn it on for each poll in its Voting rules"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "See Pro plans"
+msgstr ""
+
+#: build/dashboard.js:17
+msgid "Watch it in action"
+msgstr ""
+
 #: build/index.js:2
 #, js-format
 msgid "%s color"
@@ -1039,11 +1468,6 @@ msgid "Percent"
 msgstr ""
 
 #: build/index.js:2
-#: build/index.js:4
-msgid "Votes"
-msgstr ""
-
-#: build/index.js:2
 msgid "List"
 msgstr ""
 
@@ -1065,6 +1489,14 @@ msgstr ""
 
 #: build/index.js:2
 msgid "Rate Poll"
+msgstr ""
+
+#: build/index.js:2
+msgid "Pro feature"
+msgstr ""
+
+#: build/index.js:2
+msgid "Unlock with Pro"
 msgstr ""
 
 #. translators: %s: number of people who voted
@@ -1172,6 +1604,10 @@ msgid "The results are sorted by votes. Answers with the same number keep their 
 msgstr ""
 
 #: build/index.js:4
+msgid "Results that update by themselves while people watch, pie, donut and column charts, and results shown only after enough votes or to some roles are available in Pro."
+msgstr ""
+
+#: build/index.js:4
 msgid "Texts"
 msgstr ""
 
@@ -1249,6 +1685,42 @@ msgid "This date has passed, the poll is closed."
 msgstr ""
 
 #: build/index.js:4
+msgid "Voting again every hour, day or week, changing the vote, voting only for some user roles, a vote limit and CAPTCHA are available in Pro."
+msgstr ""
+
+#: build/index.js:4
+msgid "Live results & sharing"
+msgstr ""
+
+#: build/index.js:4
+msgid "Results that update by themselves, a share link, a QR code and a full-screen presentation for events and classes are available in Pro."
+msgstr ""
+
+#: build/index.js:4
+msgid "Other answer"
+msgstr ""
+
+#: build/index.js:4
+msgid "A last answer where visitors write their own, counted like the others and listed in Analytics, is available in Pro."
+msgstr ""
+
+#: build/index.js:4
+msgid "Voting rules"
+msgstr ""
+
+#: build/index.js:4
+msgid "Voting again daily or weekly, changing the vote, voting by role, a vote limit and CAPTCHA are available in Pro."
+msgstr ""
+
+#: build/index.js:4
+msgid "Who sees the results"
+msgstr ""
+
+#: build/index.js:4
+msgid "Showing the results only after a number of votes, or only to the user roles you choose, is available in Pro."
+msgstr ""
+
+#: build/index.js:4
 msgid "Colors"
 msgstr ""
 
@@ -1294,6 +1766,14 @@ msgstr ""
 
 #: build/index.js:4
 msgid "The bars grow when the results appear. Visitors who prefer less motion see them without it."
+msgstr ""
+
+#: build/index.js:4
+msgid "Results chart"
+msgstr ""
+
+#: build/index.js:4
+msgid "Showing the results as columns, a pie or a donut, each answer in its own color, is available in Pro."
 msgstr ""
 
 #: build/index.js:4

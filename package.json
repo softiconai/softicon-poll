@@ -1,6 +1,6 @@
 {
 	"name": "softicon-poll",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "Poll and survey block for the WordPress block editor, votes stay on your own site",
 	"main": "build/index.js",
 	"scripts": {
@@ -22,5 +22,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.9.0"
+	},
+	"dependencies": {
+		"@freemius/checkout": "1.5.1"
 	}
 }

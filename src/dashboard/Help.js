@@ -6,7 +6,7 @@ import { copyText } from './Copy';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 const FORUM = 'https://wordpress.org/support/plugin/softicon-poll/';
-const EMAIL = 'softiconai@gmail.com';
+const EMAIL = 'support@softiconai.com';
 
 const answers = () => [
 	{

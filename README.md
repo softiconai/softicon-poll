@@ -28,4 +28,4 @@ PHP is in `includes/` (`block.php` settings and poll lookup, `votes.php` the `{p
 
 ## Support
 
-Email softiconai@gmail.com.
+Email support@softiconai.com.

@@ -5,6 +5,8 @@ import App from './App';
 import Welcome from './Welcome';
 import Polls from './Polls';
 import Help from './Help';
+import { Compare, Pricing } from './Pricing';
+import { proPages } from './ProPage';
 
 const start = () => {
 	const root = document.getElementById( 'alpl-dashboard' );
@@ -13,7 +15,7 @@ const start = () => {
 		return;
 	}
 	// an add-on such as SoftIcon Poll Pro puts its own tabs here
-	const tabs = applyFilters( 'alpl.dashboard.tabs', { welcome: Welcome, polls: Polls, help: Help }, config );
+	const tabs = applyFilters( 'alpl.dashboard.tabs', { welcome: Welcome, polls: Polls, ...proPages(), pricing: Pricing, compare: Compare, help: Help }, config );
 	createRoot( root ).render( <App config={ config } tabs={ tabs } /> );
 };
 

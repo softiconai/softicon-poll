@@ -65,7 +65,7 @@ const Welcome = ( { config, play } ) => <>
 
 	<GettingStarted config={ config } play={ play } />
 
-	<h2 className="alpl-title" id="alpl-videos">{ __( 'Videos', 'softicon-poll' ) }</h2>
+	<h2 className="alpl-title" id="alpl-videos">{ __( 'Video tutorials', 'softicon-poll' ) }</h2>
 	<div className="alpl-grid alpl-videos">
 		{ config.videos.map( ( video ) => <VideoLink key={ video.url } className="alpl-card alpl-video" url={ video.url } title={ video.title } play={ play }>
 			<span className="dashicons dashicons-video-alt3" aria-hidden="true" />{ video.title }

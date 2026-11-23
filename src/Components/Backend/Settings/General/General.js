@@ -5,6 +5,7 @@ import { dateI18n, getDate, getSettings, isInTheFuture } from '@wordpress/date';
 import { FieldHead, HelpCards, Panel, Tiles, ToggleRow } from '../../../../vendor/softicon-tools/components/Panels';
 import { formats, helpCards, layouts, showResultsOptions } from '../../../../utils/options';
 import { columnCount, hasText } from '../../../../utils/functions';
+import ProNotice, { editorInfo } from '../../ProNotice';
 
 // a 12-hour clock when the site's time format has am/pm
 const is12Hour = /a(?!\\)/i.test( getSettings().formats.time.toLowerCase().replace( /\\\\/g, '' ).split( '' ).reverse().join( '' ) );
@@ -61,7 +62,7 @@ const General = ( { attributes, setAttributes, votes } ) => {
 	return <>
 		<Panel id="help" title={ __( 'Help', 'softicon-poll' ) }>
 			<HelpCards cards={ helpCards } />
-			<p className="alplHelp">{ __( 'Email:', 'softicon-poll' ) } <a href="mailto:softiconai@gmail.com">softiconai@gmail.com</a></p>
+			<p className="alplHelp">{ __( 'Email:', 'softicon-poll' ) } <a href="mailto:support@softiconai.com">support@softiconai.com</a></p>
 		</Panel>
 
 		<Panel id="answers" title={ __( 'Answers', 'softicon-poll' ) }>
@@ -86,6 +87,7 @@ const General = ( { attributes, setAttributes, votes } ) => {
 			<Tiles label={ __( 'Show as', 'softicon-poll' ) } value={ resultsFormat } options={ formats } onChange={ set( 'resultsFormat' ) } />
 			<ToggleRow label={ __( 'Total votes', 'softicon-poll' ) } tip={ __( 'The number of people who voted, under the results.', 'softicon-poll' ) } checked={ showTotal } onChange={ set( 'showTotal' ) } />
 			<ToggleRow label={ __( 'Most votes first', 'softicon-poll' ) } tip={ __( 'The results are sorted by votes. Answers with the same number keep their order.', 'softicon-poll' ) } checked={ sortResults } onChange={ set( 'sortResults' ) } />
+			{ ! editorInfo.pro && <ProNotice text={ __( 'Results that update by themselves while people watch, pie, donut and column charts, and results shown only after enough votes or to some roles are available in Pro.', 'softicon-poll' ) } /> }
 		</Panel>
 
 		<Panel id="texts" title={ __( 'Texts', 'softicon-poll' ) }>
@@ -123,11 +125,28 @@ const General = ( { attributes, setAttributes, votes } ) => {
 				{ endDate && ! ended && <ToggleRow label={ __( 'Countdown', 'softicon-poll' ) } tip={ __( 'Shows the time left, like "Voting ends in 3 hours", instead of the date.', 'softicon-poll' ) } checked={ countdown } onChange={ set( 'countdown' ) } /> }
 				{ ended && <p className="alplHelp alplWarn">{ __( 'This date has passed, the poll is closed.', 'softicon-poll' ) }</p> }
 			</div>
+			{ ! editorInfo.pro && <ProNotice text={ __( 'Voting again every hour, day or week, changing the vote, voting only for some user roles, a vote limit and CAPTCHA are available in Pro.', 'softicon-poll' ) } /> }
 		</Panel>
 
 		<Panel id="votes" title={ __( 'Votes', 'softicon-poll' ) }>
 			<Votes options={ options } votes={ votes } />
 		</Panel>
+
+		{ /* the Pro settings of this block, shown as notices only: the code is in Pro, which replaces these panels */ }
+		{ ! editorInfo.pro && <>
+			<Panel id="pro-live" title={ __( 'Live results & sharing', 'softicon-poll' ) } badge={ __( 'Pro', 'softicon-poll' ) }>
+				<ProNotice text={ __( 'Results that update by themselves, a share link, a QR code and a full-screen presentation for events and classes are available in Pro.', 'softicon-poll' ) } />
+			</Panel>
+			<Panel id="pro-other" title={ __( 'Other answer', 'softicon-poll' ) } badge={ __( 'Pro', 'softicon-poll' ) }>
+				<ProNotice text={ __( 'A last answer where visitors write their own, counted like the others and listed in Analytics, is available in Pro.', 'softicon-poll' ) } />
+			</Panel>
+			<Panel id="pro-rules" title={ __( 'Voting rules', 'softicon-poll' ) } badge={ __( 'Pro', 'softicon-poll' ) }>
+				<ProNotice text={ __( 'Voting again daily or weekly, changing the vote, voting by role, a vote limit and CAPTCHA are available in Pro.', 'softicon-poll' ) } />
+			</Panel>
+			<Panel id="pro-results-rules" title={ __( 'Who sees the results', 'softicon-poll' ) } badge={ __( 'Pro', 'softicon-poll' ) }>
+				<ProNotice text={ __( 'Showing the results only after a number of votes, or only to the user roles you choose, is available in Pro.', 'softicon-poll' ) } />
+			</Panel>
+		</> }
 	</>;
 };
 

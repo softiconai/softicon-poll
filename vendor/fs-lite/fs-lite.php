@@ -352,7 +352,7 @@ class fs_lite {
         }
         if ( is_object( $result ) && ! empty( $result->pending_activation ) ) {
             $this->save( array( 'state' => 'pending', 'email' => isset( $result->email ) ? sanitize_email( $result->email ) : $fields['user_email'] ) );
-            wp_send_json_success( array( 'next' => $this->page_url() ) );
+            wp_send_json_success( array( 'next' => $this->optin_url() ) );
         }
         $this->save( array( 'state' => 'browser' ) );
         wp_send_json_success( array( 'browser' => array( 'action' => self::OPT_IN, 'fields' => $fields ) ) );
@@ -399,7 +399,7 @@ class fs_lite {
             if ( current_user_can( 'manage_options' ) && $waiting && isset( $_GET['pending_activation'] ) ) {
                 $email = isset( $_GET['user_email'] ) ? sanitize_email( wp_unslash( $_GET['user_email'] ) ) : '';
                 $this->save( array( 'state' => 'pending', 'email' => $email ? $email : wp_get_current_user()->user_email ) );
-                wp_safe_redirect( $this->page_url() );
+                wp_safe_redirect( $this->optin_url() );
                 exit;
             }
         }

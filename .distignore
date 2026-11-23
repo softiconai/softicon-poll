@@ -9,3 +9,10 @@ package-lock.json
 softicon-poll.zip
 .wordpress-org
 videos
+plugin-licenses.txt
+svn.txt
+elevenlabs.txt
+.elevenlabs_key
+*.secret
+PROJECT-NOTES.md
+marketing

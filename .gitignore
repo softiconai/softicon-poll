@@ -18,6 +18,7 @@ PROJECT-NOTES.md
 
 # Local credentials and marketing, never commit
 svn.txt
+plugin-licenses.txt
 *.secret
 elevenlabs.txt
 .elevenlabs_key

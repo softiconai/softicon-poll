@@ -4,7 +4,7 @@ Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,32 @@ https://www.youtube.com/watch?v=rA7Lb3rCvKo
 Only want members to vote? Turn on "Only logged-in users" in the Voting panel. Visitors who are not logged in still see the poll, with a link to log in, and come right back to the same page to vote. Each account votes once.
 
 https://www.youtube.com/watch?v=xaLxre2veIs
+
+= SoftIcon Poll Pro =
+
+Everything above stays free, with no limits on polls, answers or votes. SoftIcon Poll Pro is a separate plugin for sites that want more from their polls:
+
+* **Analytics** – votes over time and per answer, by hour, day or month, for today, 7, 30 or 90 days, all time or your own dates.
+* **CSV export** – every vote, a summary per answer, or all polls at once.
+* **Live results** – the results on the page update by themselves while people watch, for events and classes.
+* **QR code and vote page** – people scan the code and vote on a page with only this poll.
+* **Presentation mode** – big full-screen results with the QR code, for a projector.
+* **"Other" written answer** – visitors write their own answer; you read them all in Analytics.
+* **CAPTCHA** – Cloudflare Turnstile, hCaptcha or Google reCAPTCHA v3 stop robot votes, checked on your server.
+* **Vote again** – once an hour, a day or a week, for contests.
+* **Change the vote** – voters can pick another answer while the poll is open.
+* **Voting by role** – only the user roles you choose can vote.
+* **Vote limit** – the poll closes by itself after a number of votes.
+* **Pie, donut and column charts** – show the results the way that fits your page.
+* **Results rules** – hide the results until a number of votes, or show them only to some roles.
+
+Pro replaces the free plugin when you activate it, and every poll and vote you have keeps working. Prices and a full comparison are in Poll → Pricing in your dashboard.
+
+**Try Pro without risk:** start with a free trial from Poll → Pricing, no card needed, and every Pro plan comes with a 14-day money-back guarantee. Any problem or question, before or after you buy, email us at support@softiconai.com. We build SoftIcon Poll for the people who use it, and your satisfaction comes first.
+
+= Third-party libraries =
+
+* Freemius Checkout 1.5.1 (npm package @freemius/checkout) by Freemius – [github.com/Freemius/freemius-checkout-js](https://github.com/Freemius/freemius-checkout-js) – MIT License. Bundled in build/dashboard.js, it opens the Pro checkout window on the Poll dashboard when you click Get Pro. License in build/freemius-checkout-LICENSE.txt.
 
 = Privacy =
 
@@ -129,11 +155,24 @@ We never collect your posts, pages, polls or votes, anything about your visitors
 
 **Why we ask:** to email you about security fixes and important new features, to know which WordPress and PHP versions we must keep supporting, and to learn what to improve.
 
-**Changed your mind?** Click "Opt Out" under SoftIcon Poll on the Plugins page and nothing more is sent. To have your data deleted, email us at softiconai@gmail.com.
+**Changed your mind?** Click "Opt Out" under SoftIcon Poll on the Plugins page and nothing more is sent. To have your data deleted, email us at support@softiconai.com.
 
 **When you deactivate the plugin**, a short form asks why. Answering is optional ("Skip & Deactivate" is always there). If you choose a reason, it is sent only when you delete the plugin. If you never opted in, only the reason and the anonymous site ID are sent, never your name or email.
 
 The opt-in is a small built-in client (vendor/fs-lite/fs-lite.php) instead of the full Freemius SDK. It connects to wp.freemius.com and api.freemius.com and nowhere else. If your server is not allowed to reach Freemius, your browser sends the same opt-in to wp.freemius.com instead, and Freemius sends you back to the plugin's dashboard.
+
+= Which outside services does the plugin use? =
+
+Polls on your pages use none. Only in the admin:
+
+* **Freemius** (wp.freemius.com, api.freemius.com) for the optional opt-in described above, only if you allow it. [Terms](https://freemius.com/terms/), [privacy policy](https://freemius.com/privacy/).
+* **Freemius plans** (api.freemius.com): when you open the Pricing or Free vs Pro tab of the Poll dashboard, it reads the Pro features and prices we set in Freemius. The answer is kept for 12 hours (1 hour if Freemius could not be reached or has no Pro plan yet). Only the plugin's public ID is sent, nothing about you or your site, and this happens even if you skipped the opt-in.
+* **Freemius Checkout** (checkout.freemius.com) opens in a window only when you click a "Get Pro" button on the Poll dashboard, so you can buy Pro. Nothing is sent before you click, and what you type in the checkout goes to Freemius, which handles the payment. Same terms and privacy policy.
+* **YouTube** (youtube-nocookie.com): a video tutorial plays in a popup only when you click it on the Poll dashboard. [YouTube terms](https://www.youtube.com/t/terms), [Google privacy policy](https://policies.google.com/privacy).
+
+= What if Pro is not right for me? =
+
+Every Pro plan comes with a 14-day money-back guarantee. Email support@softiconai.com within 14 days of your purchase and we refund you in full, no questions asked. The same address works for any question or problem with Pro.
 
 = What is removed when I delete the plugin? =
 
@@ -155,6 +194,16 @@ The plugin includes its unminified source in the `src` folder; the files in `bui
 8. Ready-made polls in the block inserter: search for "poll".
 
 == Changelog ==
+
+= 1.2.0 =
+* New: Pricing and Free vs Pro tabs in the Poll dashboard. They show the plans of SoftIcon Poll Pro, its free trial and money-back guarantee, and every feature side by side, with a search box. Get Pro opens a secure Freemius checkout window; nothing is sent before you click it.
+* New: a Manage tab in the Poll dashboard with what the Pro pages (Analytics and Settings) do, and a working demo of each with sample data. Nothing in the demos is saved.
+* New: in the block settings, each Pro setting shows a short card in its place, with a link to the Pricing tab for admins. The free settings work as before.
+* New: "Upgrade to Pro" in the dashboard header, "Free vs Pro" on the Plugins page and "Video tutorials" next to the plugin's details.
+* Improved: after "Allow & Continue", the "check your email" step now shows on the opt-in screen.
+* Improved: deleting the plugin on a multisite network cleans up every site. While SoftIcon Poll Pro is installed, the votes and polls are kept for it.
+* Developers: filters and JavaScript events (alpl:ready, alpl:state, alpl:results, alpl:beforevote) for add-ons such as SoftIcon Poll Pro. Activating Pro switches the free plugin off, and every poll and vote keeps working.
+* Support email is now support@softiconai.com.
 
 = 1.1.1 =
 * Faster pages with many polls: the polls on a page now load together in one request instead of one request each.

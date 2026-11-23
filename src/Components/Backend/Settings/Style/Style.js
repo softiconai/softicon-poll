@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { ColorRow, Panel, ToggleRow } from '../../../../vendor/softicon-tools/components/Panels';
+import ProNotice, { editorInfo } from '../../ProNotice';
 
 const Style = ( { attributes, setAttributes } ) => {
 	const { animateBars } = attributes;
@@ -23,6 +24,11 @@ const Style = ( { attributes, setAttributes } ) => {
 		<Panel id="bars" title={ __( 'Result bars', 'softicon-poll' ) }>
 			<ToggleRow label={ __( 'Animate the bars', 'softicon-poll' ) } tip={ __( 'The bars grow when the results appear. Visitors who prefer less motion see them without it.', 'softicon-poll' ) } checked={ animateBars } onChange={ set( 'animateBars' ) } />
 		</Panel>
+
+		{ /* the Pro setting of this tab, shown as a notice only: the code is in Pro, which replaces this panel */ }
+		{ ! editorInfo.pro && <Panel id="pro-chart" title={ __( 'Results chart', 'softicon-poll' ) } badge={ __( 'Pro', 'softicon-poll' ) }>
+			<ProNotice text={ __( 'Showing the results as columns, a pie or a donut, each answer in its own color, is available in Pro.', 'softicon-poll' ) } />
+		</Panel> }
 	</>;
 };
 

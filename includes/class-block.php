@@ -15,6 +15,22 @@ class Block {
 		add_filter( 'block_editor_settings_all', array( $this, 'no_inspector_tabs' ) );
 		add_action( 'save_post', array( $this, 'record_ids' ), 10, 2 );
 		add_action( 'before_delete_post', array( $this, 'forget_ids' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_info' ) );
+	}
+
+	// only in the block editor: whether Pro is active, and where its Pricing page is (for the Pro notices)
+	public function editor_info() {
+		// the dashboard is for admins; other editors see the notices without a link
+		$admin  = current_user_can( 'manage_options' );
+		$editor = 'window.alplEditor = ' . wp_json_encode(
+			array(
+				'pro'     => Dashboard::is_pro(),
+				'locked'  => Dashboard::locked(),
+				'pricing' => $admin ? Dashboard::url( 'pricing' ) : '',
+				'compare' => $admin ? Dashboard::url( 'compare' ) : '',
+			)
+		) . ';';
+		wp_add_inline_script( generate_block_asset_handle( self::NAME, 'editorScript' ), $editor, 'before' );
 	}
 
 	// One meta row per poll in the post. The oldest row of an id marks the poll's owner, the post it was made in:

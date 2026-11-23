@@ -13,6 +13,8 @@ class Dashboard {
 	const REVIEW = 'alpl_review';
 	// the Polls tab lists at most this many, newest first
 	const LIMIT = 200;
+	// the Pro plans and prices read from Freemius, kept for a while
+	const CACHE = 'alpl_freemius';
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'menu' ), 9 ); // before WordPress adds All Polls under it
@@ -20,6 +22,132 @@ class Dashboard {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( ALPL_PLUGIN_PATH . 'softicon-poll.php' ), array( $this, 'action_links' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'row_meta' ), 10, 2 );
+	}
+
+	public static function is_pro() {
+		return defined( 'ALPL_IS_PRO' ) && ALPL_IS_PRO;
+	}
+
+	// SoftIcon Poll Pro without an active license: its features are locked and Pricing shows again
+	public static function locked() {
+		return self::is_pro() && (bool) apply_filters( 'alpl_pro_locked', false );
+	}
+
+	// the Freemius product id and public key, from fs-lite (free) or the Freemius SDK (Pro)
+	private static function product() {
+		$fs = function_exists( 'softicon_poll_fs' ) ? softicon_poll_fs() : null;
+		if ( $fs && method_exists( $fs, 'public_key' ) ) {
+			return array( (string) $fs->id(), $fs->public_key() );
+		}
+		if ( $fs && method_exists( $fs, 'get_public_key' ) ) {
+			return array( (string) $fs->get_id(), $fs->get_public_key() );
+		}
+		return null;
+	}
+
+	// the public plans and prices: fs-lite reads them in the free plugin, the Freemius SDK's plugin scope in Pro
+	private static function fetch_pricing() {
+		$fs = function_exists( 'softicon_poll_fs' ) ? softicon_poll_fs() : null;
+		if ( $fs && method_exists( $fs, 'pricing' ) ) {
+			return $fs->pricing();
+		}
+		if ( $fs && method_exists( $fs, 'get_api_plugin_scope' ) ) {
+			$result = $fs->get_api_plugin_scope()->get( 'pricing.json' );
+			return is_object( $result ) && isset( $result->plans ) && is_array( $result->plans ) ? $result : null;
+		}
+		return null;
+	}
+
+	// kept for 12 hours (1 hour after a failed read or while there is no paid plan); $fetch false only reads what is kept
+	public static function freemius( $fetch = true ) {
+		$data = get_transient( self::CACHE );
+		if ( false === $data && $fetch && ( ! self::is_pro() || self::locked() ) ) {
+			$data = self::parse( self::fetch_pricing() );
+			set_transient( self::CACHE, $data, $data['error'] || ! $data['pro'] ? HOUR_IN_SECONDS : 12 * HOUR_IN_SECONDS );
+		}
+		return is_array( $data ) ? $data : self::parse( false );
+	}
+
+	// the free plan's features, and the first paid plan with its features and prices
+	private static function parse( $result ) {
+		$data = array(
+			'error'      => ! is_object( $result ),
+			'free'       => array(),
+			'pro'        => null,
+			'money_back' => 0,
+		);
+		if ( ! is_object( $result ) ) {
+			return $data;
+		}
+		$data['money_back'] = isset( $result->plugin->money_back_period ) ? absint( $result->plugin->money_back_period ) : 0;
+
+		foreach ( $result->plans as $plan ) {
+			$features = array();
+			foreach ( isset( $plan->features ) && is_array( $plan->features ) ? $plan->features : array() as $feature ) {
+				if ( ! empty( $feature->title ) ) {
+					$features[] = array(
+						'title' => sanitize_text_field( $feature->title ),
+						'text'  => isset( $feature->description ) ? sanitize_text_field( $feature->description ) : '',
+					);
+				}
+			}
+
+			$prices = array();
+			foreach ( isset( $plan->pricing ) && is_array( $plan->pricing ) ? $plan->pricing : array() as $price ) {
+				foreach ( array( 'lifetime', 'annual', 'monthly' ) as $cycle ) {
+					if ( isset( $price->{ $cycle . '_price' } ) && is_numeric( $price->{ $cycle . '_price' } ) ) {
+						$prices[] = array(
+							'licenses' => empty( $price->licenses ) ? 'unlimited' : absint( $price->licenses ),
+							'price'    => (float) $price->{ $cycle . '_price' },
+							'cycle'    => $cycle,
+							'currency' => isset( $price->currency ) ? sanitize_key( $price->currency ) : 'usd',
+						);
+						break;
+					}
+				}
+			}
+
+			if ( $prices && null === $data['pro'] ) {
+				// fewest sites first, unlimited last
+				usort(
+					$prices,
+					function ( $a, $b ) {
+						$a = 'unlimited' === $a['licenses'] ? PHP_INT_MAX : $a['licenses'];
+						$b = 'unlimited' === $b['licenses'] ? PHP_INT_MAX : $b['licenses'];
+						return $a <=> $b;
+					}
+				);
+				$data['pro'] = array(
+					'id'         => isset( $plan->id ) ? absint( $plan->id ) : 0,
+					'title'      => isset( $plan->title ) ? sanitize_text_field( $plan->title ) : '',
+					'text'       => isset( $plan->description ) ? sanitize_text_field( $plan->description ) : '',
+					'features'   => $features,
+					'prices'     => $prices,
+					// the free trial set in Freemius: its days (0: none), and whether it asks for a card first
+					'trial'      => isset( $plan->trial_period ) ? absint( $plan->trial_period ) : 0,
+					'trial_card' => ! empty( $plan->is_require_subscription ),
+				);
+			} elseif ( ! $prices && isset( $plan->name ) && 'free' === $plan->name ) {
+				$data['free'] = $features;
+			}
+		}
+		return $data;
+	}
+
+	// the Pro features the free plan does not have
+	public static function pro_only( $data ) {
+		if ( ! $data['pro'] ) {
+			return array();
+		}
+		$free = array_map( 'strtolower', wp_list_pluck( $data['free'], 'title' ) );
+		return array_values(
+			array_filter(
+				$data['pro']['features'],
+				function ( $feature ) use ( $free ) {
+					return ! in_array( strtolower( $feature['title'] ), $free, true );
+				}
+			)
+		);
 	}
 
 	// the videos; a click plays one in a popup on the dashboard
@@ -59,12 +187,15 @@ class Dashboard {
 
 	public function action_links( $links ) {
 		array_unshift( $links, '<a href="' . esc_url( self::url() ) . '">' . esc_html__( 'Dashboard', 'softicon-poll' ) . '</a>' );
+		if ( ! self::is_pro() ) {
+			$links[] = '<a href="' . esc_url( self::url( 'compare' ) ) . '" style="color:#be123c;font-weight:600">' . esc_html__( 'Free vs Pro', 'softicon-poll' ) . '</a>';
+		}
 		return $links;
 	}
 
 	public function row_meta( $links, $file ) {
 		if ( plugin_basename( ALPL_PLUGIN_PATH . 'softicon-poll.php' ) === $file ) {
-			$links[] = '<a href="' . esc_url( self::url( 'help' ) ) . '">' . esc_html__( 'Help', 'softicon-poll' ) . '</a>';
+			$links[] = '<a href="' . esc_url( self::url( 'videos' ) ) . '">' . esc_html__( 'Video tutorials', 'softicon-poll' ) . '</a>';
 		}
 		return $links;
 	}
@@ -87,18 +218,57 @@ class Dashboard {
 		wp_enqueue_script( 'alpl-dashboard', ALPL_PLUGIN_URL . 'build/dashboard.js', $script['dependencies'], $script['version'], true );
 		wp_set_script_translations( 'alpl-dashboard', 'softicon-poll', ALPL_PLUGIN_PATH . 'languages' );
 		wp_add_inline_script( 'alpl-dashboard', 'window.alplDashboard = ' . wp_json_encode( self::config() ) . ';', 'before' );
+		// add-ons enqueue their tabs here; a script that adds tabs makes itself a dependency of alpl-dashboard
+		do_action( 'alpl_dashboard_assets' );
 	}
 
 	// the tab names; their content is React (src/dashboard), an add-on adds its own through the alpl.dashboard.tabs JS filter
 	public static function tabs() {
-		return apply_filters(
-			'alpl_dashboard_tabs',
-			array(
-				'welcome' => __( 'Welcome', 'softicon-poll' ),
-				'polls'   => __( 'Polls', 'softicon-poll' ),
-				'help'    => __( 'Help', 'softicon-poll' ),
-			)
+		$tabs = array(
+			'welcome' => __( 'Welcome', 'softicon-poll' ),
+			'polls'   => __( 'Polls', 'softicon-poll' ),
 		);
+		// the Pro pages, under Manage (self::groups()); the free plugin shows what each one does, Pro adds the real ones
+		if ( ! self::is_pro() ) {
+			foreach ( self::groups()[0]['items'] as $item ) {
+				$tabs[ $item['key'] ] = $item['label'];
+			}
+		}
+		if ( ! self::is_pro() || self::locked() ) {
+			$tabs['pricing'] = __( 'Pricing', 'softicon-poll' );
+			$tabs['compare'] = __( 'Free vs Pro', 'softicon-poll' );
+		}
+		$tabs['help'] = __( 'Help', 'softicon-poll' );
+		return apply_filters( 'alpl_dashboard_tabs', $tabs );
+	}
+
+	// the Pro pages show as one Manage tab with its own menu (src/dashboard/App.js), in the free plugin and in Pro
+	public static function groups() {
+		$item = function ( $key, $icon, $label, $text ) {
+			return array(
+				'key'   => $key,
+				'icon'  => $icon,
+				'label' => $label,
+				'text'  => $text,
+			);
+		};
+		return array(
+			array(
+				'key'   => 'manage',
+				'label' => __( 'Manage', 'softicon-poll' ),
+				'items' => array(
+					$item( 'analytics', 'chart-area', __( 'Analytics', 'softicon-poll' ), __( 'Votes, answers and exports', 'softicon-poll' ) ),
+					$item( 'settings', 'shield', __( 'Settings', 'softicon-poll' ), __( 'CAPTCHA for your polls', 'softicon-poll' ) ),
+				),
+			),
+		);
+	}
+
+	// a tab placed just before Help
+	public static function before_help( $tabs, $key, $label ) {
+		$at = array_search( 'help', array_keys( $tabs ), true );
+		$at = false === $at ? count( $tabs ) : $at;
+		return array_slice( $tabs, 0, $at, true ) + array( $key => $label ) + array_slice( $tabs, $at, null, true );
 	}
 
 	private static function config() {
@@ -117,21 +287,28 @@ class Dashboard {
 			);
 		}
 		$config = array(
-			'tabs'    => $tabs,
-			'version' => ALPL_PLUGIN_VERSION,
-			'icon'    => ALPL_PLUGIN_URL . 'assets/images/icon-128x128.png',
-			'videos'  => $videos,
-			'review'  => self::review(),
-			// the message after the Freemius opt-in screen (vendor/fs-lite): thanks, or the confirmation email to click
-			'notice'  => function_exists( 'softicon_poll_fs' ) ? softicon_poll_fs()->notice() : null,
-			'urls'    => array(
+			'tabs'       => $tabs,
+			'pro'        => self::is_pro(),
+			// Pro without a license: these tabs open the "this is a Pro feature" popup instead
+			'locked'     => self::locked(),
+			'groups'     => self::groups(),
+			'lockedTabs' => self::locked() ? array_values( (array) apply_filters( 'alpl_dashboard_locked_tabs', array() ) ) : array(),
+			'activate'   => self::locked() ? esc_url_raw( (string) apply_filters( 'alpl_activate_url', '' ) ) : '',
+			'version'    => ALPL_PLUGIN_VERSION,
+			'icon'       => ALPL_PLUGIN_URL . 'assets/images/icon-128x128.png',
+			'videos'     => $videos,
+			'review'     => self::review(),
+			// the message after the Freemius opt-in screen (vendor/fs-lite): thanks, or the confirmation email to click;
+			// the full Freemius SDK of SoftIcon Poll Pro shows its own notices and has no notice()
+			'notice'     => function_exists( 'softicon_poll_fs' ) && method_exists( softicon_poll_fs(), 'notice' ) ? softicon_poll_fs()->notice() : null,
+			'urls'       => array(
 				'newPage'  => admin_url( 'post-new.php?post_type=page' ),
 				'newPoll'  => admin_url( 'post-new.php?post_type=' . Shortcode::TYPE ),
 				'allPolls' => admin_url( 'edit.php?post_type=' . Shortcode::TYPE ),
 			),
-			'start'   => self::start(),
+			'start'      => self::start(),
 			// the Help tab's "Your site details", copied into a support topic (only copied, never sent)
-			'site'    => array(
+			'site'       => array(
 				'wp'    => get_bloginfo( 'version' ),
 				'php'   => PHP_VERSION,
 				'theme' => wp_get_theme()->get( 'Name' ),
@@ -186,6 +363,15 @@ class Dashboard {
 			array(
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'polls' ),
+				'permission_callback' => $admin,
+			)
+		);
+		register_rest_route(
+			Rest::NS,
+			'/dashboard/plans',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( __CLASS__, 'plans' ),
 				'permission_callback' => $admin,
 			)
 		);
@@ -320,6 +506,21 @@ class Dashboard {
 		return rest_ensure_response( array( 'ok' => true ) );
 	}
 
+	// the Pricing and Free vs Pro tabs: the plans from Freemius and what the checkout needs;
+	// ?cached=1 only reads what is kept and never asks Freemius
+	public static function plans( $request = null ) {
+		$data             = self::freemius( ! ( $request && $request->get_param( 'cached' ) ) );
+		$data['pro_only'] = self::pro_only( $data );
+		$product          = ( self::is_pro() && ! self::locked() ) ? null : self::product();
+		$data['checkout'] = ! $product ? null : array(
+			'product' => $product[0],
+			'key'     => $product[1],
+			// no image: the checkout shows the product icon set in Freemius, and the site's own address is not sent
+			'base'    => 'https://checkout.freemius.com/plugin/' . $product[0] . '/',
+		);
+		return rest_ensure_response( $data );
+	}
+
 	// React draws the whole page into #alpl-dashboard
 	public function render() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -327,7 +528,7 @@ class Dashboard {
 		}
 		?>
 		<div class="wrap alpl-dash-notices">
-			<h1 class="screen-reader-text"><?php esc_html_e( 'SoftIcon Poll', 'softicon-poll' ); ?></h1>
+			<h1 class="screen-reader-text"><?php echo esc_html( self::is_pro() ? __( 'SoftIcon Poll Pro', 'softicon-poll' ) : __( 'SoftIcon Poll', 'softicon-poll' ) ); ?></h1>
 			<hr class="wp-header-end">
 		</div>
 		<div id="alpl-dashboard" class="alpl-dash">
