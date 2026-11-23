@@ -14,7 +14,7 @@ A poll block for the block editor. Votes are saved on your own site, with no acc
 
 **SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and nothing about your visitors is sent anywhere. For the Classic Editor and page builders, every poll also has a shortcode.
 
-[Documentation](https://softiconai.com/docs/poll/) | [Demo](https://softiconai.com/products/poll/) | [Support](https://wordpress.org/support/plugin/softicon-poll/)
+[Documentation](https://softiconai.com/docs/poll/) | [Demo](https://softiconai.com/products/poll/) | [Pricing](https://softiconai.com/products/poll/pricing/) | [Support](https://wordpress.org/support/plugin/softicon-poll/)
 
 https://www.youtube.com/watch?v=rA7Lb3rCvKo
 
