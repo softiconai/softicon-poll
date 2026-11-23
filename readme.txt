@@ -204,6 +204,7 @@ Ask in the [support forum](https://wordpress.org/support/plugin/softicon-poll/) 
 6. The current votes in the block settings, with Refresh and Reset votes.
 7. The Style tab: background, text, accent, bar and border colors.
 8. Ready-made polls in the block inserter: search for "poll".
+9. The Poll dashboard: add a poll as a block or with a shortcode, the steps to get started, your polls, video tutorials, Pro plans and help.
 
 == Changelog ==
 
