@@ -12,9 +12,13 @@ A poll block for the block editor. Votes are saved on your own site, with no acc
 
 == Description ==
 
-**SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and nothing about your visitors is sent anywhere.
+**SoftIcon Poll** adds a **Poll** block to the block editor. Write the question and the answers right in the block, publish, and visitors vote. The votes stay in your own WordPress database: no sign-up, no outside service, and nothing about your visitors is sent anywhere. For the Classic Editor and page builders, every poll also has a shortcode.
+
+[Documentation](https://softiconai.com/docs/poll/) | [Demo](https://softiconai.com/products/poll/) | [Support](https://wordpress.org/support/plugin/softicon-poll/)
 
 https://www.youtube.com/watch?v=rA7Lb3rCvKo
+
+Video tutorials: [SoftIcon Poll in 30 seconds](https://www.youtube.com/watch?v=rA7Lb3rCvKo) and [members-only polls](https://www.youtube.com/watch?v=xaLxre2veIs).
 
 = Why choose SoftIcon Poll? =
 
@@ -76,11 +80,11 @@ Pro replaces the free plugin when you activate it, and every poll and vote you h
 
 * Freemius Checkout 1.5.1 (npm package @freemius/checkout) by Freemius – [github.com/Freemius/freemius-checkout-js](https://github.com/Freemius/freemius-checkout-js) – MIT License. Bundled in build/dashboard.js, it opens the Pro checkout window on the Poll dashboard when you click Get Pro. License in build/freemius-checkout-LICENSE.txt.
 
-= Privacy =
+The unminified source of this plugin is in the src folder, with package.json and webpack.config.js. Build it with `npm install` and `npm run build`.
 
-Polls on your pages contact no external service: the votes and the results go only between the visitor's browser and your own site.
+= Development =
 
-In the admin, after activation, the plugin asks once if you want to share basic data with us through Freemius (wp.freemius.com, api.freemius.com). It is optional, and nothing about you or your site is sent unless you click "Allow & Continue". See "Does the plugin collect any data?" below. Freemius [terms](https://freemius.com/terms/) and [privacy policy](https://freemius.com/privacy/).
+The plugin is developed on GitHub: [github.com/softiconai/softicon-poll](https://github.com/softiconai/softicon-poll). Bug reports and pull requests are welcome there; for help, use the support forum here on WordPress.org.
 
 == Installation ==
 
@@ -142,7 +146,7 @@ The plugin saves the chosen answers and a scrambled code made from the user acco
 
 **From your visitors: nothing.** The votes are saved on your own site, and nothing about your visitors is sent anywhere.
 
-**From you, the site admin: only if you say yes.** After activation, the plugin asks once if you would like to opt in. Click "Skip" and nothing about you or your site is ever sent; the plugin works exactly the same either way.
+**From you, the site admin: only if you say yes.** After activation, a short screen asks if you would like to opt in. Click "Skip" and nothing about you or your site is ever sent; the plugin works exactly the same either way. If you allow it, Freemius may email you a confirmation link (it can land in your spam folder); nothing is sent until you click it.
 
 If you click "Allow & Continue", this is shared with us through [Freemius](https://freemius.com), the service we use to manage our users:
 
@@ -159,7 +163,15 @@ We never collect your posts, pages, polls or votes, anything about your visitors
 
 **When you deactivate the plugin**, a short form asks why. Answering is optional ("Skip & Deactivate" is always there). If you choose a reason, it is sent only when you delete the plugin. If you never opted in, only the reason and the anonymous site ID are sent, never your name or email.
 
-The opt-in is a small built-in client (vendor/fs-lite/fs-lite.php) instead of the full Freemius SDK. It connects to wp.freemius.com and api.freemius.com and nowhere else. If your server is not allowed to reach Freemius, your browser sends the same opt-in to wp.freemius.com instead, and Freemius sends you back to the plugin's dashboard.
+= Why a small built-in opt-in instead of the Freemius SDK? =
+
+We only need the opt-in, so SoftIcon Poll uses its own small client in the vendor/fs-lite folder instead of the full Freemius SDK:
+
+* **A lighter plugin:** about 3.8 MB less on your server.
+* **Easy to check:** one plain PHP file (vendor/fs-lite/fs-lite.php) that shows exactly what is sent and when.
+* **Only Freemius:** it connects to wp.freemius.com and api.freemius.com and nowhere else. Anything about you or your site is sent only after you click "Allow & Continue".
+* **Works on strict hosts too:** if your server is not allowed to reach Freemius, your browser sends the same opt-in to wp.freemius.com instead, and Freemius sends you back to your site.
+* **Nothing extra in your admin:** no added menus, and its scripts load only on the Plugins page and its own opt-in screen.
 
 = Which outside services does the plugin use? =
 
@@ -178,9 +190,9 @@ Every Pro plan comes with a 14-day money-back guarantee. Email support@softicona
 
 Deleting the plugin removes the votes table, its settings, the opt-in choice and the note of which post each poll belongs to. The polls in your posts stay as blocks. Deleting a post for good also deletes the votes of the polls made in it.
 
-= Where is the source code? =
+= Where can I get help? =
 
-The plugin includes its unminified source in the `src` folder; the files in `build` are made from it with `npm run build`. It is also on GitHub: [github.com/softiconai/softicon-poll](https://github.com/softiconai/softicon-poll).
+Ask in the [support forum](https://wordpress.org/support/plugin/softicon-poll/) and we will reply there, so the answer can help others too. For anything you would rather not post in public, such as a site you cannot share, email us at support@softiconai.com. Tell us your WordPress version, the page with the poll and what you see, and we will get back to you.
 
 == Screenshots ==
 
