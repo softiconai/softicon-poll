@@ -4,7 +4,7 @@ Tags: poll, survey, voting, block, poll block
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,9 @@ Ask in the [support forum](https://wordpress.org/support/plugin/softicon-poll/) 
 9. The Poll dashboard: add a poll as a block or with a shortcode, the steps to get started, your polls, video tutorials, Pro plans and help.
 
 == Changelog ==
+
+= 1.2.1 =
+* New: Black Friday offer, 26 November to 5 December 2026: 40% off SoftIcon Poll Pro, shown on the Poll dashboard, the All Polls list and the Plugins page. Close it with × and it stays closed. It disappears by itself after the sale, and never shows with Pro active.
 
 = 1.2.0 =
 * New: Pricing and Free vs Pro tabs in the Poll dashboard. They show the plans of SoftIcon Poll Pro, its free trial and money-back guarantee, and every feature side by side, with a search box. Get Pro opens a secure Freemius checkout window; nothing is sent before you click it.
