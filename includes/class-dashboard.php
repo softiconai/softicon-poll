@@ -517,6 +517,9 @@ class Dashboard {
 			'key'     => $product[1],
 			// no image: the checkout shows the product icon set in Freemius, and the site's own address is not sent
 			'base'    => 'https://checkout.freemius.com/plugin/' . $product[0] . '/',
+			'coupon'  => Black_Friday::coupon(),
+			// the percent off, for the sale prices on the cards
+			'off'     => Black_Friday::coupon() ? (int) Black_Friday::OFF : 0,
 		);
 		return rest_ensure_response( $data );
 	}

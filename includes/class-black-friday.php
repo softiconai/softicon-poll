@@ -17,14 +17,19 @@ class Black_Friday {
 	const SCREENS = array( 'toplevel_page_softicon-poll', 'edit-alpl_poll' );
 
 	public function __construct() {
-		$tz = wp_timezone();
-		if ( time() < ( new \DateTime( self::START, $tz ) )->getTimestamp() || time() > ( new \DateTime( self::END, $tz ) )->getTimestamp() ) {
+		if ( ! self::coupon() ) {
 			return;
 		}
 		add_action('admin_enqueue_scripts', array( $this, 'assets' ));
 		add_action('admin_notices', array( $this, 'banner' ));
 		add_action('wp_ajax_' . self::KEY, array( $this, 'dismiss' ));
 		add_filter('plugin_action_links_' . plugin_basename( ALPL_PLUGIN_PATH . 'softicon-poll.php' ), array( $this, 'link' ), 20);
+	}
+
+	// the code while the sale runs, '' otherwise; the Pricing tab's checkout fills it in
+	public static function coupon() {
+		$tz = wp_timezone();
+		return time() >= ( new \DateTime( self::START, $tz ) )->getTimestamp() && time() <= ( new \DateTime( self::END, $tz ) )->getTimestamp() ? self::CODE : '';
 	}
 
 	private static function name() {

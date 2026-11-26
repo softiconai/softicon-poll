@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.2.1\n"
+"Project-Id-Version: SoftIcon Poll – Poll & Survey Block 1.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/softicon-poll\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-25T13:32:44+00:00\n"
+"POT-Creation-Date: 2026-11-26T00:55:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: softicon-poll\n"
@@ -93,61 +93,61 @@ msgstr ""
 msgid "Please turn on JavaScript to vote."
 msgstr ""
 
-#: includes/class-black-friday.php:31
+#: includes/class-black-friday.php:36
 #: includes/class-dashboard.php:168
 #: includes/class-dashboard.php:177
-#: includes/class-dashboard.php:531
+#: includes/class-dashboard.php:534
 msgid "SoftIcon Poll"
 msgstr ""
 
-#: includes/class-black-friday.php:35
+#: includes/class-black-friday.php:40
 #: includes/class-dashboard.php:260
 msgid "Analytics"
 msgstr ""
 
-#: includes/class-black-friday.php:35
+#: includes/class-black-friday.php:40
 msgid "CSV export"
 msgstr ""
 
-#: includes/class-black-friday.php:35
+#: includes/class-black-friday.php:40
 msgid "Live results"
 msgstr ""
 
-#: includes/class-black-friday.php:35
+#: includes/class-black-friday.php:40
 msgid "QR code voting"
 msgstr ""
 
 #. translators: %s: the discount, e.g. 40%
-#: includes/class-black-friday.php:47
+#: includes/class-black-friday.php:52
 #, php-format
 msgid "Black Friday: Save %s!"
 msgstr ""
 
 #. translators: 1: plugin name, 2: the discount, e.g. 40%
-#: includes/class-black-friday.php:87
+#: includes/class-black-friday.php:92
 #, php-format
 msgid "%1$s's Biggest Black Friday Sale is Live – %2$s OFF!"
 msgstr ""
 
 #. translators: 1: plugin name, 2: the discount, 3: the coupon code
-#: includes/class-black-friday.php:91
+#: includes/class-black-friday.php:96
 #, php-format
 msgid "The biggest deal of the year: get %1$s Pro at %2$s off until 5 December with code %3$s, and unlock every Pro feature at the lowest price of the year."
 msgstr ""
 
-#: includes/class-black-friday.php:93
+#: includes/class-black-friday.php:98
 msgid "Unlock PRO Features →"
 msgstr ""
 
-#: includes/class-black-friday.php:96
+#: includes/class-black-friday.php:101
 msgid "Pro features"
 msgstr ""
 
-#: includes/class-black-friday.php:98
+#: includes/class-black-friday.php:103
 msgid "And much more →"
 msgstr ""
 
-#: includes/class-black-friday.php:100
+#: includes/class-black-friday.php:105
 msgid "Dismiss"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgid "Polls"
 msgstr ""
 
 #: includes/class-dashboard.php:238
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Pricing"
 msgstr ""
 
@@ -215,11 +215,11 @@ msgstr ""
 msgid "(no title)"
 msgstr ""
 
-#: includes/class-dashboard.php:531
+#: includes/class-dashboard.php:534
 msgid "SoftIcon Poll Pro"
 msgstr ""
 
-#: includes/class-dashboard.php:535
+#: includes/class-dashboard.php:538
 msgid "The Poll dashboard needs JavaScript."
 msgstr ""
 
@@ -390,7 +390,7 @@ msgid "It is a temporary deactivation, I am fixing something"
 msgstr ""
 
 #: vendor/fs-lite/fs-lite.php:527
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Other"
 msgstr ""
 
@@ -596,8 +596,8 @@ msgid "I already did"
 msgstr ""
 
 #: build/dashboard.js:1
-#: build/dashboard.js:16
-#: build/dashboard.js:17
+#: build/dashboard.js:18
+#: build/dashboard.js:19
 #: build/index.js:4
 msgid "Pro"
 msgstr ""
@@ -896,7 +896,7 @@ msgid "Status"
 msgstr ""
 
 #: build/dashboard.js:7
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Voters"
 msgstr ""
 
@@ -1151,36 +1151,48 @@ msgstr ""
 msgid "Questions? %s"
 msgstr ""
 
-#: build/dashboard.js:12
+#. translators: %d: percent off, e.g. 40
+#: build/dashboard.js:13
+#, js-format
+msgid "Black Friday: %d%% off"
+msgstr ""
+
+#: build/dashboard.js:13
 msgid "one-time"
 msgstr ""
 
-#: build/dashboard.js:12
+#: build/dashboard.js:13
 msgid "per year"
 msgstr ""
 
-#: build/dashboard.js:12
+#: build/dashboard.js:13
 msgid "per month"
 msgstr ""
 
-#: build/dashboard.js:12
+#. translators: %s: coupon code
+#: build/dashboard.js:14
+#, js-format
+msgid "Code %s is applied at checkout. The sale ends on 5 December."
+msgstr ""
+
+#: build/dashboard.js:14
 msgid "Unlimited websites"
 msgstr ""
 
 #. translators: %d: number of websites
-#: build/dashboard.js:13
+#: build/dashboard.js:15
 #, js-format
 msgid "%d website"
 msgid_plural "%d websites"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/dashboard.js:13
+#: build/dashboard.js:15
 msgid "Get Pro"
 msgstr ""
 
 #. translators: %d: number of days
-#: build/dashboard.js:14
+#: build/dashboard.js:16
 #, js-format
 msgid "Start %d-day free trial"
 msgid_plural "Start %d-day free trial"
@@ -1188,289 +1200,289 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of days
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 #, js-format
 msgid "Try Pro free for %d day"
 msgid_plural "Try Pro free for %d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Every Pro feature on one website. Cancel before the trial ends and you pay nothing."
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Every Pro feature on one website, no card needed. When the trial ends, pick a plan or keep using the free plugin."
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "The Pro plans could not be loaded right now. Please try again later."
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "SoftIcon Poll Pro is coming soon."
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Pay once, use it for life"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Pick your plan"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Every plan has all Pro features; pick how many websites you need."
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Every free feature"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Secure checkout by Freemius. Pro replaces the free plugin and keeps every poll and vote."
 msgstr ""
 
-#: build/dashboard.js:15
 #: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Compare Free and Pro"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Included"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Not included"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "In Free and Pro"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Only in Pro"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Compare"
 msgstr ""
 
-#: build/dashboard.js:15
+#: build/dashboard.js:17
 msgid "Free vs Pro at a glance"
 msgstr ""
 
 #. translators: %s: number of features
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 #, js-format
 msgid "See what you get when you upgrade. %s features are only in Pro."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Free"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Free forever, everything you need to run polls on your site."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "forever"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "You already have it"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Plans for more websites"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Feature breakdown"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Filter features"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Filter features…"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Feature"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "No features match."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Saturday morning"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Friday evening"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Sunday afternoon"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Period"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "7 days"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "30 days"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "90 days"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Download CSV"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 #: build/index.js:2
 #: build/index.js:4
 msgid "Votes"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Votes per day"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Written answers"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Which day suits the workshop?"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Share"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "None"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Votes are not checked for robots."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Free, and usually no puzzle for visitors."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Free plan; visitors may get a picture puzzle."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "No box to tick; Google scores each vote."
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "CAPTCHA service"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Site key"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Secret key"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Save settings"
 msgstr ""
 
-#: build/dashboard.js:16
+#: build/dashboard.js:18
 msgid "Try it"
 msgstr ""
 
 #. translators: %s: the Pro feature, such as Poll analytics
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 #, js-format
 msgid "A working demo of %s with sample data. Click around; nothing is saved."
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Insights"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Poll analytics"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "See when people vote, how each answer does, and share a poll with a QR code."
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Votes over time, by hour, day or month"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Today, 7, 30 or 90 days, all time, or your own dates"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Every vote or a summary as a CSV file"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Read the answers people wrote in \"Other\""
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "A QR code, a vote page and a full-screen presentation for each poll"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Site"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "CAPTCHA and settings"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Stop robots from voting with the CAPTCHA service you like."
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Cloudflare Turnstile, hCaptcha or Google reCAPTCHA v3"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Checked on your server, so a robot cannot skip it"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Its script loads only on pages with such a poll"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Turn it on for each poll in its Voting rules"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "See Pro plans"
 msgstr ""
 
-#: build/dashboard.js:17
+#: build/dashboard.js:19
 msgid "Watch it in action"
 msgstr ""
 

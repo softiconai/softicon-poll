@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SoftIcon Poll – Poll & Survey Block
  * Description: A poll block for the block editor. Votes are saved on your own site, no account or outside service needed.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: softiconai
@@ -32,7 +32,7 @@ if ( function_exists( 'softicon_poll_fs' ) ) {
 		}
 	);
 } else {
-	define( 'ALPL_PLUGIN_VERSION', '1.2.1' );
+	define( 'ALPL_PLUGIN_VERSION', '1.2.2' );
 	define( 'ALPL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 	define( 'ALPL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -42,9 +42,9 @@ if ( function_exists( 'softicon_poll_fs' ) ) {
 	require_once ALPL_PLUGIN_PATH . 'includes/class-alpl-poll.php';
 	ALPL_Poll::get_instance();
 
-	// Black Friday 2026, for free users only
+	// Black Friday 2026, for free users only; the Pricing tab's REST data reads its coupon too
+	require_once ALPL_PLUGIN_PATH . 'includes/class-black-friday.php';
 	if ( is_admin() ) {
-		require_once ALPL_PLUGIN_PATH . 'includes/class-black-friday.php';
 		new ALPL_Poll\Black_Friday();
 	}
 

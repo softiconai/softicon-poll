@@ -55,11 +55,40 @@ const cycles = () => ( {
 	monthly: __( 'per month', 'softicon-poll' ),
 } );
 
-const Price = ( { price } ) => <p className="alpl-price">
-	<sup>{ symbols[ price.currency ] || price.currency.toUpperCase() + ' ' }</sup>
-	{ price.price.toLocaleString( undefined, { minimumFractionDigits: Number.isInteger( price.price ) ? 0 : 2, maximumFractionDigits: 2 } ) }
-	<span>{ cycles()[ price.cycle ] }</span>
-</p>;
+const amount = ( number ) => number.toLocaleString( undefined, { minimumFractionDigits: Number.isInteger( number ) ? 0 : 2, maximumFractionDigits: 2 } );
+const symbol = ( price ) => symbols[ price.currency ] || price.currency.toUpperCase() + ' ';
+
+// the percent off while a sale's coupon is filled in at checkout, 0 otherwise
+const saleOff = ( checkout ) => ( checkout && checkout.coupon && checkout.off > 0 ? checkout.off : 0 );
+
+// as Freemius counts it: the discount rounded to cents, taken off the price
+const salePrice = ( price, off ) => Math.round( ( price - ( Math.round( price * off ) / 100 ) ) * 100 ) / 100;
+
+// in a sale: the old price struck through, the sale's name and the price at checkout
+const Price = ( { price, off = 0 } ) => <>
+	{ off > 0 && <div className="alpl-price-was">
+		<s>{ symbol( price ) }{ amount( price.price ) }</s>
+		<span className="alpl-sale">{ sprintf(
+			/* translators: %d: percent off, e.g. 40 */
+			__( 'Black Friday: %d%% off', 'softicon-poll' ),
+			off
+		) }</span>
+	</div> }
+	<p className="alpl-price">
+		<sup>{ symbol( price ) }</sup>
+		{ amount( off > 0 ? salePrice( price.price, off ) : price.price ) }
+		<span>{ cycles()[ price.cycle ] }</span>
+	</p>
+</>;
+
+// under Get Pro in a sale: the code is already in the checkout
+const SaleNote = ( { checkout } ) => <div className="alpl-sale-note">
+	{ createInterpolateElement( sprintf(
+		/* translators: %s: coupon code */
+		__( 'Code %s is applied at checkout. The sale ends on 5 December.', 'softicon-poll' ),
+		'<b>' + checkout.coupon + '</b>'
+	), { b: <strong /> } ) }
+</div>;
 
 const sites = ( licenses ) => 'unlimited' === licenses
 	? __( 'Unlimited websites', 'softicon-poll' )
@@ -83,9 +112,12 @@ const openCheckout = ( event, checkout, plan, options, href ) => {
 };
 
 const ProButton = ( { checkout, plan, price, className } ) => {
-	const href = `${ checkout.base }?plan_id=${ plan.id }&licenses=${ price.licenses }&billing_cycle=${ price.cycle }`;
+	// a running sale's coupon is filled in for the buyer
+	const coupon = checkout.coupon ? { coupon: checkout.coupon } : {};
+	const href = `${ checkout.base }?plan_id=${ plan.id }&licenses=${ price.licenses }&billing_cycle=${ price.cycle }` +
+		( checkout.coupon ? `&coupon=${ encodeURIComponent( checkout.coupon ) }` : '' );
 	return <a className={ 'alpl-btn alpl-btn-block ' + className } href={ href } target="_blank" rel="noopener noreferrer"
-		onClick={ ( event ) => openCheckout( event, checkout, plan, { licenses: price.licenses, billing_cycle: price.cycle }, href ) }>
+		onClick={ ( event ) => openCheckout( event, checkout, plan, { licenses: price.licenses, billing_cycle: price.cycle, ...coupon }, href ) }>
 		{ __( 'Get Pro', 'softicon-poll' ) } &rarr;
 	</a>;
 };
@@ -139,6 +171,7 @@ export const Pricing = () => {
 	}
 	const plan = data.pro;
 	const once = plan && 'lifetime' === plan.prices[ 0 ].cycle;
+	const off = saleOff( data.checkout );
 
 	return <>
 		<Intro eyebrow={ __( 'Pricing', 'softicon-poll' ) } title={ once ? __( 'Pay once, use it for life', 'softicon-poll' ) : __( 'Pick your plan', 'softicon-poll' ) }>
@@ -151,8 +184,9 @@ export const Pricing = () => {
 			{ plan.prices.map( ( price ) => <div className="alpl-plan" key={ price.licenses }>
 				<span className="alpl-tag">{ sites( price.licenses ) }</span>
 				<h3>{ plan.title }</h3>
-				<Price price={ price } />
+				<Price price={ price } off={ off } />
 				<ProButton checkout={ data.checkout } plan={ plan } price={ price } className="alpl-btn-coral" />
+				{ off > 0 && <SaleNote checkout={ data.checkout } /> }
 				<ul className="alpl-checks">
 					<li>{ sites( price.licenses ) }</li>
 					<li>{ __( 'Every free feature', 'softicon-poll' ) }</li>
@@ -213,8 +247,9 @@ export const Compare = () => {
 				<span className="alpl-tag">{ __( 'Pro', 'softicon-poll' ) }</span>
 				<h3>{ plan.title }</h3>
 				{ plan.text && <p>{ plan.text }</p> }
-				<Price price={ plan.prices[ 0 ] } />
+				<Price price={ plan.prices[ 0 ] } off={ saleOff( data.checkout ) } />
 				<ProButton checkout={ data.checkout } plan={ plan } price={ plan.prices[ 0 ] } className="alpl-btn-light" />
+				{ saleOff( data.checkout ) > 0 && <SaleNote checkout={ data.checkout } /> }
 				{ plan.trial > 0 && <TrialButton checkout={ data.checkout } plan={ plan } className="alpl-more-plans alpl-trial-link">{ trialLabel( plan ) }</TrialButton> }
 				{ plan.prices.length > 1 && <a className="alpl-more-plans" href="#/pricing">{ __( 'Plans for more websites', 'softicon-poll' ) }</a> }
 			</div> }

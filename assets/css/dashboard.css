@@ -1589,6 +1589,49 @@
 	color: rgba(255, 255, 255, 0.75);
 }
 
+/* a sale: the old price struck through, its name, and the code under Get Pro */
+.alpl-price-was {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 20px;
+}
+
+.alpl-price-was s {
+	color: #646970;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.alpl-price-was + .alpl-price {
+	margin-top: 8px;
+}
+
+.alpl-sale {
+	padding: 4px 9px;
+	border-radius: 3px;
+	background: #d63638;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.alpl-sale-note {
+	align-self: stretch;
+	margin-top: 10px;
+	color: #b32d2e;
+	font-size: 13px;
+	text-align: center;
+}
+
+.alpl-plan.is-pro .alpl-price-was s,
+.alpl-plan.is-pro .alpl-sale-note {
+	color: rgba(255, 255, 255, 0.85);
+}
+
 .alpl-plan .alpl-btn-block,
 .alpl-have {
 	align-self: stretch;
